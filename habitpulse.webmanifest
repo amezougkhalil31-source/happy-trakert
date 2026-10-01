@@ -1,0 +1,19 @@
+{
+  "id": "./habitpulse.html",
+  "name": "HabitPulse | A little, often",
+  "short_name": "HabitPulse",
+  "description": "A thoughtful, private place to build habits that fit your life.",
+  "start_url": "./habitpulse.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#edf1e9",
+  "theme_color": "#edf1e9",
+  "icons": [
+    {
+      "src": "./habitpulse-icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

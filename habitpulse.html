@@ -1,0 +1,1880 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#edf1e9">
+    <meta name="description" content="A thoughtful, private place to build the habits that make a life feel like yours.">
+    <meta name="referrer" content="no-referrer">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline'; connect-src 'self' https://*.supabase.co wss://*.supabase.co; img-src 'self' data:; worker-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'">
+    <link rel="manifest" href="habitpulse.webmanifest">
+    <title>HabitPulse | A little, often</title>
+    <style>
+        :root {
+            color-scheme: light;
+            --paper: #edf1e9;
+            --paper-bright: #f8faf5;
+            --ink: #193330;
+            --muted: #667a72;
+            --line: rgba(25, 51, 48, .13);
+            --green: #527d70;
+            --green-dark: #355f53;
+            --coral: #d87963;
+            --gold: #ba9652;
+            --blue: #6d8791;
+            --plum: #806b7c;
+            --white: #fffefa;
+            --shadow: 0 24px 70px rgba(39, 62, 54, .08);
+        }
+
+        * { box-sizing: border-box; }
+        html { min-width: 320px; scroll-behavior: smooth; }
+        body {
+            min-height: 100vh;
+            margin: 0;
+            color: var(--ink);
+            background: radial-gradient(ellipse at 8% 8%, rgba(143, 183, 161, .22), transparent 35%), radial-gradient(ellipse at 93% 27%, rgba(218, 161, 132, .13), transparent 31%), var(--paper);
+            font: 15px/1.5 "Trebuchet MS", "Segoe UI", sans-serif;
+            overflow-x: hidden;
+        }
+        body[data-gate="welcome"] .shell { display: none; }
+        body[data-gate="app"] .welcome-screen { display: none; }
+        button, input, select, textarea { font: inherit; }
+        button { color: inherit; }
+        button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible, a:focus-visible, summary:focus-visible { outline: 3px solid rgba(82, 125, 112, .42); outline-offset: 3px; }
+        #sky { position: fixed; inset: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; }
+        .sky-wash { position: fixed; inset: 0; z-index: -1; pointer-events: none; background: radial-gradient(ellipse at 20% 70%, rgba(91, 142, 126, .08), transparent 34%), radial-gradient(ellipse at 85% 80%, rgba(202, 134, 111, .08), transparent 30%); }
+        body[data-space-theme="aurora"] .sky-wash { background: radial-gradient(ellipse at 18% 24%, rgba(77,157,140,.18), transparent 38%), radial-gradient(ellipse at 82% 72%, rgba(105,126,161,.13), transparent 34%); }
+        body[data-space-theme="midnight"] .sky-wash { background: radial-gradient(ellipse at 17% 32%, rgba(91,107,155,.16), transparent 38%), radial-gradient(ellipse at 79% 77%, rgba(121,101,137,.14), transparent 34%); }
+        body[data-space-theme="solar"] .sky-wash { background: radial-gradient(ellipse at 21% 27%, rgba(193,148,84,.18), transparent 36%), radial-gradient(ellipse at 85% 77%, rgba(209,123,92,.13), transparent 35%); }
+        body[data-space-theme="nebula"] .sky-wash { background: radial-gradient(ellipse at 15% 74%, rgba(151,112,143,.17), transparent 38%), radial-gradient(ellipse at 85% 23%, rgba(92,143,142,.14), transparent 35%); }
+        body[data-space-theme="minimal"] .sky-wash { background: radial-gradient(ellipse at 24% 36%, rgba(82,125,112,.06), transparent 36%); }
+        .shell { width: min(1180px, calc(100% - 48px)); margin: 0 auto; padding: 28px 0 56px; }
+        .welcome-screen { width: min(1120px, calc(100% - 40px)); min-height: 100vh; margin: 0 auto; padding: 25px 0 34px; display: flex; flex-direction: column; }
+        .welcome-top { display: flex; align-items: center; justify-content: space-between; gap: 15px; padding-bottom: 20px; border-bottom: 1px solid var(--line); }
+        .welcome-auth-actions { display: flex; align-items: center; gap: 9px; }
+        .welcome-hero { display: grid; grid-template-columns: minmax(0,1.2fr) minmax(250px,.8fr); gap: 40px; align-items: center; flex: 1; padding: 58px 0 42px; }
+        .welcome-hero h1 { max-width: 650px; font: 500 62px/1.02 Georgia,serif; }
+        .welcome-lead { max-width: 570px; color: var(--muted); font-size: 17px; }
+        .welcome-art { position: relative; min-height: 310px; display: grid; place-items: center; }
+        .welcome-orbit { width: 245px; aspect-ratio: 1; position: relative; display: grid; place-items: center; border: 1px solid rgba(82,125,112,.26); border-radius: 50%; transform: rotate(-17deg); }
+        .welcome-orbit::before,.welcome-orbit::after { content: ''; position: absolute; width: 310px; height: 135px; border: 1px solid rgba(82,125,112,.24); border-radius: 50%; }
+        .welcome-orbit::after { transform: rotate(64deg); width: 285px; height: 110px; }
+        .welcome-planet { width: 103px; aspect-ratio: 1; display: grid; place-items: center; border-radius: 50%; background: radial-gradient(circle at 31% 25%,#fff5dd,#d4a56c 54%,#7f7162); box-shadow: 0 0 90px rgba(186,150,82,.27); color: #fffefa; font-size: 31px; transform: rotate(17deg); }
+        .welcome-dot { position: absolute; width: 13px; height: 13px; border-radius: 50%; background: var(--coral); box-shadow: 0 0 20px rgba(216,121,99,.5); }
+        .welcome-dot.one { top: 7%; left: 40%; }.welcome-dot.two { right: 0; bottom: 34%; width: 8px; height: 8px; background: var(--green); }
+        .welcome-proof { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 0; border-block: 1px solid var(--line); }
+        .welcome-proof article { padding: 18px 22px 18px 0; }
+        .welcome-proof article + article { padding-left: 20px; border-left: 1px solid var(--line); }
+        .welcome-proof strong { display: block; margin-bottom: 4px; font: 500 19px Georgia,serif; }
+        .welcome-proof p { margin: 0; color: var(--muted); font-size: 12px; }
+        .welcome-foot { display: flex; align-items: center; justify-content: space-between; gap: 15px; padding-top: 21px; color: var(--muted); font-size: 11px; }
+        .welcome-note { min-height: 20px; margin-top: 10px; color: var(--green-dark); font-size: 12px; }
+        .auth-tabs { display: flex; gap: 5px; padding: 4px; border-radius: 999px; background: rgba(82,125,112,.08); }
+        .auth-tab { flex: 1; padding: 8px; border: 0; border-radius: 999px; background: transparent; color: var(--muted); cursor: pointer; font-size: 12px; font-weight: 700; }
+        .auth-tab[aria-selected="true"] { background: var(--white); color: var(--ink); box-shadow: 0 2px 9px rgba(25,51,48,.09); }
+        .account-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+        .quota-dialog .dialog-inner { text-align: center; }
+        .quota-number { margin: 18px 0; color: var(--coral); font: 500 48px Georgia,serif; }
+        .topbar { display: flex; align-items: center; justify-content: space-between; gap: 24px; padding: 4px 0 24px; border-bottom: 1px solid var(--line); }
+        .brand { display: flex; align-items: center; gap: 12px; color: inherit; text-decoration: none; }
+        .brand-mark { width: 38px; height: 38px; display: grid; place-items: center; border: 1px solid rgba(82,125,112,.35); border-radius: 13px 13px 13px 4px; color: var(--green-dark); font-family: Georgia, serif; font-size: 23px; transform: rotate(-4deg); }
+        .brand-word { font-size: 19px; font-weight: 800; letter-spacing: 0; }
+        .brand-word span { color: var(--green); }
+        .brand-note { display: block; margin-top: -2px; color: var(--muted); font-size: 11px; }
+        .top-actions, .main-nav { display: flex; align-items: center; gap: 8px; }
+        .main-nav { padding: 4px; border: 1px solid var(--line); border-radius: 999px; background: rgba(255,254,250,.63); }
+        .nav-btn, .icon-btn, .button, .quiet-btn { border: 0; cursor: pointer; transition: transform .18s ease, background-color .18s ease, color .18s ease; }
+        .nav-btn { padding: 9px 14px; border-radius: 999px; background: transparent; color: var(--muted); font-size: 13px; font-weight: 700; }
+        .nav-btn[aria-current="page"] { background: var(--ink); color: var(--white); }
+        .icon-btn { width: 38px; height: 38px; display: grid; place-items: center; border: 1px solid var(--line); border-radius: 50%; background: rgba(255,254,250,.65); font-size: 17px; }
+        .nav-btn:hover, .icon-btn:hover, .button:hover, .quiet-btn:hover { transform: translateY(-1px); }
+        .button { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 42px; padding: 10px 16px; border-radius: 999px; background: var(--ink); color: var(--white); font-weight: 700; text-decoration: none; }
+        .button.primary { background: var(--green-dark); }
+        .button.coral { background: var(--coral); }
+        .button.light { border: 1px solid var(--line); background: var(--paper-bright); color: var(--ink); }
+        .button.small { min-height: 35px; padding: 7px 12px; font-size: 13px; }
+        .button:disabled { opacity: .5; cursor: not-allowed; transform: none; }
+        .quiet-btn { padding: 8px 10px; border-radius: 10px; background: transparent; color: var(--muted); }
+        .welcome { display: grid; grid-template-columns: minmax(0,1fr) auto; align-items: end; gap: 20px; padding: 34px 0 22px; }
+        .eyebrow { color: var(--green-dark); font-size: 11px; font-weight: 800; letter-spacing: .09em; text-transform: uppercase; }
+        h1, h2, h3, p { margin-top: 0; }
+        h1 { max-width: 690px; margin: 8px 0 8px; font: 500 42px/1.08 Georgia, "Times New Roman", serif; letter-spacing: 0; }
+        .welcome-copy { max-width: 640px; margin: 0; color: var(--muted); }
+        .date-note { padding-bottom: 4px; color: var(--muted); font-size: 13px; text-align: right; }
+        .daily-strip { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); border-block: 1px solid var(--line); margin-bottom: 22px; }
+        .daily-metric { padding: 14px 18px 14px 0; }
+        .daily-metric + .daily-metric { padding-left: 20px; border-left: 1px solid var(--line); }
+        .metric-value { display: block; font: 500 25px/1.1 Georgia, serif; }
+        .metric-label { color: var(--muted); font-size: 11px; }
+        .metric-label button { padding: 0; border: 0; background: none; color: inherit; text-decoration: underline; text-decoration-color: rgba(102,122,114,.4); cursor: pointer; font: inherit; }
+        .layout { display: grid; grid-template-columns: minmax(0,1.42fr) minmax(0,.78fr); gap: 24px; align-items: start; }
+        .layout > section, .side-column, .side-section { min-width: 0; }
+        .section-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin: 0 0 12px; }
+        .section-actions { display: flex; align-items: center; gap: 5px; }
+        .section-head h2 { margin: 0; font: 500 23px/1.15 Georgia, serif; letter-spacing: 0; }
+        .section-sub { margin: 4px 0 0; color: var(--muted); font-size: 12px; }
+        .habit-list { display: grid; gap: 10px; }
+        .habit-card { position: relative; display: grid; grid-template-columns: 9px minmax(0,1fr) auto; gap: 15px; align-items: center; min-height: 104px; padding: 15px 16px 15px 0; border: 1px solid var(--line); border-radius: 5px 18px 18px 5px; background: rgba(255,254,250,.82); box-shadow: 0 5px 22px rgba(39,62,54,.035); animation: arrive .28s ease both; }
+        .habit-stripe { align-self: stretch; border-radius: 0 5px 5px 0; background: var(--pillar, var(--green)); }
+        .habit-main { min-width: 0; }
+        .habit-topline { display: flex; align-items: baseline; flex-wrap: wrap; gap: 7px; }
+        .habit-name { margin: 0; font-size: 16px; font-weight: 800; letter-spacing: 0; }
+        .pillar-tag { color: var(--pillar, var(--green)); font-size: 10px; font-weight: 800; text-transform: uppercase; }
+        .habit-identity { margin: 3px 0 8px; color: var(--muted); font: italic 13px Georgia, serif; }
+        .habit-identity strong { color: var(--ink); font-style: normal; font-weight: 600; }
+        .habit-relationship { display: block; margin-top: 3px; color: var(--muted); font-size: 10px; font-style: normal; }
+        .habit-progress-row { display: flex; align-items: center; gap: 9px; }
+        .progress-track { height: 5px; flex: 1; overflow: hidden; border-radius: 999px; background: rgba(25,51,48,.09); }
+        .progress-fill { height: 100%; border-radius: inherit; background: var(--pillar, var(--green)); transition: width .45s cubic-bezier(.2,.7,.2,1); }
+        .progress-text { min-width: 67px; color: var(--muted); font-size: 11px; text-align: right; }
+        .habit-controls { display: flex; align-items: center; gap: 7px; }
+        .counter-btn { width: 36px; height: 36px; border: 1px solid var(--line); border-radius: 50%; background: var(--paper-bright); color: var(--ink); cursor: pointer; font-size: 19px; line-height: 1; }
+        .counter-btn:hover { background: var(--green-dark); color: white; }
+        .more-btn { width: 32px; height: 34px; border: 0; border-radius: 9px; background: transparent; color: var(--muted); cursor: pointer; font-size: 20px; }
+        .review-habit-btn { border: 0; border-radius: 999px; background: rgba(216,121,99,.12); color: #98523f; padding: 6px 9px; cursor: pointer; font-size: 10px; font-weight: 700; }
+        .routine-list { margin-top: 19px; }
+        .routine-card { display: grid; grid-template-columns: minmax(0,1fr) auto; gap: 12px; align-items: center; margin-top: 8px; padding: 12px 14px; border: 1px solid var(--line); border-radius: 14px; background: rgba(255,254,250,.54); }
+        .routine-title { margin: 0 0 2px; font-size: 13px; }
+        .routine-meta { margin: 0; color: var(--muted); font-size: 10px; }
+        .routine-progress { height: 4px; margin-top: 8px; overflow: hidden; border-radius: 99px; background: rgba(25,51,48,.09); }
+        .routine-progress span { display: block; height: 100%; background: var(--green); transition: width .35s ease; }
+        .routine-card button { white-space: nowrap; }
+        .parked-habits { margin-top: 12px; color: var(--muted); font-size: 12px; }
+        .parked-habits summary { width: fit-content; padding: 7px 0; cursor: pointer; }
+        .parked-card { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 9px 11px; border-top: 1px solid var(--line); color: var(--ink); }
+        .parked-card span { overflow-wrap: anywhere; }
+        .recovery-banner { display: flex; align-items: center; justify-content: space-between; gap: 18px; margin: -5px 0 20px; padding: 13px 16px; border: 1px solid rgba(186,150,82,.32); border-radius: 15px; background: rgba(255,248,225,.72); }
+        .recovery-banner strong, .recovery-banner span { display: block; }
+        .recovery-banner strong { font: 500 18px Georgia, serif; }
+        .recovery-banner span { margin-top: 2px; color: var(--muted); font-size: 11px; }
+        .empty-state { padding: 27px 22px; border: 1px dashed rgba(25,51,48,.22); border-radius: 18px; background: rgba(255,254,250,.45); }
+        .empty-state h3 { margin-bottom: 7px; font: 500 21px Georgia, serif; }
+        .empty-state p { margin-bottom: 14px; color: var(--muted); font-size: 13px; }
+        .starter-row { display: flex; flex-wrap: wrap; gap: 7px; }
+        .starter { padding: 7px 10px; border: 1px solid var(--line); border-radius: 999px; background: transparent; cursor: pointer; color: var(--ink); font-size: 11px; }
+        .side-column { display: grid; gap: 17px; }
+        .side-section { padding: 17px; border: 1px solid var(--line); border-radius: 16px; background: rgba(255,254,250,.72); }
+        .side-section h2 { margin-bottom: 4px; font: 500 19px Georgia, serif; }
+        .side-section p { margin-bottom: 12px; color: var(--muted); font-size: 12px; }
+        .boost-box { overflow: hidden; position: relative; border-color: rgba(186,150,82,.35); background: linear-gradient(135deg, rgba(255,248,225,.92), rgba(255,254,250,.72)); }
+        .boost-box::after { content: '✦'; position: absolute; right: 16px; top: 9px; color: rgba(186,150,82,.48); font-size: 28px; }
+        .boost-box .button { position: relative; z-index: 1; }
+        .insight-line { display: flex; gap: 10px; align-items: flex-start; padding-top: 10px; border-top: 1px solid var(--line); }
+        .insight-mark { color: var(--coral); font-size: 17px; }
+        .insight-line p { margin: 0; color: var(--ink); font-size: 12px; }
+        .reflection-list { display: grid; gap: 8px; margin-top: 12px; }
+        .reflection-entry { padding-top: 8px; border-top: 1px solid var(--line); }
+        .reflection-entry time { display: block; margin-bottom: 2px; color: var(--muted); font-size: 10px; }
+        .reflection-entry p { margin: 0; color: var(--ink); font-size: 11px; }
+        .heatmap-wrap { max-width: 100%; overflow-x: auto; padding-bottom: 4px; }
+        .heatmap { display: grid; grid-auto-flow: column; grid-template-rows: repeat(7, 11px); grid-auto-columns: 11px; gap: 3px; min-width: max-content; padding: 5px 1px; }
+        .heat-cell { width: 11px; height: 11px; border: 0; border-radius: 3px; background: rgba(25,51,48,.07); padding: 0; }
+        .heat-spacer { width: 11px; height: 11px; }
+        .heat-cell[data-level="1"] { background: #c3d9cb; }
+        .heat-cell[data-level="2"] { background: #8fb7a0; }
+        .heat-cell[data-level="3"] { background: #5f927d; }
+        .heat-cell[data-level="4"] { background: #315f52; }
+        .heat-cell:focus-visible { outline-offset: 1px; }
+        .heat-legend { display: flex; align-items: center; justify-content: flex-end; gap: 4px; margin-top: 7px; color: var(--muted); font-size: 10px; }
+        .heat-legend .heat-cell { display: inline-block; }
+        .year-controls { display: flex; align-items: center; gap: 5px; }
+        .year-controls button { width: 27px; height: 27px; border: 1px solid var(--line); border-radius: 50%; background: transparent; cursor: pointer; }
+        .year-label { min-width: 36px; font-size: 12px; text-align: center; }
+        .analytics { display: grid; grid-template-columns: repeat(3, 1fr); gap: 7px; margin: 10px 0 0; }
+        .analytics div { padding: 8px 5px; border-radius: 10px; background: rgba(82,125,112,.08); text-align: center; }
+        .analytics strong { display: block; font: 500 19px Georgia, serif; }
+        .analytics span { color: var(--muted); font-size: 10px; }
+        .review-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+        .review-stat { padding: 10px; border-radius: 11px; background: rgba(82,125,112,.08); }
+        .review-stat strong { display: block; font: 500 20px Georgia, serif; }
+        .review-stat span { color: var(--muted); font-size: 10px; }
+        .review-story { display: grid; gap: 8px; margin-top: 14px; }
+        .story-event { padding-left: 12px; border-left: 2px solid rgba(82,125,112,.4); color: var(--muted); font-size: 11px; }
+        .template-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+        .template-choice { display: grid; gap: 3px; min-height: 74px; padding: 11px; border: 1px solid var(--line); border-radius: 12px; background: white; cursor: pointer; text-align: left; }
+        .template-choice strong { font-size: 12px; }
+        .template-choice span { color: var(--muted); font-size: 10px; }
+        .score-note { padding: 12px; border-left: 2px solid var(--green); background: rgba(82,125,112,.06); color: var(--muted); font-size: 12px; }
+        .preferences-panel { margin: 0 0 18px; padding: 14px; border: 1px solid var(--line); border-radius: 13px; background: rgba(82,125,112,.05); }
+        .preferences-panel h3 { margin: 0; font: 500 18px Georgia, serif; }
+        .help-item { padding: 11px 0; border-top: 1px solid var(--line); }
+        .help-item summary { color: var(--ink); font-size: 12px; font-weight: 700; cursor: pointer; }
+        .help-item p { margin: 8px 0 0; color: var(--muted); font-size: 11px; }
+        .select-small { max-width: 150px; padding: 6px 8px; border: 1px solid var(--line); border-radius: 9px; background: var(--paper-bright); color: var(--ink); font-size: 11px; }
+        .bottom-row { display: grid; grid-template-columns: minmax(0,1fr) auto; align-items: center; gap: 20px; margin-top: 25px; padding-top: 16px; border-top: 1px solid var(--line); }
+        .bottom-copy { max-width: 680px; color: var(--muted); font-size: 11px; }
+        .footer-links { display: flex; gap: 12px; flex-wrap: wrap; }
+        .footer-links button { border: 0; background: none; color: var(--muted); text-decoration: underline; text-decoration-color: rgba(102,122,114,.35); cursor: pointer; font-size: 11px; }
+        dialog { width: min(460px, calc(100% - 28px)); max-height: min(90vh, 760px); padding: 0; overflow: auto; border: 1px solid var(--line); border-radius: 20px; background: var(--paper-bright); color: var(--ink); box-shadow: 0 30px 100px rgba(15,35,31,.28); }
+        dialog::backdrop { background: rgba(17,37,33,.45); backdrop-filter: blur(4px); }
+        .dialog-inner { padding: 22px; }
+        .dialog-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; margin-bottom: 16px; }
+        .dialog-head h2 { margin: 0; font: 500 24px Georgia, serif; }
+        .dialog-head p { margin: 5px 0 0; color: var(--muted); font-size: 12px; }
+        .close-dialog { width: 32px; height: 32px; border: 1px solid var(--line); border-radius: 50%; background: transparent; cursor: pointer; }
+        .field { display: grid; gap: 5px; margin: 12px 0; }
+        .field label, .field legend { color: var(--muted); font-size: 11px; font-weight: 800; }
+        .field input, .field select, .field textarea { width: 100%; padding: 10px 11px; border: 1px solid var(--line); border-radius: 10px; background: white; color: var(--ink); }
+        .field textarea { min-height: 85px; resize: vertical; }
+        .email-optin { display: flex; align-items: flex-start; gap: 9px; color: var(--muted); font-size: 11px; }
+        .email-optin input { width: 16px; min-width: 16px; accent-color: var(--green); }
+        .field-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        fieldset.field { padding: 9px 10px; border: 1px solid var(--line); border-radius: 12px; }
+        .weekday-list { display: flex; flex-wrap: wrap; gap: 5px; }
+        .weekday-choice { display: flex; align-items: center; gap: 4px; padding: 5px 7px; border: 1px solid var(--line); border-radius: 999px; font-size: 10px; }
+        .weekday-choice input { width: auto; accent-color: var(--green); }
+        .dialog-actions { display: flex; justify-content: flex-end; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+        .dialog-error { min-height: 18px; color: #a44435; font-size: 11px; }
+        .challenge-time { margin: 20px 0; color: var(--green-dark); font: 500 52px Georgia, serif; text-align: center; }
+        .challenge-action { padding: 18px; border-radius: 14px; background: rgba(82,125,112,.09); font: 500 19px/1.35 Georgia, serif; text-align: center; }
+        .toast { position: fixed; left: 50%; bottom: 22px; z-index: 5; max-width: min(440px, calc(100% - 24px)); padding: 10px 16px; border-radius: 999px; background: var(--ink); color: white; box-shadow: var(--shadow); opacity: 0; transform: translate(-50%, 12px); pointer-events: none; transition: opacity .2s ease, transform .2s ease; }
+        .toast.show { opacity: 1; transform: translate(-50%, 0); }
+        .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+        [hidden] { display: none !important; }
+        @keyframes arrive { from { opacity: 0; transform: translateY(7px); } to { opacity: 1; transform: translateY(0); } }
+        @media (max-width: 820px) {
+            .welcome-hero { grid-template-columns: 1fr; gap: 10px; padding: 42px 0 28px; }
+            .welcome-art { min-height: 220px; }
+            .welcome-orbit { transform: scale(.75) rotate(-17deg); }
+            .shell { width: min(100% - 30px, 680px); padding-top: 17px; }
+            .topbar { flex-wrap: wrap; }
+            .top-actions { width: 100%; justify-content: space-between; }
+            .main-nav { flex: 1; justify-content: space-between; }
+            .nav-btn { padding: 8px 10px; }
+            .welcome { grid-template-columns: 1fr; padding-top: 25px; }
+            .date-note { text-align: left; }
+            .layout { grid-template-columns: 1fr; }
+            .side-column { grid-template-columns: repeat(2,minmax(0,1fr)); }
+            .heatmap-section { grid-column: 1 / -1; }
+            .bottom-row { grid-template-columns: 1fr; }
+            .recovery-banner { align-items: flex-start; flex-direction: column; }
+            h1 { font-size: 38px; }
+        }
+        @media (max-width: 520px) {
+            .welcome-screen { width: calc(100% - 26px); padding-top: 15px; }
+            .welcome-hero h1 { font-size: 41px; }
+            .welcome-lead { font-size: 14px; }
+            .welcome-art { min-height: 180px; }
+            .welcome-orbit { transform: scale(.62) rotate(-17deg); }
+            .welcome-proof { grid-template-columns: 1fr; }
+            .welcome-proof article,.welcome-proof article + article { padding: 12px 0; border-left: 0; }
+            .welcome-top { flex-wrap: wrap; }
+            .welcome-foot { align-items: flex-start; flex-direction: column; }
+            .shell { width: calc(100% - 24px); padding-top: 12px; }
+            .brand-note { display: none; }
+            .topbar { gap: 13px; padding-bottom: 14px; }
+            .nav-btn { padding: 7px 8px; font-size: 11px; }
+            .welcome { gap: 9px; padding: 23px 0 16px; }
+            h1 { font-size: 32px; }
+            .daily-metric { padding-right: 8px; }
+            .daily-metric + .daily-metric { padding-left: 10px; }
+            .metric-value { font-size: 22px; }
+            .daily-strip { grid-template-columns: repeat(2,minmax(0,1fr)); }
+            .daily-metric:nth-child(3) { border-left: 0; padding-left: 0; }
+            .habit-card { grid-template-columns: 6px minmax(0,1fr) auto; gap: 10px; padding-right: 9px; }
+            .habit-name { font-size: 14px; }
+            .habit-identity { font-size: 12px; }
+            .habit-controls { gap: 4px; }
+            .counter-btn { width: 32px; height: 32px; }
+            .side-column { grid-template-columns: 1fr; }
+            .heatmap-section { grid-column: auto; }
+            .field-grid { grid-template-columns: 1fr; gap: 0; }
+            .welcome-copy { font-size: 13px; }
+            .section-actions { flex-direction: column-reverse; align-items: flex-end; }
+            .template-grid { grid-template-columns: 1fr; }
+            .routine-card { grid-template-columns: 1fr; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+        }
+    </style>
+</head>
+<body data-gate="welcome">
+    <section class="welcome-screen" id="welcomeScreen" aria-labelledby="welcomeHeading">
+        <header class="welcome-top">
+            <a href="#" class="brand" aria-label="HabitPulse">
+                <span class="brand-mark" aria-hidden="true">h</span>
+                <span><span class="brand-word">Habit<span>Pulse</span></span><small class="brand-note">A little, often.</small></span>
+            </a>
+            <div class="welcome-auth-actions">
+                <button class="button light small" id="welcomeSignIn" type="button">Sign in</button>
+                <button class="button primary small" id="welcomeSignUp" type="button">Create account</button>
+            </div>
+        </header>
+        <div class="welcome-hero">
+            <div>
+                <div class="eyebrow">A gentler way to grow</div>
+                <h1 id="welcomeHeading">Small promises. A life that feels more like yours.</h1>
+                <p class="welcome-lead">Build a rhythm around the person you want to become. Track what matters, notice what fits, and begin again without the guilt.</p>
+                <button class="button primary" id="welcomeStart" type="button">Start free <span aria-hidden="true">→</span></button>
+                <div class="welcome-note" id="welcomeStatus" role="status" aria-live="polite"></div>
+            </div>
+            <div class="welcome-art" aria-hidden="true"><div class="welcome-orbit"><span class="welcome-planet">h</span><i class="welcome-dot one"></i><i class="welcome-dot two"></i></div></div>
+        </div>
+        <section class="welcome-proof" aria-label="What you can do with HabitPulse">
+            <article><strong>Keep the promise small.</strong><p>Shape daily, weekday, or interval habits around real targets and routines.</p></article>
+            <article><strong>See your own rhythm.</strong><p>Private heatmaps, kind weekly reviews, and notes based on what you actually did.</p></article>
+            <article><strong>Make room for real life.</strong><p>Pause, adjust, export, or take a rest day. Your history stays yours.</p></article>
+        </section>
+        <footer class="welcome-foot"><span>Private on this device by default. Cloud accounts are optional when configured.</span><a href="./habitpulse-privacy.html">Privacy & terms</a></footer>
+    </section>
+    <canvas id="sky" aria-hidden="true"></canvas>
+    <div class="sky-wash" aria-hidden="true"></div>
+    <div class="shell">
+        <header class="topbar">
+            <a href="#today" class="brand" aria-label="HabitPulse home">
+                <span class="brand-mark" aria-hidden="true">h</span>
+                <span><span class="brand-word">Habit<span>Pulse</span></span><small class="brand-note">A little, often.</small></span>
+            </a>
+            <div class="top-actions">
+                <nav class="main-nav" aria-label="Main navigation">
+                    <button class="nav-btn" data-view="today" aria-current="page">Today</button>
+                    <button class="nav-btn" data-view="insights">Patterns</button>
+                    <button class="nav-btn" data-view="account">Account</button>
+                </nav>
+                <button class="icon-btn" id="motionToggle" type="button" aria-label="Pause background motion" title="Pause background motion">Ⅱ</button>
+            </div>
+        </header>
+
+        <main id="today">
+            <section class="welcome" aria-labelledby="welcomeTitle">
+                <div>
+                    <div class="eyebrow" id="welcomeEyebrow">A fresh page</div>
+                    <h1 id="welcomeTitle">Make room for the person you’re becoming.</h1>
+                    <p class="welcome-copy" id="welcomeCopy">Small promises count. Let’s keep today’s ones kind and doable.</p>
+                </div>
+                <div class="date-note" id="todayDate"></div>
+            </section>
+
+            <section class="daily-strip" aria-label="Today's summary">
+                <div class="daily-metric"><strong class="metric-value" id="todayDone">0 / 0</strong><span class="metric-label">habits kept today</span></div>
+                <div class="daily-metric"><strong class="metric-value" id="activeStreak">0</strong><span class="metric-label">day current streak</span></div>
+                <div class="daily-metric"><strong class="metric-value" id="weekRate">0%</strong><span class="metric-label">this week, so far</span></div>
+                <div class="daily-metric"><strong class="metric-value" id="consistencyStat">0%</strong><span class="metric-label"><button type="button" id="consistencyExplain">30-day consistency</button></span></div>
+            </section>
+
+            <section class="recovery-banner" id="recoveryBanner" hidden aria-live="polite">
+                <div><strong>You don’t need to restart your life.</strong><span>Just restart the next action. We can make it smaller, too.</span></div>
+                <button class="button light small" id="recoveryButton" type="button">Find a gentle way back</button>
+            </section>
+
+            <div class="layout">
+                <section aria-labelledby="habitsHeading">
+                    <div class="section-head">
+                        <div><h2 id="habitsHeading">Your promises</h2><p class="section-sub" id="habitSubhead">The ones that fit real life.</p></div>
+                            <div class="section-actions"><button class="quiet-btn" id="templateButton" type="button">Browse ideas</button><button class="button primary small" id="addHabitButton" type="button"><span aria-hidden="true">+</span> Add a habit</button></div>
+                    </div>
+                    <div class="habit-list" id="habitList"></div>
+                        <section class="routine-list" id="routineSection" hidden aria-labelledby="routineHeading"><div class="section-head"><div><h2 id="routineHeading">Routines</h2><p class="section-sub">A loose sequence, never a rule.</p></div></div><div id="routineList"></div></section>
+                        <details class="parked-habits" id="parkedHabits" hidden><summary id="parkedSummary">Paused promises</summary><div id="parkedList"></div></details>
+                    <div class="empty-state" id="emptyState" hidden>
+                        <h3>Nothing on the list yet. Lovely.</h3>
+                        <p>Start with one small promise you’d be glad you kept by tonight.</p>
+                        <div class="starter-row">
+                            <button class="starter" data-starter="read" type="button">Read 15 pages</button>
+                            <button class="starter" data-starter="walk" type="button">Walk 20 minutes</button>
+                            <button class="starter" data-starter="write" type="button">Write for 30 minutes</button>
+                        </div>
+                    </div>
+                </section>
+
+                <aside class="side-column" aria-label="Personal progress tools">
+                    <section class="side-section boost-box">
+                        <div class="eyebrow">For the wobbly moments</div>
+                        <h2>Quantum Boost</h2>
+                        <p>Ten seconds is enough to begin again. No streak guilt, just one tiny next move.</p>
+                        <button class="button coral small" id="boostButton" type="button">Give me a 10-second start</button>
+                    </section>
+
+                    <section class="side-section" id="insightSection">
+                        <div class="section-head"><div><h2>A note from your patterns</h2><p class="section-sub">Kind observations, based on your own check-ins.</p></div><button class="quiet-btn" id="weeklyReviewButton" type="button">This week</button></div>
+                        <div class="insight-line"><span class="insight-mark" aria-hidden="true">↗</span><p id="insightText">Your story starts with the first check-in. Keep it tiny; consistency likes a low bar.</p></div>
+                        <div class="reflection-list" id="reflectionList" aria-label="Recent reflections"></div>
+                    </section>
+
+                    <section class="side-section heatmap-section" aria-labelledby="heatmapTitle">
+                        <div class="section-head">
+                            <div><h2 id="heatmapTitle">A year in little wins</h2><p class="section-sub">Every square is a day you showed up.</p></div>
+                            <div>
+                                <label class="sr-only" for="heatPeriod">Heatmap period</label>
+                                <select class="select-small" id="heatPeriod"><option value="year">Year</option><option value="month">Month</option></select>
+                                <label class="sr-only" for="heatMonth">Heatmap month</label>
+                                <select class="select-small" id="heatMonth" hidden></select>
+                            </div>
+                        </div>
+                        <div class="section-head">
+                            <span class="section-sub">Contribution map</span>
+                            <div class="year-controls"><button id="yearBack" type="button" aria-label="Previous year">‹</button><span class="year-label" id="heatYear"></span><button id="yearForward" type="button" aria-label="Next year">›</button></div>
+                        </div>
+                        <label class="sr-only" for="heatHabit">Choose habit for heatmap</label>
+                        <select class="select-small" id="heatHabit"><option value="all">All habits</option></select>
+                        <div class="heatmap-wrap"><div class="heatmap" id="heatmap" role="grid" aria-label="Habit completion heatmap"></div></div>
+                        <div class="heat-legend"><span>less</span><i class="heat-cell"></i><i class="heat-cell" data-level="1"></i><i class="heat-cell" data-level="2"></i><i class="heat-cell" data-level="3"></i><i class="heat-cell" data-level="4"></i><span>more</span></div>
+                        <div class="analytics" aria-label="Habit analytics">
+                            <div><strong id="rateStat">0%</strong><span>completion</span></div>
+                            <div><strong id="currentStat">0</strong><span>current streak</span></div>
+                            <div><strong id="bestStat">0</strong><span>best streak</span></div>
+                        </div>
+                    </section>
+                </aside>
+            </div>
+
+            <section class="bottom-row" aria-label="Account and support">
+                <p class="bottom-copy">Your habit journal stays on this device unless you connect a cloud account. No streaks are taken away for being human.</p>
+                <div class="footer-links">
+                    <button type="button" data-contact="support">Contact & support</button>
+                    <button type="button" data-contact="pro">HabitPulse Pro</button>
+                    <button type="button" id="helpButton">Help</button>
+                    <button type="button" id="privacyButton">Privacy & terms</button>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <dialog id="habitDialog" aria-labelledby="habitDialogTitle">
+        <form id="habitForm" class="dialog-inner">
+            <div class="dialog-head"><div><h2 id="habitDialogTitle">A promise worth keeping</h2><p>Make it specific, and make it yours.</p></div><button class="close-dialog" type="button" data-close aria-label="Close">×</button></div>
+            <input type="hidden" id="habitId">
+            <div class="field"><label for="habitName">Habit</label><input id="habitName" maxlength="70" required placeholder="Read 15 pages"></div>
+            <div class="field-grid">
+                <div class="field"><label for="pillar">Life pillar</label><select id="pillar"><option>Mind</option><option>Body</option><option>Career</option><option>Wealth</option><option>Soul</option></select></div>
+                <div class="field"><label for="identity">I am...</label><input id="identity" maxlength="80" placeholder="a curious reader"></div>
+            </div>
+            <div class="field"><label for="goalLink">Long-term direction (optional)</label><input id="goalLink" maxlength="100" placeholder="Become more knowledgeable"></div>
+            <div class="field-grid">
+                <div class="field"><label for="routineName">Routine (optional)</label><input id="routineName" list="routineChoices" maxlength="40" placeholder="Morning routine"><datalist id="routineChoices"></datalist></div>
+                <div class="field"><label for="stackAfter">Do this after…</label><select id="stackAfter"><option value="">No stack; keep it flexible</option></select></div>
+            </div>
+            <div class="field-grid">
+                <div class="field"><label for="estimatedMinutes">Usual time (minutes)</label><input id="estimatedMinutes" type="number" min="0" max="240" value="0"></div>
+                <label class="email-optin"><input type="checkbox" id="boundaryHabit"><span>This is a boundary I want to keep, not a quantity to build.</span></label>
+            </div>
+            <div class="field-grid">
+                <div class="field"><label for="target">Daily target</label><input id="target" type="number" min="1" max="100000" step="1" value="1" required></div>
+                <div class="field"><label for="unit">Measured in</label><input id="unit" maxlength="18" placeholder="pages, glasses, minutes" value="times"></div>
+            </div>
+            <fieldset class="field"><legend>When does it fit?</legend>
+                <div class="field"><label for="scheduleType">Schedule</label><select id="scheduleType"><option value="daily">Every day</option><option value="weekdays">Choose weekdays</option><option value="interval">Every few days</option></select></div>
+                <div id="weekdayOptions" class="weekday-list" hidden></div>
+                <div class="field" id="intervalOptions" hidden><label for="intervalDays">Repeat every (days)</label><input id="intervalDays" type="number" min="2" max="365" value="2"></div>
+            </fieldset>
+            <div class="dialog-error" id="habitError" role="alert"></div>
+                <div class="dialog-actions"><button class="button light" type="button" id="pauseHabitButton" hidden>Pause</button><button class="button light" type="button" id="archiveHabitButton" hidden>Archive</button><button class="button light" type="button" id="deleteHabitButton" hidden>Delete habit</button><button class="button light" type="button" data-close>Not now</button><button class="button primary" type="submit">Save this promise</button></div>
+        </form>
+    </dialog>
+
+    <dialog id="templateDialog" aria-labelledby="templateTitle">
+        <div class="dialog-inner"><div class="dialog-head"><div><h2 id="templateTitle">A few good starting points</h2><p>Pick an idea, then make every detail your own before saving.</p></div><button class="close-dialog" type="button" data-close aria-label="Close">×</button></div><div class="template-grid" id="templateChoices"></div></div>
+    </dialog>
+
+    <dialog id="healthReviewDialog" aria-labelledby="healthReviewTitle">
+        <div class="dialog-inner"><div class="dialog-head"><div><h2 id="healthReviewTitle">Does this still fit?</h2><p id="healthReviewCopy">A pattern is a clue, not a verdict.</p></div><button class="close-dialog" type="button" data-close aria-label="Close">×</button></div>
+            <div class="score-note" id="healthReviewStats"></div>
+            <div class="dialog-actions"><button class="button light" id="healthKeep" type="button">Keep as is</button><button class="button light" id="healthEdit" type="button">Change schedule</button><button class="button light" id="healthPause" type="button">Pause for now</button><button class="button light" id="healthArchive" type="button">Archive quietly</button><button class="button coral" id="healthReduce" type="button">Try a smaller target</button></div>
+        </div>
+    </dialog>
+
+    <dialog id="recoveryDialog" aria-labelledby="recoveryTitle">
+        <div class="dialog-inner"><div class="dialog-head"><div><h2 id="recoveryTitle">Welcome back to your own pace.</h2><p>A missed day doesn’t need a make-up day. Just choose what feels kind now.</p></div><button class="close-dialog" type="button" data-close aria-label="Close">×</button></div>
+            <div class="score-note" id="recoveryDetail">Your history stays put. Nothing is reset or taken away.</div>
+            <div class="dialog-actions"><button class="button light" type="button" data-close>Resume my day</button><button class="button light" id="recoveryReview" type="button">Review a habit</button><button class="button coral" id="recoveryBoost" type="button">Choose one tiny action</button></div>
+        </div>
+    </dialog>
+
+    <dialog id="weeklyDialog" aria-labelledby="weeklyTitle">
+        <form id="weeklyForm" class="dialog-inner"><div class="dialog-head"><div><h2 id="weeklyTitle">Your week, honestly.</h2><p id="weeklyRange">A small review, not a report card.</p></div><button class="close-dialog" type="button" data-close aria-label="Close">×</button></div>
+            <div class="review-grid" id="weeklyStats"></div><div class="review-story" id="progressStory"></div>
+            <div class="score-note" id="weeklySuggestion"></div>
+            <div class="field"><label for="weeklyWorked">What worked (optional)</label><textarea id="weeklyWorked" maxlength="500" placeholder="Keep the part that felt like you."></textarea></div>
+            <div class="field"><label for="weeklyChange">What might you adjust (optional)</label><textarea id="weeklyChange" maxlength="500" placeholder="One small change is plenty."></textarea></div>
+            <div class="dialog-actions"><button class="button light" type="button" data-close>Close</button><button class="button primary" type="submit">Save this week’s note</button></div>
+        </form>
+    </dialog>
+
+    <dialog id="focusDialog" aria-labelledby="focusTitle">
+        <div class="dialog-inner"><div class="dialog-head"><div><h2 id="focusTitle">Just this one thing.</h2><p id="focusHabitName">A quiet session, linked to a habit.</p></div><button class="close-dialog" type="button" data-close aria-label="Close">×</button></div>
+            <div class="challenge-time" id="focusClock">25:00</div><p class="section-sub" id="focusElapsed">Nothing is logged until you choose to finish.</p>
+            <div class="dialog-actions"><button class="button light" id="focusCancel" type="button">Cancel session</button><button class="button light" id="focusReset" type="button">Reset</button><button class="button primary" id="focusToggle" type="button">Start</button><button class="button coral" id="focusFinish" type="button">Finish and save</button></div>
+        </div>
+    </dialog>
+
+    <dialog id="consistencyDialog" aria-labelledby="consistencyTitle">
+        <div class="dialog-inner"><div class="dialog-head"><div><h2 id="consistencyTitle">A score with its workings shown.</h2><p>Recent check-ins, no secret sauce.</p></div><button class="close-dialog" type="button" data-close aria-label="Close">×</button></div>
+            <p class="score-note" id="consistencyDetails"></p><p class="section-sub">Only scheduled days from the last 30 days count, starting on each habit’s creation date. Paused days are left out. The score is a plain percentage, not a grade, and it never affects your habits.</p>
+            <div class="dialog-actions"><button class="button primary" type="button" data-close>Got it</button></div>
+        </div>
+    </dialog>
+
+    <dialog id="journalDialog" aria-labelledby="journalTitle">
+        <form id="journalForm" class="dialog-inner">
+            <div class="dialog-head"><div><h2 id="journalTitle">A little reflection</h2><p id="journalPrompt">What helped today?</p></div><button class="close-dialog" type="button" data-close aria-label="Close">×</button></div>
+            <input type="hidden" id="journalHabitId">
+            <div class="field"><label for="journalMood">How did today feel? (optional)</label><select id="journalMood"><option value="">Skip the mood check</option><option value="steady">Steady</option><option value="good">Good</option><option value="tired">Tired</option><option value="stretched">Stretched</option><option value="hopeful">Hopeful</option></select></div>
+            <div class="field"><label for="journalNote">A note to future-you (optional)</label><textarea id="journalNote" maxlength="500" placeholder="One line is plenty."></textarea></div>
+            <div class="dialog-actions"><button class="button light" type="button" id="skipJournal">Skip note</button><button class="button primary" type="submit">Save reflection</button></div>
+        </form>
+    </dialog>
+
+    <dialog id="boostDialog" aria-labelledby="boostTitle">
+        <div class="dialog-inner">
+            <div class="dialog-head"><div><h2 id="boostTitle">A tiny beginning</h2><p id="boostHabitLabel">Pick one gentle next step.</p></div><button class="close-dialog" type="button" data-close aria-label="Close">×</button></div>
+            <p class="challenge-action" id="challengeText"></p>
+            <div class="challenge-time" id="challengeTimer">10</div>
+            <div class="dialog-actions"><button class="button light" type="button" data-close>Maybe later</button><button class="button primary" id="startChallenge" type="button">Start 10 seconds</button><button class="button coral" id="completeChallenge" type="button" hidden>I did the tiny thing</button></div>
+        </div>
+    </dialog>
+
+    <dialog id="accountDialog" aria-labelledby="accountTitle">
+        <div class="dialog-inner">
+            <div class="dialog-head"><div><h2 id="accountTitle">Your account, your call</h2><p>Cloud sync is optional. Your local habits keep working either way.</p></div><button class="close-dialog" type="button" data-close aria-label="Close">×</button></div>
+            <section class="preferences-panel" aria-labelledby="preferencesTitle"><h3 id="preferencesTitle">A little more like you</h3><p class="section-sub">These choices stay on this device.</p>
+                <div class="field-grid"><div class="field"><label for="motivationTone">How should we sound?</label><select id="motivationTone"><option value="minimal">Minimal</option><option value="calm">Calm</option><option value="encouraging">Encouraging</option><option value="energetic">Energetic</option></select></div>
+                    <div class="field"><label for="weekStartsOn">My week starts on</label><select id="weekStartsOn"><option value="1">Monday</option><option value="0">Sunday</option><option value="6">Saturday</option></select></div></div>
+                <div class="field-grid"><div class="field"><label for="spaceTheme">Space atmosphere</label><select id="spaceTheme"><option value="deep">Deep Space</option><option value="aurora">Aurora</option><option value="midnight">Midnight</option><option value="solar">Solar</option><option value="nebula">Nebula</option><option value="minimal">Minimal Cosmos</option></select></div>
+                    <div class="field"><label for="spaceDensity">Star density</label><select id="spaceDensity"><option value="low">Low</option><option value="balanced">Balanced</option><option value="high">High</option></select></div></div>
+                <div class="field-grid"><div class="field"><label for="motionIntensity">Motion intensity</label><select id="motionIntensity"><option value="subtle">Subtle</option><option value="gentle">Gentle</option><option value="lively">Lively</option></select></div>
+                    <label class="email-optin"><input type="checkbox" id="reduceMotionPreference"><span>Reduce motion, including space movement</span></label></div>
+                <button class="button light small" id="savePreferences" type="button">Save these preferences</button>
+            </section>
+            <p id="accountStatus" class="section-sub">Cloud accounts are not connected in this copy yet. We won’t pretend a local password is a real account.</p>
+            <p id="accountPlanStatus" class="score-note">Local plan · 5 new habits per 72-hour window.</p>
+            <div class="account-actions"><button class="button primary small" id="accountAuthButton" type="button">Sign in or create account</button><button class="button light small" id="signOutButton" type="button" hidden>Sign out</button><button class="button coral small" type="button" data-contact="pro">Ask about Pro</button></div>
+        </div>
+    </dialog>
+
+    <dialog id="authDialog" aria-labelledby="authTitle">
+        <form id="authForm" class="dialog-inner">
+            <div class="dialog-head"><div><h2 id="authTitle">Make your own space.</h2><p id="authIntro">One account, private habits. We’ll verify your email before sign-in.</p></div><button class="close-dialog" type="button" data-close aria-label="Close">×</button></div>
+            <div class="auth-tabs" role="tablist" aria-label="Account action"><button class="auth-tab" id="signupTab" type="button" role="tab" aria-selected="true">Create account</button><button class="auth-tab" id="signinTab" type="button" role="tab" aria-selected="false">Sign in</button></div>
+            <div class="field" id="usernameField"><label for="authUsername">Username</label><input id="authUsername" autocomplete="username" minlength="3" maxlength="24" placeholder="3–24 letters, numbers or _"><span id="usernameStatus" class="section-sub" aria-live="polite">We’ll check if it’s free.</span></div>
+            <div class="field"><label for="authEmail">Email</label><input type="email" id="authEmail" autocomplete="email" required placeholder="you@example.com"></div>
+            <div class="field"><label for="authPassword">Password</label><input type="password" id="authPassword" autocomplete="new-password" minlength="12" placeholder="At least 12 characters"></div>
+            <div class="field" id="confirmPasswordField"><label for="confirmPassword">Confirm password</label><input type="password" id="confirmPassword" autocomplete="new-password" minlength="12" placeholder="Type it once more"></div>
+            <label class="email-optin" id="emailCheckinsLabel"><input type="checkbox" id="emailCheckins"><span>Send me an occasional daily nudge by email. Entirely optional.</span></label>
+            <button class="quiet-btn" id="forgotPassword" type="button" hidden>Send me a password reset link</button>
+            <p class="dialog-error" id="authError" role="alert"></p>
+            <div class="dialog-actions"><button class="button light" type="button" id="authLocalButton">Use this device without an account</button><button class="button primary" id="authSubmit" type="submit">Create account</button></div>
+        </form>
+    </dialog>
+
+    <dialog id="quotaDialog" class="quota-dialog" aria-labelledby="quotaTitle">
+        <div class="dialog-inner"><div class="dialog-head"><div><h2 id="quotaTitle">That’s five new promises for now.</h2><p>Your Free allowance comes back automatically.</p></div><button class="close-dialog" type="button" data-close aria-label="Close">×</button></div>
+            <div class="quota-number" id="quotaCountdown">72:00:00</div>
+            <p class="section-sub" id="quotaMessage">Your existing habits keep working. You can wait for the refresh or ask about Pro.</p>
+            <div class="dialog-actions"><button class="button light" type="button" data-close>I’ll wait</button><button class="button coral" id="quotaProButton" type="button">Ask about Pro</button></div>
+        </div>
+    </dialog>
+
+    <dialog id="contactDialog" aria-labelledby="contactTitle">
+        <div class="dialog-inner">
+            <div class="dialog-head"><div><h2 id="contactTitle">A real person will read this.</h2><p id="contactCopy">Choose the route that suits you; WhatsApp will open with a draft.</p></div><button class="close-dialog" type="button" data-close aria-label="Close">×</button></div>
+            <div class="field"><label for="customMessage">Or write your own note</label><textarea id="customMessage" placeholder="Tell us what’s on your mind."></textarea></div>
+            <div class="dialog-actions"><a class="button light" id="emailContact" href="mailto:Amezougkhalil31@gmail.com">Email support</a><button class="button primary" id="whatsappSupport" type="button">General support</button><button class="button coral" id="whatsappPro" type="button">Ask about Pro</button><button class="button light" id="whatsappCustom" type="button">Send my note</button></div>
+        </div>
+    </dialog>
+
+    <dialog id="privacyDialog" aria-labelledby="privacyTitle">
+        <div class="dialog-inner"><div class="dialog-head"><div><h2 id="privacyTitle">Privacy, plainly.</h2><p>HabitPulse keeps your routine yours.</p></div><button class="close-dialog" type="button" data-close aria-label="Close">×</button></div>
+            <p class="section-sub">By default, habits, check-ins and journal notes are stored only in this browser. We do not send them anywhere. Cloud sign-in, analytics, email and paid upgrades are unavailable until a secure backend is configured and you opt in. WhatsApp and email links open your chosen mail or messaging app only when you press them.</p>
+            <p class="section-sub">Your local data is not protected by a server account and can be cleared with browser storage. Do not store highly sensitive health or financial information here.</p>
+            <div class="score-note" id="trustSummary">Stored on this device: habits, check-ins, schedules and reflection notes. Connected services: none.</div>
+            <div class="dialog-actions trust-actions"><button class="button light" id="exportJsonButton" type="button">Export JSON</button><button class="button light" id="exportCsvButton" type="button">Export CSV</button><button class="button light" id="importDataButton" type="button">Import JSON</button><button class="button coral" id="deleteLocalDataButton" type="button">Delete local data</button><input class="sr-only" id="importFile" type="file" accept="application/json,.json"></div>
+            <div class="dialog-actions"><a class="button light" href="./habitpulse-privacy.html">Read full privacy & terms</a><button class="button primary" type="button" data-close>Got it</button></div>
+        </div>
+    </dialog>
+
+    <dialog id="helpDialog" aria-labelledby="helpTitle">
+        <div class="dialog-inner"><div class="dialog-head"><div><h2 id="helpTitle">A few useful answers.</h2><p>No manual required; just the bits people ask.</p></div><button class="close-dialog" type="button" data-close aria-label="Close">×</button></div>
+            <details class="help-item"><summary>How do streaks work?</summary><p>A day counts only when the full target is met on a scheduled day. Unscheduled days and explicit pause periods are skipped; a missed planned day breaks the current run, but never erases your history.</p></details>
+            <details class="help-item"><summary>How does scheduling work?</summary><p>Daily, selected weekdays and repeating intervals are supported. A new habit starts counting on its creation date. Change or pause the schedule whenever it stops fitting.</p></details>
+            <details class="help-item"><summary>Where is my data?</summary><p>Habits, check-ins, goals and notes stay in this browser by default. Export a JSON backup before moving browsers or devices. Cloud sync is not connected in this copy.</p></details>
+            <details class="help-item"><summary>How do I export or delete data?</summary><p>Open Privacy & terms from the footer. JSON keeps the full record; CSV is handy for a spreadsheet. Delete local data removes the browser copy after confirmation.</p></details>
+            <details class="help-item"><summary>Are reminders or integrations active?</summary><p>No. This copy does not send notifications or connect calendars, health services, wearables or social accounts. It will not claim a connection that is not there.</p></details>
+            <details class="help-item"><summary>What does Pro unlock?</summary><p>Nothing is being sold or paywalled here yet. Contact support if you want to ask about a future plan; no subscription starts from this page.</p></details>
+        </div>
+    </dialog>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+    <script src="./habitpulse-config.js"></script>
+    <script>
+        'use strict';
+        const STORAGE_KEY = 'habitpulse_v1';
+        const FREE_HABIT_LIMIT = 5;
+        const FREE_WINDOW_MS = 72 * 60 * 60 * 1000;
+        const PILLARS = ['Mind', 'Body', 'Career', 'Wealth', 'Soul'];
+        const PILLAR_COLORS = { Mind: '#6d8791', Body: '#d87963', Career: '#527d70', Wealth: '#ba9652', Soul: '#806b7c' };
+        const WEEKDAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+        const SUGGESTIONS = {
+            Mind: ['Read one page slowly.', 'Take three calm breaths before opening your next tab.', 'Write down one thing you learned today.'],
+            Body: ['Stand up and stretch your shoulders for ten seconds.', 'Take a sip of water, then another.', 'Walk to the nearest window and back.'],
+            Career: ['Open the document and write one sentence.', 'Send the one-line reply you have been avoiding.', 'Tidy one small corner of your workspace.'],
+            Wealth: ['Check one recent transaction without judging it.', 'Put one coin or a tiny amount into savings.', 'Write down one thing you do not need to buy today.'],
+            Soul: ['Step outside and notice the air for ten seconds.', 'Send someone a warm, no-strings-attached message.', 'Name one small thing you are grateful for.']
+        };
+        const HABIT_TEMPLATES = [
+            { name: 'Wind-down cue', pillar: 'Body', identity: 'someone who protects my rest', target: 10, unit: 'minutes', goal: 'Sleep with a steadier rhythm', routine: 'Evening routine' },
+            { name: 'Morning light', pillar: 'Body', identity: 'someone who meets the day gently', target: 10, unit: 'minutes', goal: 'Feel more awake in the morning', routine: 'Morning routine' },
+            { name: 'Focused study', pillar: 'Career', identity: 'a patient learner', target: 25, unit: 'minutes', goal: 'Make steady progress in my studies', routine: 'Study routine' },
+            { name: 'Easy movement', pillar: 'Body', identity: 'someone who moves with care', target: 15, unit: 'minutes', goal: 'Build a kinder relationship with movement', routine: 'Movement routine' },
+            { name: 'Water with lunch', pillar: 'Body', identity: 'someone who notices what I need', target: 2, unit: 'glasses', goal: 'Feel better cared for through the day', routine: 'Lunch routine' },
+            { name: 'Read a little', pillar: 'Mind', identity: 'a curious reader', target: 10, unit: 'pages', goal: 'Keep learning for the long run', routine: 'Evening routine' },
+            { name: 'Phone-free pause', pillar: 'Soul', identity: 'someone who chooses where my attention goes', target: 1, unit: 'pause', goal: 'Make more room for the present', boundary: true },
+            { name: 'Three quiet breaths', pillar: 'Mind', identity: 'someone who can pause before reacting', target: 3, unit: 'breaths', goal: 'Find a little more steadiness', routine: 'Morning routine' }
+        ];
+        let accountStorageKey = STORAGE_KEY;
+        let state = loadState(accountStorageKey);
+        let authUser = null;
+        let accountPlan = 'free';
+        let authSession = null;
+        let serverQuota = null;
+        let quotaCountdownTimer = null;
+        document.body.dataset.gate = localStorage.getItem('habitpulse_guest_active') === 'true' ? 'app' : 'welcome';
+        document.body.dataset.gate = localStorage.getItem('habitpulse_guest_active') === 'true' ? 'app' : 'welcome';
+        const today = dateKey(new Date());
+        if (!state.startedAt) { state.startedAt = today; saveState(); }
+        let selectedYear = new Date().getFullYear();
+        let selectedHeatHabit = 'all';
+        let contactKind = 'support';
+        let challengeHabitId = null;
+        let challengeTimerId = null;
+        let focusHabitId = null;
+        let focusTimerId = null;
+        let focusElapsedSeconds = 0;
+        let focusDurationSeconds = 0;
+        const reducedMotionMedia = window.matchMedia('(prefers-reduced-motion: reduce)');
+        let motionPaused = state.preferences.reduceMotion || reducedMotionMedia.matches;
+        let stars = [];
+        let frameId = 0;
+        let lastPointer = { x: 0, y: 0 };
+        let scrollDepth = 0;
+
+        function loadState(storageKey = STORAGE_KEY) {
+            try {
+            const stored = JSON.parse(localStorage.getItem(storageKey) || '{}');
+                    const preferences = stored.preferences || {};
+                    const tone = ['minimal', 'calm', 'encouraging', 'energetic'].includes(preferences.tone) ? preferences.tone : 'calm';
+                    const weekStartsOn = [0, 1, 6].includes(Number(preferences.weekStartsOn)) ? Number(preferences.weekStartsOn) : 1;
+                    const spaceTheme = ['deep', 'aurora', 'midnight', 'solar', 'nebula', 'minimal'].includes(preferences.spaceTheme) ? preferences.spaceTheme : 'deep';
+                    const spaceDensity = ['low', 'balanced', 'high'].includes(preferences.spaceDensity) ? preferences.spaceDensity : 'balanced';
+                    const motionIntensity = ['subtle', 'gentle', 'lively'].includes(preferences.motionIntensity) ? preferences.motionIntensity : 'subtle';
+                        return { habits: Array.isArray(stored.habits) ? stored.habits : [], logs: Array.isArray(stored.logs) ? stored.logs : [], reviews: Array.isArray(stored.reviews) ? stored.reviews : [], startedAt: typeof stored.startedAt === 'string' ? stored.startedAt : '', preferences: { tone, weekStartsOn, spaceTheme, spaceDensity, motionIntensity, reduceMotion: Boolean(preferences.reduceMotion) }, quotaWindow: stored.quotaWindow && typeof stored.quotaWindow === 'object' ? stored.quotaWindow : null };
+            } catch (error) {
+                        return { habits: [], logs: [], reviews: [], startedAt: '', preferences: { tone: 'calm', weekStartsOn: 1, spaceTheme: 'deep', spaceDensity: 'balanced', motionIntensity: 'subtle', reduceMotion: false }, quotaWindow: null };
+            }
+        }
+                function saveState() { localStorage.setItem(accountStorageKey, JSON.stringify(state)); }
+        function dateKey(date) { return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`; }
+        function fromKey(key) { const [year, month, day] = key.split('-').map(Number); return new Date(year, month - 1, day, 12); }
+        function addDays(date, amount) { const next = new Date(date); next.setDate(next.getDate() + amount); return next; }
+        function weekStartDate(date) { return addDays(date, -((date.getDay() - Number(state.preferences.weekStartsOn || 0) + 7) % 7)); }
+        function localDayDifference(first, second) { return Math.round((fromKey(second) - fromKey(first)) / 86400000); }
+        function dayAmount(habitId, day) { return state.logs.filter(log => log.habitId === habitId && log.date === day).reduce((sum, log) => sum + Number(log.amount || 0), 0); }
+        function scheduled(habit, date) {
+            const rule = habit.schedule || { type: 'daily' };
+            if (rule.type === 'weekdays') return (rule.weekdays || []).includes(date.getDay());
+            if (rule.type === 'interval') return localDayDifference(rule.anchor || habit.createdAt || today, dateKey(date)) >= 0 && localDayDifference(rule.anchor || habit.createdAt || today, dateKey(date)) % Math.max(2, Number(rule.interval) || 2) === 0;
+            return true;
+        }
+        function dueOn(habit, date) {
+            const key = dateKey(date);
+            if (key < (habit.createdAt || '0000-00-00') || (habit.archivedAt && key >= habit.archivedAt)) return false;
+            const inactive = [...(habit.pauseRanges || []), ...(habit.archiveRanges || [])];
+            if (!inactive.length && habit.pausedAt) inactive.push({ start: habit.pausedAt, end: null });
+            if (inactive.some(range => key >= range.start && (!range.end || key <= range.end))) return false;
+            return scheduled(habit, date);
+        }
+        function closeCurrentRange(ranges) {
+            const current = ranges && [...ranges].reverse().find(range => !range.end);
+            if (current) current.end = dateKey(addDays(new Date(), -1));
+        }
+        function activeHabits() { return state.habits.filter(habit => !habit.archived && !habit.paused); }
+        function dueCount(habit, days = 30) {
+            let count = 0;
+            for (let offset = days - 1; offset >= 0; offset--) if (dueOn(habit, addDays(new Date(), -offset))) count++;
+            return count;
+        }
+        function consistencyScore(habits = activeHabits(), days = 30) {
+            let due = 0, completed = 0;
+            for (let offset = days - 1; offset >= 0; offset--) {
+                const date = addDays(new Date(), -offset);
+                for (const habit of habits) if (dueOn(habit, date)) { due++; if (completedOn(habit, dateKey(date))) completed++; }
+            }
+            return { score: due ? Math.round(completed / due * 100) : 0, completed, due };
+        }
+        function habitDays(habit, year) {
+            const start = new Date(year, 0, 1, 12);
+            const end = new Date(year, 11, 31, 12);
+            const dates = [];
+            for (let day = start; day <= end; day = addDays(day, 1)) dates.push(day);
+            return dates;
+        }
+        function completedOn(habit, key) { return dayAmount(habit.id, key) >= Number(habit.target || 1); }
+        function streakData(habit) {
+            const days = [...new Set(state.logs.filter(log => log.habitId === habit.id && Number(log.amount) > 0).map(log => log.date))].filter(key => completedOn(habit, key)).sort();
+            if (!days.length) return { current: 0, best: 0 };
+            const dates = new Set(days);
+            let best = 0, run = 0;
+            for (let cursor = fromKey(days[0]); cursor <= new Date(); cursor = addDays(cursor, 1)) {
+                if (!dueOn(habit, cursor)) continue;
+                if (dates.has(dateKey(cursor))) run++;
+                else run = 0;
+                best = Math.max(best, run);
+            }
+            let current = 0;
+            let cursor = new Date();
+            if (dueOn(habit, cursor) && !dates.has(dateKey(cursor))) cursor = addDays(cursor, -1);
+            for (let guard = 0; guard < 370; guard++, cursor = addDays(cursor, -1)) {
+                if (!dueOn(habit, cursor)) continue;
+                if (!dates.has(dateKey(cursor))) break;
+                current++;
+            }
+            return { current, best };
+        }
+        function completionRate(habit) {
+            const start = addDays(new Date(), -29);
+            let due = 0, met = 0;
+            for (let date = start; date <= new Date(); date = addDays(date, 1)) {
+                if (!dueOn(habit, date)) continue;
+                due++;
+                if (completedOn(habit, dateKey(date))) met++;
+            }
+            return due ? Math.round(met / due * 100) : 0;
+        }
+        function escapeText(value) { return String(value).replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[char]); }
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            window.setTimeout(() => toast.classList.remove('show'), 2600);
+        }
+        function localQuota() {
+            const now = Date.now();
+            if (!state.quotaWindow || !Number.isFinite(state.quotaWindow.startedAt) || now - state.quotaWindow.startedAt >= FREE_WINDOW_MS) {
+                state.quotaWindow = { startedAt: now, used: Math.min(FREE_HABIT_LIMIT, activeHabits().length) };
+                saveState();
+            }
+            return { used: Math.min(FREE_HABIT_LIMIT, Number(state.quotaWindow.used) || 0), resetAt: state.quotaWindow.startedAt + FREE_WINDOW_MS };
+        }
+        function formatRemaining(milliseconds) {
+            const seconds = Math.max(0, Math.ceil(milliseconds / 1000));
+            return `${String(Math.floor(seconds / 3600)).padStart(2, '0')}:${String(Math.floor(seconds % 3600 / 60)).padStart(2, '0')}:${String(seconds % 60).padStart(2, '0')}`;
+        }
+        function renderQuotaStatus() {
+            const element = document.getElementById('accountPlanStatus');
+            if (!element) return;
+            if (accountPlan === 'pro') { element.textContent = 'Pro plan · unlimited habit creation.'; return; }
+            const quota = serverQuota || localQuota();
+            const activeCount = activeHabits().length;
+            element.textContent = `Free plan · ${activeCount}/5 active · ${quota.used}/5 new habits used this 72-hour window.`;
+        }
+        function openQuotaDialog(reason = 'credits') {
+            const quota = serverQuota || localQuota();
+            const resetAt = quota.resetAt ? new Date(quota.resetAt).getTime() : quota.reset_at ? Date.parse(quota.reset_at) : quota.resetAt;
+            const activeFull = activeHabits().length >= FREE_HABIT_LIMIT;
+            document.getElementById('quotaTitle').textContent = activeFull ? 'Your five active habits are here.' : 'That’s five new promises for now.';
+            document.getElementById('quotaMessage').textContent = activeFull ? 'Pause or archive a habit to make room. Your history stays safe.' : 'Your existing habits keep working. You can wait for the refresh or ask about Pro.';
+            const countdown = document.getElementById('quotaCountdown');
+            if (quotaCountdownTimer) window.clearInterval(quotaCountdownTimer);
+            const update = () => { countdown.textContent = resetAt && Number.isFinite(resetAt) ? formatRemaining(resetAt - Date.now()) : '72:00:00'; };
+            update(); quotaCountdownTimer = window.setInterval(update, 1000);
+            openDialog(document.getElementById('quotaDialog'));
+            showToast(reason === 'active' ? 'Free keeps up to five active habits at a time.' : 'Your Free creation allowance is taking a short breather.');
+        }
+        async function reserveFreeHabitCredit(habitId) {
+            if (accountPlan === 'pro') return true;
+            if (activeHabits().length >= FREE_HABIT_LIMIT) { openQuotaDialog('active'); return false; }
+            if (authUser && supabaseClient) {
+                if (!navigator.onLine) { showToast('Connect briefly to check your Free allowance. Your habit was not added.'); return false; }
+                const { data, error } = await supabaseClient.rpc('consume_free_habit_credit', { requested_habit_id: habitId });
+                if (error) { showToast('We couldn’t check your Free allowance just now. Nothing was added.'); return false; }
+                serverQuota = data;
+                if (!data.allowed) { openQuotaDialog('credits'); return false; }
+                renderQuotaStatus(); return true;
+            }
+            const quota = localQuota();
+            if (quota.used >= FREE_HABIT_LIMIT) { openQuotaDialog('credits'); return false; }
+            state.quotaWindow.used = quota.used + 1;
+            saveState(); renderQuotaStatus(); return true;
+        }
+        function openDialog(dialog) { if (!dialog.open) dialog.showModal(); }
+        function closeDialog(dialog) { if (dialog.open) dialog.close(); }
+        function renderDate() {
+            const date = new Date();
+            document.getElementById('todayDate').textContent = new Intl.DateTimeFormat(undefined, { weekday: 'long', month: 'long', day: 'numeric' }).format(date);
+            const hour = date.getHours();
+            const eyebrow = document.getElementById('welcomeEyebrow');
+            const copy = document.getElementById('welcomeCopy');
+            if (hour < 11) { eyebrow.textContent = 'A fresh page'; copy.textContent = 'Pick the promises that make this morning feel like yours.'; }
+            else if (hour < 18) { eyebrow.textContent = 'One thing at a time'; copy.textContent = 'The day is still yours. Choose the next useful thing, not every thing.'; }
+            else { eyebrow.textContent = 'A softer landing'; copy.textContent = 'Notice what you did manage. Tomorrow can hold the rest.'; }
+            const dayNumber = Math.min(7, Math.max(1, localDayDifference(state.startedAt, today) + 1));
+            const firstWeek = [
+                'Day 1 · Start with one promise that feels kind and doable.',
+                'Day 2 · One check-in is enough to begin a rhythm.',
+                'Day 3 · Notice what makes a habit easier to return to.',
+                'Day 4 · A one-line reflection can tell you what is working.',
+                'Day 5 · Momentum comes from returning, not from rushing.',
+                'Day 6 · If the week feels full, make the next step smaller.',
+                'Day 7 · Take a look back, then choose one thing for next week.'
+            ];
+            if (localDayDifference(state.startedAt, today) < 7) {
+                eyebrow.textContent = `A fresh page · Day ${dayNumber}`;
+                copy.textContent = firstWeek[dayNumber - 1];
+            }
+        }
+        function renderHabits() {
+            const list = document.getElementById('habitList');
+            list.replaceChildren();
+            const visibleHabits = activeHabits();
+            document.getElementById('emptyState').hidden = visibleHabits.length !== 0;
+            for (const habit of visibleHabits) {
+                const amount = dayAmount(habit.id, today);
+                const target = Math.max(1, Number(habit.target) || 1);
+                const percent = Math.min(100, Math.round(amount / target * 100));
+                const card = document.createElement('article');
+                card.className = 'habit-card';
+                card.dataset.habitId = habit.id;
+                card.style.setProperty('--pillar', PILLAR_COLORS[habit.pillar] || PILLAR_COLORS.Mind);
+                const stripe = document.createElement('span'); stripe.className = 'habit-stripe'; stripe.setAttribute('aria-hidden', 'true');
+                const main = document.createElement('div'); main.className = 'habit-main';
+                const topline = document.createElement('div'); topline.className = 'habit-topline';
+                const title = document.createElement('h3'); title.className = 'habit-name'; title.textContent = habit.name;
+                const pillar = document.createElement('span'); pillar.className = 'pillar-tag'; pillar.textContent = habit.pillar;
+                topline.append(title, pillar);
+                const identity = document.createElement('p'); identity.className = 'habit-identity'; identity.textContent = habit.identity ? `I am ${habit.identity}.` : 'A promise to yourself.';
+                if (habit.goal || habit.routine || habit.stackAfter) {
+                    const relation = document.createElement('span'); relation.className = 'habit-relationship';
+                    const previous = state.habits.find(item => item.id === habit.stackAfter);
+                    relation.textContent = [habit.goal ? `Toward: ${habit.goal}` : '', habit.routine ? `In ${habit.routine}` : '', previous ? `After ${previous.name}` : ''].filter(Boolean).join(' · ');
+                    identity.append(relation);
+                }
+                const row = document.createElement('div'); row.className = 'habit-progress-row';
+                const track = document.createElement('div'); track.className = 'progress-track'; track.setAttribute('role', 'progressbar'); track.setAttribute('aria-valuemin', '0'); track.setAttribute('aria-valuemax', String(target)); track.setAttribute('aria-valuenow', String(Math.min(amount, target))); track.setAttribute('aria-label', `${habit.name} progress`);
+                const fill = document.createElement('div'); fill.className = 'progress-fill'; fill.style.width = `${percent}%`; track.append(fill);
+                const progress = document.createElement('span'); progress.className = 'progress-text'; progress.textContent = `${Math.min(amount, target)} / ${target} ${habit.unit || 'times'}`;
+                row.append(track, progress); main.append(topline, identity, row);
+                const controls = document.createElement('div'); controls.className = 'habit-controls';
+                const increment = document.createElement('button'); increment.className = 'counter-btn'; increment.type = 'button'; increment.textContent = '+'; increment.setAttribute('aria-label', habit.boundary ? `Log that you kept the ${habit.name} boundary` : `Add one ${habit.unit || 'step'} to ${habit.name}`); increment.addEventListener('click', () => addProgress(habit, 1));
+                if (habit.estimatedMinutes || String(habit.unit).toLowerCase().includes('minute')) {
+                    const focus = document.createElement('button'); focus.className = 'counter-btn'; focus.type = 'button'; focus.textContent = '◷'; focus.setAttribute('aria-label', `Start a focus timer for ${habit.name}`); focus.addEventListener('click', () => openFocus(habit)); controls.append(focus);
+                }
+                const more = document.createElement('button'); more.className = 'more-btn'; more.type = 'button'; more.textContent = '···'; more.setAttribute('aria-label', `Edit ${habit.name}`); more.title = 'Edit habit'; more.addEventListener('click', () => editHabit(habit));
+                controls.append(increment, more); card.append(stripe, main, controls);
+                if (!habit.boundary && dueCount(habit) >= 5 && completionRate(habit) < 35) {
+                    const review = document.createElement('button'); review.className = 'review-habit-btn'; review.type = 'button'; review.textContent = 'Adjust this habit?'; review.addEventListener('click', () => openHealthReview(habit));
+                    main.append(review);
+                }
+                list.append(card);
+            }
+            renderRoutines(visibleHabits);
+            renderParkedHabits();
+            renderSummary();
+            renderHeatHabitOptions();
+            renderHeatmap();
+            renderInsights();
+            renderReflections();
+        }
+        function renderRoutines(habits) {
+            const root = document.getElementById('routineList');
+            root.replaceChildren();
+            const groups = new Map();
+            for (const habit of habits) if (habit.routine) {
+                if (!groups.has(habit.routine)) groups.set(habit.routine, []);
+                groups.get(habit.routine).push(habit);
+            }
+            document.getElementById('routineSection').hidden = groups.size === 0;
+            for (const [name, members] of groups) {
+                const dueToday = members.filter(habit => dueOn(habit, new Date()));
+                const done = dueToday.filter(habit => completedOn(habit, today)).length;
+                const minutes = members.reduce((sum, habit) => sum + Number(habit.estimatedMinutes || 0), 0);
+                const card = document.createElement('article'); card.className = 'routine-card';
+                const details = document.createElement('div');
+                const title = document.createElement('h3'); title.className = 'routine-title'; title.textContent = name;
+                const meta = document.createElement('p'); meta.className = 'routine-meta'; meta.textContent = dueToday.length ? `${done} of ${dueToday.length} scheduled today${minutes ? ` · about ${minutes} min total` : ''}` : `Nothing scheduled today · ${members.length} in this routine`;
+                const track = document.createElement('div'); track.className = 'routine-progress';
+                const fill = document.createElement('span'); fill.style.width = `${dueToday.length ? Math.round(done / dueToday.length * 100) : 0}%`; track.append(fill);
+                details.append(title, meta, track);
+                const next = dueToday.find(habit => dayAmount(habit.id, today) < habit.target);
+                const start = document.createElement('button'); start.className = 'button light small'; start.type = 'button'; start.textContent = next ? 'Go to next habit' : dueToday.length ? 'Routine done' : 'Rest day'; start.disabled = !next;
+                if (next) start.addEventListener('click', () => {
+                    const card = document.querySelector(`.habit-card[data-habit-id="${CSS.escape(next.id)}"]`);
+                    card?.scrollIntoView({ behavior: motionPaused ? 'auto' : 'smooth', block: 'center' });
+                    card?.querySelector('.counter-btn')?.focus({ preventScroll: true });
+                });
+                card.append(details, start); root.append(card);
+            }
+        }
+        function renderParkedHabits() {
+            const parked = state.habits.filter(habit => habit.paused || habit.archived);
+            const details = document.getElementById('parkedHabits');
+            details.hidden = parked.length === 0;
+            details.open = parked.length > 0 && details.open;
+            document.getElementById('parkedSummary').textContent = `${parked.length} paused or archived ${parked.length === 1 ? 'promise' : 'promises'}`;
+            const root = document.getElementById('parkedList'); root.replaceChildren();
+            for (const habit of parked) {
+                const row = document.createElement('div'); row.className = 'parked-card';
+                const label = document.createElement('span'); label.textContent = `${habit.name} · ${habit.archived ? 'archived' : 'paused'}`;
+                const action = document.createElement('button'); action.className = 'quiet-btn'; action.type = 'button'; action.textContent = habit.archived ? 'Restore' : 'Resume';
+                action.addEventListener('click', () => {
+                    if (habit.archived) { habit.archived = false; closeCurrentRange(habit.archiveRanges); }
+                    else { habit.paused = false; closeCurrentRange(habit.pauseRanges); }
+                    saveState(); renderHabits(); showToast('Back on your list, whenever you’re ready.');
+                });
+                row.append(label, action); root.append(row);
+            }
+        }
+        function recentMisses(habits = activeHabits(), days = 3) {
+            const missed = [];
+            for (let offset = days - 1; offset >= 0; offset--) {
+                const date = addDays(new Date(), -offset);
+                for (const habit of habits) if (dueOn(habit, date) && !completedOn(habit, dateKey(date))) missed.push({ habit, date });
+            }
+            return missed;
+        }
+        function updateRecoveryBanner(habits) {
+            const missed = recentMisses(habits);
+            document.getElementById('recoveryBanner').hidden = missed.length < 2;
+            document.getElementById('recoveryDetail').textContent = `${missed.length} planned check-ins were left open over the last few days. They stay in your history; there is nothing to make up.`;
+        }
+        let healthHabitId = null;
+        function openHealthReview(habit) {
+            healthHabitId = habit.id;
+            const rate = completionRate(habit);
+            const due = dueCount(habit);
+            document.getElementById('healthReviewTitle').textContent = `Does “${habit.name}” still fit?`;
+            document.getElementById('healthReviewCopy').textContent = rate < 35 ? 'It may be asking more of you than this season has room for.' : 'A pattern is a clue, not a verdict.';
+            document.getElementById('healthReviewStats').textContent = `${rate}% of ${due} planned check-ins met over the last 30 days. Keep it, make it smaller, change the days, pause, or archive. Your call.`;
+            document.getElementById('healthReduce').disabled = Number(habit.target) <= 1;
+            openDialog(document.getElementById('healthReviewDialog'));
+        }
+        function finishHealthReview(action) {
+            const habit = state.habits.find(item => item.id === healthHabitId);
+            if (!habit) return closeDialog(document.getElementById('healthReviewDialog'));
+            if (action === 'edit') {
+                closeDialog(document.getElementById('healthReviewDialog'));
+                openHabitForm(habit);
+                return;
+            }
+            if (action === 'reduce') habit.target = Math.max(1, Math.floor(Number(habit.target) * .7));
+            if (action === 'pause') {
+                habit.paused = true;
+                habit.pauseRanges = [...(habit.pauseRanges || []), { start: today, end: null }];
+            }
+            if (action === 'archive') {
+                habit.archived = true;
+                habit.archiveRanges = [...(habit.archiveRanges || []), { start: today, end: null }];
+            }
+            saveState(); closeDialog(document.getElementById('healthReviewDialog')); renderHabits();
+            if (action !== 'keep') showToast(action === 'pause' ? 'Paused. Your history stays right here.' : action === 'archive' ? 'Archived. Nothing was erased.' : 'Smaller target saved. You can change it again any time.');
+        }
+        function openWeeklyReview() {
+            const habits = activeHabits();
+            const weekStartKey = dateKey(weekStartDate(new Date()));
+            const weekStartDateValue = fromKey(weekStartKey);
+            const todayDateValue = fromKey(today);
+            const results = habits.map(habit => {
+                let due = 0, met = 0;
+                for (let date = weekStartDateValue; date <= todayDateValue; date = addDays(date, 1)) {
+                    if (dueOn(habit, date)) { due++; if (completedOn(habit, dateKey(date))) met++; }
+                }
+                return { habit, due, met, rate: due ? Math.round(met / due * 100) : 0 };
+            }).filter(item => item.due);
+            const due = results.reduce((sum, item) => sum + item.due, 0);
+            const met = results.reduce((sum, item) => sum + item.met, 0);
+            const strongest = [...results].sort((a, b) => b.rate - a.rate)[0];
+            const hardest = [...results].sort((a, b) => a.rate - b.rate)[0];
+            const weekdayScores = WEEKDAYS.map((name, weekday) => {
+                let planned = 0, kept = 0;
+                for (let date = weekStartDateValue; date <= todayDateValue; date = addDays(date, 1)) {
+                    if (date.getDay() !== weekday) continue;
+                    for (const habit of habits) if (dueOn(habit, date)) { planned++; if (completedOn(habit, dateKey(date))) kept++; }
+                }
+                return { name, planned, rate: planned ? kept / planned : -1 };
+            }).filter(day => day.planned).sort((a, b) => b.rate - a.rate);
+            const score = { score: due ? Math.round(met / due * 100) : 0, completed: met, due };
+            const pillarCounts = new Map();
+            let focusMinutes = 0;
+            for (const log of state.logs) if (log.date >= weekStartKey && log.date <= today) {
+                const habit = state.habits.find(item => item.id === log.habitId);
+                if (habit && Number(log.amount) > 0) pillarCounts.set(habit.pillar, (pillarCounts.get(habit.pillar) || 0) + Number(log.amount));
+                focusMinutes += Number(log.actualMinutes || 0);
+            }
+            const pillarTop = [...pillarCounts.entries()].sort((a, b) => b[1] - a[1])[0];
+            const stats = [
+                [`${score.score}%`, 'of planned check-ins'],
+                [strongest ? strongest.habit.name : '—', 'easiest rhythm'],
+                [hardest ? hardest.habit.name : '—', 'worth a rethink'],
+                [weekdayScores[0]?.name || '—', `best day · weakest ${weekdayScores.at(-1)?.name || '—'}`],
+                [String(habits.reduce((max, habit) => Math.max(max, streakData(habit).current), 0)), 'longest current streak'],
+                [`${score.completed} / ${score.due}`, 'completed / planned'],
+                [pillarTop ? pillarTop[0] : '—', 'most active pillar'],
+                [`${focusMinutes} min`, 'focused time logged']
+            ];
+            const statsRoot = document.getElementById('weeklyStats'); statsRoot.replaceChildren();
+            for (const [value, label] of stats) { const item = document.createElement('div'); item.className = 'review-stat'; const strong = document.createElement('strong'); strong.textContent = value; const small = document.createElement('span'); small.textContent = label; item.append(strong, small); statsRoot.append(item); }
+            const story = document.getElementById('progressStory'); story.replaceChildren();
+            const events = habits.map(habit => ({ habit, first: state.logs.filter(log => log.habitId === habit.id && Number(log.amount) > 0).map(log => log.date).sort()[0] })).filter(item => item.first).sort((a, b) => a.first.localeCompare(b.first)).slice(-3);
+            if (!events.length) { const empty = document.createElement('p'); empty.className = 'section-sub'; empty.textContent = 'Your progress story will grow from check-ins you actually make.'; story.append(empty); }
+            else for (const event of events) { const line = document.createElement('div'); line.className = 'story-event'; line.textContent = `${event.first} · You began “${event.habit.name}”.`; story.append(line); }
+            const suggestion = document.getElementById('weeklySuggestion');
+            if (!results.length) suggestion.textContent = 'One next step: choose a promise that feels easy to return to.';
+            else if (hardest.rate < 50 && hardest.due >= 3) suggestion.textContent = `One next step: consider making “${hardest.habit.name}” smaller or choosing fewer days. The pattern is based on ${hardest.due} planned check-ins, not a judgment.`;
+            else suggestion.textContent = `One next step: keep “${(strongest || hardest).habit.name}” just as it is for another week; it seems to fit the life you have now.`;
+            const weekStart = weekStartKey;
+            const saved = state.reviews.find(review => review.weekStart === weekStart);
+            document.getElementById('weeklyWorked').value = saved?.worked || '';
+            document.getElementById('weeklyChange').value = saved?.change || '';
+            document.getElementById('weeklyRange').textContent = `${weekStart} through ${today} · ${due ? `${met} of ${due} planned check-ins` : 'Not enough scheduled check-ins yet'}`;
+            openDialog(document.getElementById('weeklyDialog'));
+        }
+        function renderSummary() {
+            const active = activeHabits();
+            const done = active.filter(habit => completedOn(habit, today)).length;
+            const current = active.reduce((max, habit) => Math.max(max, streakData(habit).current), 0);
+            let due = 0, met = 0;
+            for (let date = weekStartDate(new Date()); date <= new Date(); date = addDays(date, 1)) {
+                for (const habit of active) if (dueOn(habit, date)) { due++; if (completedOn(habit, dateKey(date))) met++; }
+            }
+            document.getElementById('todayDone').textContent = `${done} / ${active.length}`;
+            document.getElementById('activeStreak').textContent = String(current);
+            document.getElementById('weekRate').textContent = `${due ? Math.round(met / due * 100) : 0}%`;
+            const score = consistencyScore(active);
+            document.getElementById('consistencyStat').textContent = `${score.score}%`;
+            updateRecoveryBanner(active);
+            renderQuotaStatus();
+        }
+        function renderHeatHabitOptions() {
+            const select = document.getElementById('heatHabit');
+            const old = select.value;
+            select.replaceChildren(new Option('All habits', 'all'));
+            for (const habit of state.habits) select.add(new Option(`${habit.name}${habit.archived ? ' · archived' : habit.paused ? ' · paused' : ''}`, habit.id));
+            select.value = [...select.options].some(option => option.value === old) ? old : 'all';
+            selectedHeatHabit = select.value;
+        }
+        function renderHeatmap() {
+            const root = document.getElementById('heatmap');
+            root.replaceChildren();
+            document.getElementById('heatYear').textContent = selectedYear;
+            const habits = selectedHeatHabit === 'all' ? state.habits : state.habits.filter(h => h.id === selectedHeatHabit);
+            const monthMode = document.getElementById('heatPeriod').value === 'month';
+            const month = Number(document.getElementById('heatMonth').value || new Date().getMonth());
+            const dates = monthMode
+                ? Array.from({ length: new Date(selectedYear, month + 1, 0).getDate() }, (_, day) => new Date(selectedYear, month, day + 1, 12))
+                : habitDays(selectedHeatHabit, selectedYear);
+            document.getElementById('heatMonth').hidden = !monthMode;
+            document.getElementById('heatmapTitle').textContent = monthMode ? 'This month in little wins' : 'A year in little wins';
+            for (let blank = 0; blank < dates[0].getDay(); blank++) {
+                const spacer = document.createElement('span'); spacer.className = 'heat-spacer'; spacer.setAttribute('role', 'presentation'); root.append(spacer);
+            }
+            for (const date of dates) {
+                const key = dateKey(date);
+                let score = 0;
+                for (const habit of habits) if (dueOn(habit, date) && completedOn(habit, key)) score++;
+                const scheduledCount = habits.filter(habit => dueOn(habit, date)).length;
+                const level = score === 0 ? 0 : scheduledCount ? Math.min(4, Math.ceil(score / scheduledCount * 4)) : 0;
+                const cell = document.createElement('span');
+                cell.className = 'heat-cell'; cell.dataset.level = String(level); cell.setAttribute('role', 'gridcell');
+                cell.title = `${new Intl.DateTimeFormat(undefined, { month: 'short', day: 'numeric' }).format(date)}: ${score} ${score === 1 ? 'habit' : 'habits'} kept`;
+                cell.setAttribute('aria-label', cell.title);
+                root.append(cell);
+            }
+            const selected = state.habits.find(habit => habit.id === selectedHeatHabit);
+            const basis = selected ? [selected] : state.habits;
+            const rate = basis.length ? Math.round(basis.reduce((sum, habit) => sum + completionRate(habit), 0) / basis.length) : 0;
+            const current = basis.reduce((max, habit) => Math.max(max, streakData(habit).current), 0);
+            const best = basis.reduce((max, habit) => Math.max(max, streakData(habit).best), 0);
+            document.getElementById('rateStat').textContent = `${rate}%`;
+            document.getElementById('currentStat').textContent = String(current);
+            document.getElementById('bestStat').textContent = String(best);
+        }
+        function renderInsights() {
+            const active = activeHabits();
+            const node = document.getElementById('insightText');
+            if (!active.length) { node.textContent = state.preferences.tone === 'minimal' ? 'Your first check-in will start this story.' : 'Your story starts with the first check-in. Keep it tiny; consistency likes a low bar.'; return; }
+            const rates = active.map(habit => ({ habit, rate: completionRate(habit), streak: streakData(habit).current }));
+            const strongest = [...rates].sort((a, b) => b.rate - a.rate)[0];
+            const struggling = [...rates].sort((a, b) => a.rate - b.rate)[0];
+            if (strongest.rate >= 75) node.textContent = state.preferences.tone === 'minimal'
+                ? `“${strongest.habit.name}”: ${strongest.rate}% of planned days lately.`
+                : `You have shown up for “${strongest.habit.name}” on ${strongest.rate}% of its planned days lately. ${state.preferences.tone === 'energetic' ? 'That is real momentum.' : state.preferences.tone === 'encouraging' ? 'You’re building a rhythm that belongs to you.' : 'That quiet reliability is doing its job.'}`;
+            else if (strongest.rate >= 40) node.textContent = `“${strongest.habit.name}” is finding its rhythm. Try attaching it to something you already do, like your first cup of tea.`;
+            else node.textContent = `A gentle reset for “${struggling.habit.name}” might help: make the next version so small it feels almost silly.`;
+            if (strongest.streak >= 3 && strongest.habit.id !== struggling.habit.id) node.textContent += ` Your ${strongest.streak}-day run on “${strongest.habit.name}” is a lovely clue about what fits.`;
+            const timed = state.logs.filter(log => {
+                const habit = state.habits.find(item => item.id === log.habitId);
+                if (!habit || !active.some(item => item.pillar === habit.pillar) || Number(log.amount) <= 0 || !log.createdAt) return false;
+                const daysAgo = localDayDifference(dateKey(new Date(log.createdAt)), today);
+                return daysAgo >= 0 && daysAgo <= 30;
+            });
+            if (timed.length >= 3) {
+                const hours = new Map();
+                for (const log of timed) { const habit = state.habits.find(item => item.id === log.habitId); const hour = new Date(log.createdAt).getHours(); const key = `${habit.pillar}|${hour}`; hours.set(key, (hours.get(key) || 0) + 1); }
+                const [key, count] = [...hours.entries()].sort((a, b) => b[1] - a[1])[0];
+                if (count >= 3) {
+                    const [pillar, hour] = key.split('|');
+                    const clock = new Intl.DateTimeFormat(undefined, { hour: 'numeric' }).format(new Date(2020, 0, 1, Number(hour)));
+                    node.textContent += ` Your ${pillar} check-ins have tended to happen around ${clock} (${count} check-ins). A pattern, not a rule.`;
+                }
+            }
+        }
+        function renderReflections() {
+            const root = document.getElementById('reflectionList');
+            root.replaceChildren();
+            const notes = state.logs.filter(log => log.note || log.mood).slice(-3).reverse();
+            if (!notes.length) { const empty = document.createElement('p'); empty.className = 'section-sub'; empty.textContent = 'No notes yet. That’s perfectly fine.'; root.append(empty); return; }
+            for (const note of notes) {
+                const habit = state.habits.find(item => item.id === note.habitId);
+                const entry = document.createElement('article'); entry.className = 'reflection-entry';
+                const time = document.createElement('time'); time.dateTime = note.createdAt || `${note.date}T12:00:00`; time.textContent = `${note.date}${habit ? ` · ${habit.name}` : ''}`;
+                const text = document.createElement('p'); text.textContent = [note.mood, note.note].filter(Boolean).join(' · ');
+                entry.append(time, text); root.append(entry);
+            }
+        }
+        function addProgress(habit, amount, note = '', actualMinutes = 0) {
+            const before = dayAmount(habit.id, today);
+            state.logs.push({ id: crypto.randomUUID ? crypto.randomUUID() : `${Date.now()}-${Math.random()}`, habitId: habit.id, date: today, amount, actualMinutes, note, createdAt: new Date().toISOString() });
+            saveState(); renderHabits();
+            const after = dayAmount(habit.id, today);
+            if (before < habit.target && after >= habit.target) {
+                const nextHabit = activeHabits().find(item => item.stackAfter === habit.id && !completedOn(item, today));
+                document.getElementById('journalHabitId').value = habit.id;
+                document.getElementById('journalNote').value = '';
+                document.getElementById('journalMood').value = '';
+                document.getElementById('journalPrompt').textContent = `You kept “${habit.name}”. What made that possible today?`;
+                openDialog(document.getElementById('journalDialog'));
+                showToast(nextHabit ? `That counts. You’ve got “${nextHabit.name}” ready next, if you fancy it.` : 'That counts. Nice work showing up.');
+            } else showToast(after >= habit.target ? 'You already met today’s target. Extra credit is optional.' : 'One small step, in the bank.');
+        }
+        function saveNote(habitId, note, mood) {
+            if (note.trim() || mood) state.logs.push({ id: crypto.randomUUID ? crypto.randomUUID() : `${Date.now()}-${Math.random()}`, habitId, date: today, amount: 0, note: note.trim(), mood: mood || '', createdAt: new Date().toISOString() });
+            saveState(); closeDialog(document.getElementById('journalDialog')); renderHeatmap(); renderReflections();
+        }
+        function downloadFile(name, content, type) {
+            const url = URL.createObjectURL(new Blob([content], { type }));
+            const link = document.createElement('a'); link.href = url; link.download = name; link.click();
+            window.setTimeout(() => URL.revokeObjectURL(url), 1000);
+        }
+        function exportJson() {
+            downloadFile(`habitpulse-${today}.json`, JSON.stringify({ schemaVersion: 1, exportedAt: new Date().toISOString(), startedAt: state.startedAt, preferences: state.preferences, habits: state.habits, logs: state.logs, reviews: state.reviews }, null, 2), 'application/json');
+            showToast('Your private backup is ready. Keep it somewhere you trust.');
+        }
+        function exportCsv() {
+            const quote = value => `"${String(value ?? '').replace(/"/g, '""')}"`;
+            const rows = [['date', 'habit', 'pillar', 'identity', 'goal', 'routine', 'amount', 'unit', 'actual_minutes', 'mood', 'reflection']];
+            const loggedHabits = new Set();
+            for (const log of state.logs) {
+                const habit = state.habits.find(item => item.id === log.habitId);
+                if (habit) loggedHabits.add(habit.id);
+                rows.push([log.date, habit?.name, habit?.pillar, habit?.identity, habit?.goal, habit?.routine, log.amount, habit?.unit, log.actualMinutes || 0, log.mood || '', log.note]);
+            }
+            for (const habit of state.habits) if (!loggedHabits.has(habit.id)) rows.push([habit.createdAt, habit.name, habit.pillar, habit.identity, habit.goal, habit.routine, '', habit.unit, '', '', '']);
+            downloadFile(`habitpulse-${today}.csv`, rows.map(row => row.map(quote).join(',')).join('\r\n'), 'text/csv;charset=utf-8');
+        }
+        function validDateKey(value) { return typeof value === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(value) && dateKey(fromKey(value)) === value; }
+        function cleanSchedule(schedule, createdAt) {
+            if (schedule?.type === 'weekdays') {
+                const weekdays = [...new Set((Array.isArray(schedule.weekdays) ? schedule.weekdays : []).map(Number).filter(day => Number.isInteger(day) && day >= 0 && day <= 6))];
+                return weekdays.length ? { type: 'weekdays', weekdays } : { type: 'daily' };
+            }
+            if (schedule?.type === 'interval') return { type: 'interval', interval: Math.max(2, Math.min(365, Math.floor(Number(schedule.interval) || 2))), anchor: validDateKey(schedule.anchor) ? schedule.anchor : createdAt };
+            return { type: 'daily' };
+        }
+        async function importJsonFile(file) {
+            if (!file || file.size > 2 * 1024 * 1024) { showToast('That file is too large. Choose a HabitPulse JSON backup under 2 MB.'); return; }
+            try {
+                const payload = JSON.parse(await file.text());
+                if (!Array.isArray(payload.habits) || !Array.isArray(payload.logs) || !Array.isArray(payload.reviews || [])) throw new Error('format');
+                const seenHabitIds = new Set();
+                const habits = payload.habits.filter(item => {
+                    if (!item || typeof item.id !== 'string' || item.id.length >= 100 || seenHabitIds.has(item.id) || typeof item.name !== 'string' || !item.name.trim() || !PILLARS.includes(item.pillar)) return false;
+                    seenHabitIds.add(item.id); return true;
+                });
+                const ids = new Set(habits.map(habit => habit.id));
+                const seenLogIds = new Set();
+                const logs = payload.logs.filter(item => {
+                    if (!item || !ids.has(item.habitId) || !validDateKey(item.date) || !Number.isFinite(Number(item.amount)) || Number(item.amount) < 0 || Number(item.amount) > 100000 || (item.note && typeof item.note !== 'string')) return false;
+                    if (typeof item.id === 'string' && seenLogIds.has(item.id)) return false;
+                    if (typeof item.id === 'string') seenLogIds.add(item.id);
+                    return true;
+                }).map(item => ({
+                    id: typeof item.id === 'string' ? item.id : `import-${Date.now()}-${Math.random()}`,
+                    habitId: item.habitId, date: item.date, amount: Number(item.amount), actualMinutes: Math.max(0, Math.min(1440, Number(item.actualMinutes) || 0)),
+                    mood: ['steady', 'good', 'tired', 'stretched', 'hopeful'].includes(item.mood) ? item.mood : '', note: String(item.note || '').slice(0, 500),
+                    createdAt: typeof item.createdAt === 'string' && !Number.isNaN(Date.parse(item.createdAt)) ? item.createdAt : `${item.date}T12:00:00`
+                }));
+                if (!window.confirm(`Replace this browser’s data with ${habits.length} habits and ${logs.length} check-ins from the selected file? Export a backup first if you’re unsure.`)) return;
+                state.habits = habits.map(item => ({
+                    id: item.id, name: item.name.trim().slice(0, 70), pillar: item.pillar, identity: String(item.identity || '').slice(0, 80),
+                    goal: String(item.goal || '').slice(0, 100), routine: String(item.routine || '').slice(0, 40), stackAfter: ids.has(item.stackAfter) ? item.stackAfter : '',
+                    target: Math.max(1, Math.min(100000, Math.floor(Number(item.target) || 1))), unit: String(item.unit || 'times').slice(0, 18),
+                    schedule: cleanSchedule(item.schedule, validDateKey(item.createdAt) ? item.createdAt : today),
+                    boundary: Boolean(item.boundary), estimatedMinutes: Math.max(0, Math.min(240, Number(item.estimatedMinutes) || 0)),
+                    createdAt: validDateKey(item.createdAt) ? item.createdAt : today, archived: Boolean(item.archived), paused: Boolean(item.paused),
+                    pauseRanges: Array.isArray(item.pauseRanges) ? item.pauseRanges.filter(range => validDateKey(range.start) && (!range.end || validDateKey(range.end))) : [],
+                    archiveRanges: Array.isArray(item.archiveRanges) ? item.archiveRanges.filter(range => validDateKey(range.start) && (!range.end || validDateKey(range.end))) : []
+                }));
+                state.logs = logs;
+                state.reviews = (payload.reviews || []).filter(review => review && validDateKey(review.weekStart)).map(review => ({ weekStart: review.weekStart, worked: String(review.worked || '').slice(0, 500), change: String(review.change || '').slice(0, 500) }));
+                state.startedAt = validDateKey(payload.startedAt) ? payload.startedAt : today;
+                state.preferences = {
+                    tone: ['minimal', 'calm', 'encouraging', 'energetic'].includes(payload.preferences?.tone) ? payload.preferences.tone : 'calm',
+                    weekStartsOn: [0, 1, 6].includes(Number(payload.preferences?.weekStartsOn)) ? Number(payload.preferences.weekStartsOn) : 1,
+                    spaceTheme: ['deep', 'aurora', 'midnight', 'solar', 'nebula', 'minimal'].includes(payload.preferences?.spaceTheme) ? payload.preferences.spaceTheme : 'deep',
+                    spaceDensity: ['low', 'balanced', 'high'].includes(payload.preferences?.spaceDensity) ? payload.preferences.spaceDensity : 'balanced',
+                    motionIntensity: ['subtle', 'gentle', 'lively'].includes(payload.preferences?.motionIntensity) ? payload.preferences.motionIntensity : 'subtle',
+                    reduceMotion: Boolean(payload.preferences?.reduceMotion)
+                };
+                document.body.dataset.spaceTheme = state.preferences.spaceTheme;
+                setMotion(state.preferences.reduceMotion || reducedMotionMedia.matches, false);
+                saveState(); renderHabits(); closeDialog(document.getElementById('privacyDialog')); showToast('Your backup is back where it belongs.');
+            } catch (error) { showToast('That file doesn’t look like a HabitPulse JSON backup. Nothing was changed.'); }
+        }
+        function deleteLocalData() {
+            if (!window.confirm('Delete all habits, check-ins, and reflection notes from this browser? This cannot be undone.')) return;
+            state.habits = []; state.logs = []; state.reviews = []; state.startedAt = today;
+            state.preferences = { tone: 'calm', weekStartsOn: 1, spaceTheme: 'deep', spaceDensity: 'balanced', motionIntensity: 'subtle', reduceMotion: false };
+            document.body.dataset.spaceTheme = state.preferences.spaceTheme;
+            setMotion(reducedMotionMedia.matches, false);
+            localStorage.removeItem(STORAGE_KEY); renderHabits(); closeDialog(document.getElementById('privacyDialog'));
+            showToast('Your local HabitPulse data has been deleted.');
+        }
+        function focusClockText(seconds) { return `${String(Math.floor(seconds / 60)).padStart(2, '0')}:${String(seconds % 60).padStart(2, '0')}`; }
+        function openFocus(habit) {
+            if (focusTimerId) window.clearInterval(focusTimerId);
+            focusTimerId = null; focusHabitId = habit.id; focusElapsedSeconds = 0;
+            const minutes = Math.max(1, Math.min(180, Number(habit.estimatedMinutes) || (String(habit.unit).toLowerCase().includes('minute') ? Number(habit.target) : 25)));
+            focusDurationSeconds = minutes * 60;
+            document.getElementById('focusHabitName').textContent = `${habit.name} · ${minutes} minute${minutes === 1 ? '' : 's'} planned`;
+            document.getElementById('focusClock').textContent = focusClockText(focusDurationSeconds);
+            document.getElementById('focusElapsed').textContent = 'Nothing is logged until you choose to finish.';
+            document.getElementById('focusToggle').textContent = 'Start';
+            openDialog(document.getElementById('focusDialog'));
+        }
+        function setFocusRunning(running) {
+            if (focusTimerId) window.clearInterval(focusTimerId);
+            focusTimerId = null;
+            document.getElementById('focusToggle').textContent = running ? 'Pause' : 'Resume';
+            if (!running) return;
+            focusTimerId = window.setInterval(() => {
+                focusElapsedSeconds++;
+                document.getElementById('focusClock').textContent = focusClockText(Math.max(0, focusDurationSeconds - focusElapsedSeconds));
+                document.getElementById('focusElapsed').textContent = `${Math.ceil(focusElapsedSeconds / 60)} minute${Math.ceil(focusElapsedSeconds / 60) === 1 ? '' : 's'} so far · only saved if you finish`;
+                if (focusElapsedSeconds >= focusDurationSeconds) {
+                    window.clearInterval(focusTimerId); focusTimerId = null;
+                    document.getElementById('focusToggle').textContent = 'Start again';
+                    showToast('Your focus time is up. Finish and save if you like.');
+                }
+            }, 1000);
+        }
+        function finishFocus() {
+            if (focusElapsedSeconds < 1) { showToast('Give it a moment first, or cancel without saving.'); return; }
+            const habit = state.habits.find(item => item.id === focusHabitId);
+            if (!habit) return closeDialog(document.getElementById('focusDialog'));
+            const minutes = Math.max(1, Math.ceil(focusElapsedSeconds / 60));
+            const isMinuteGoal = String(habit.unit).toLowerCase().includes('minute');
+            const note = `Focus session: ${minutes} minute${minutes === 1 ? '' : 's'}.`;
+            if (isMinuteGoal) addProgress(habit, minutes, note, minutes);
+            else {
+                state.logs.push({ id: crypto.randomUUID ? crypto.randomUUID() : `focus-${Date.now()}`, habitId: habit.id, date: today, amount: 0, actualMinutes: minutes, note, createdAt: new Date().toISOString() });
+                saveState(); renderHabits(); showToast(`${minutes} focused minute${minutes === 1 ? '' : 's'} saved with “${habit.name}”.`);
+            }
+            if (focusTimerId) window.clearInterval(focusTimerId);
+            focusTimerId = null; closeDialog(document.getElementById('focusDialog'));
+        }
+        function openHabitForm(habit = null) {
+            const existing = habit && state.habits.some(item => item.id === habit.id);
+            const form = document.getElementById('habitForm'); form.reset();
+            document.getElementById('habitId').value = existing ? habit.id : '';
+            document.getElementById('deleteHabitButton').hidden = !existing;
+            document.getElementById('pauseHabitButton').hidden = !existing || Boolean(habit.paused);
+            document.getElementById('archiveHabitButton').hidden = !existing;
+            document.getElementById('habitName').value = habit ? habit.name : '';
+            document.getElementById('pillar').value = habit ? habit.pillar : 'Mind';
+            document.getElementById('identity').value = habit ? habit.identity : '';
+            document.getElementById('goalLink').value = habit ? habit.goal || '' : '';
+            document.getElementById('routineName').value = habit ? habit.routine || '' : '';
+            document.getElementById('estimatedMinutes').value = habit ? habit.estimatedMinutes || 0 : 0;
+            document.getElementById('boundaryHabit').checked = Boolean(habit && habit.boundary);
+            document.getElementById('target').value = habit ? habit.target : 1;
+            document.getElementById('unit').value = habit ? habit.unit : 'times';
+            const routines = [...new Set(state.habits.map(item => item.routine).filter(Boolean))];
+            const datalist = document.getElementById('routineChoices'); datalist.replaceChildren(...routines.map(name => new Option(name, name)));
+            const stackSelect = document.getElementById('stackAfter'); stackSelect.replaceChildren(new Option('No stack; keep it flexible', ''));
+            for (const item of state.habits.filter(item => !item.archived && !item.paused && item.id !== (existing ? habit.id : ''))) stackSelect.add(new Option(item.name, item.id));
+            stackSelect.value = habit ? habit.stackAfter || '' : '';
+            const rule = habit && habit.schedule || { type: 'daily' };
+            document.getElementById('scheduleType').value = rule.type;
+            document.getElementById('intervalDays').value = rule.interval || 2;
+            const weekdays = document.querySelectorAll('#weekdayOptions input');
+            weekdays.forEach(input => input.checked = habit ? (rule.weekdays || []).includes(Number(input.value)) : true);
+            document.getElementById('habitDialogTitle').textContent = existing ? 'Tend an existing promise' : habit ? 'Make this idea yours' : 'A promise worth keeping';
+            document.getElementById('habitError').textContent = '';
+            updateScheduleFields(); openDialog(document.getElementById('habitDialog'));
+            window.setTimeout(() => document.getElementById('habitName').focus(), 40);
+        }
+        function editHabit(habit) { openHabitForm(habit); }
+        function updateScheduleFields() {
+            const type = document.getElementById('scheduleType').value;
+            document.getElementById('weekdayOptions').hidden = type !== 'weekdays';
+            document.getElementById('intervalOptions').hidden = type !== 'interval';
+        }
+        async function saveHabit(event) {
+            event.preventDefault();
+            const id = document.getElementById('habitId').value;
+            const name = document.getElementById('habitName').value.trim();
+            const pillar = document.getElementById('pillar').value;
+            const target = Number(document.getElementById('target').value);
+            const estimatedMinutes = Number(document.getElementById('estimatedMinutes').value || 0);
+            const type = document.getElementById('scheduleType').value;
+            const weekdays = [...document.querySelectorAll('#weekdayOptions input:checked')].map(input => Number(input.value));
+            if (!name || !Number.isFinite(target) || target < 1) { document.getElementById('habitError').textContent = 'Give it a name and a target of at least one.'; return; }
+            if (!Number.isFinite(estimatedMinutes) || estimatedMinutes < 0 || estimatedMinutes > 240) { document.getElementById('habitError').textContent = 'Keep the time estimate between 0 and 240 minutes.'; return; }
+            if (type === 'weekdays' && !weekdays.length) { document.getElementById('habitError').textContent = 'Pick at least one day, or choose every day.'; return; }
+            const existing = state.habits.find(habit => habit.id === id);
+            const habitId = id || (crypto.randomUUID ? crypto.randomUUID() : `habit-${Date.now()}`);
+            if (!existing && !await reserveFreeHabitCredit(habitId)) return;
+            const habit = {
+                ...(existing || {}), id: habitId, name, pillar,
+                identity: document.getElementById('identity').value.trim(), goal: document.getElementById('goalLink').value.trim(),
+                routine: document.getElementById('routineName').value.trim(), stackAfter: document.getElementById('stackAfter').value,
+                boundary: document.getElementById('boundaryHabit').checked, estimatedMinutes,
+                target, unit: document.getElementById('unit').value.trim() || 'times',
+                schedule: type === 'weekdays' ? { type, weekdays } : type === 'interval' ? { type, interval: Number(document.getElementById('intervalDays').value), anchor: existing && existing.schedule.anchor || today } : { type: 'daily' },
+                createdAt: existing ? existing.createdAt : today, archived: existing ? existing.archived : false,
+                paused: existing ? existing.paused : false, pauseRanges: existing ? existing.pauseRanges || [] : [], archiveRanges: existing ? existing.archiveRanges || [] : []
+            };
+            if (existing) Object.assign(existing, habit); else state.habits.push(habit);
+            saveState(); closeDialog(document.getElementById('habitDialog')); renderHabits();
+            showToast(existing ? 'A small tune-up, all done.' : 'New promise, gently planted.');
+        }
+        async function addStarter(kind) {
+            const presets = {
+                read: { name: 'Read 15 pages', pillar: 'Mind', identity: 'a curious reader', target: 15, unit: 'pages' },
+                walk: { name: 'Walk 20 minutes', pillar: 'Body', identity: 'someone who cares for my body', target: 20, unit: 'minutes' },
+                write: { name: 'Write for 30 minutes', pillar: 'Career', identity: 'a disciplined creator', target: 30, unit: 'minutes' }
+            };
+            const preset = presets[kind];
+            if (!preset) return;
+            const id = crypto.randomUUID ? crypto.randomUUID() : `habit-${Date.now()}`;
+            if (!await reserveFreeHabitCredit(id)) return;
+            state.habits.push({ ...preset, id, schedule: { type: 'daily' }, createdAt: today, archived: false });
+            saveState(); renderHabits(); showToast('Good choice. Start with the smallest version.');
+        }
+        function startBoost() {
+            const active = activeHabits();
+            if (!active.length) { openHabitForm(); showToast('Add one promise first, then we’ll find its 10-second version.'); return; }
+            const habit = [...active].sort((a, b) => completionRate(a) - completionRate(b))[0];
+            challengeHabitId = habit.id;
+            const options = SUGGESTIONS[habit.pillar] || SUGGESTIONS.Mind;
+            document.getElementById('boostHabitLabel').textContent = `A tiny nudge for “${habit.name}”. No catching up required.`;
+            document.getElementById('challengeText').textContent = options[Math.floor(Math.random() * options.length)];
+            document.getElementById('challengeTimer').textContent = '10';
+            document.getElementById('startChallenge').hidden = false;
+            document.getElementById('completeChallenge').hidden = true;
+            openDialog(document.getElementById('boostDialog'));
+        }
+        function startChallengeTimer() {
+            let remaining = 10;
+            document.getElementById('startChallenge').hidden = true;
+            const display = document.getElementById('challengeTimer'); display.textContent = String(remaining);
+            challengeTimerId = window.setInterval(() => {
+                remaining--;
+                display.textContent = String(Math.max(remaining, 0));
+                if (remaining <= 0) {
+                    window.clearInterval(challengeTimerId); challengeTimerId = null;
+                    document.getElementById('completeChallenge').hidden = false;
+                    display.textContent = 'Done?';
+                }
+            }, 1000);
+        }
+        function sendWhatsApp(message) {
+            const url = `https://wa.me/212660725091?text=${encodeURIComponent(message)}`;
+            window.open(url, '_blank', 'noopener,noreferrer');
+        }
+        function openContact(kind) {
+            contactKind = kind;
+            const title = document.getElementById('contactTitle');
+            const copy = document.getElementById('contactCopy');
+            document.getElementById('customMessage').value = '';
+            if (kind === 'pro') {
+                title.textContent = 'Curious about Pro?'; copy.textContent = 'No hard sell. Ask what you need to know and we’ll get back to you.';
+                document.getElementById('whatsappPro').hidden = false;
+                document.getElementById('emailContact').textContent = 'Email about Pro';
+            } else {
+                title.textContent = 'A real person will read this.'; copy.textContent = 'Choose the route that suits you; WhatsApp will open with a draft.';
+                document.getElementById('whatsappPro').hidden = true;
+                document.getElementById('emailContact').textContent = 'Email support';
+            }
+            openDialog(document.getElementById('contactDialog'));
+        }
+        function insightLogs() {
+            const active = activeHabits();
+            const log = state.logs.filter(item => item.date === today && item.note);
+            return { habits: active.length, entries: state.logs.length, reflections: log.length };
+        }
+        function drawSky() {
+            if (frameId) cancelAnimationFrame(frameId);
+            frameId = 0;
+            const canvas = document.getElementById('sky');
+            const context = canvas.getContext('2d');
+            const ratio = Math.min(window.devicePixelRatio || 1, 1.5);
+            const width = window.innerWidth, height = window.innerHeight;
+            canvas.width = Math.round(width * ratio); canvas.height = Math.round(height * ratio);
+            context.setTransform(ratio, 0, 0, ratio, 0, 0);
+            const density = { low: .45, balanced: 1, high: 1.55 }[state.preferences.spaceDensity] || 1;
+            const count = Math.min(150, Math.max(16, Math.floor(width * height / 11500 * density)));
+            const palette = { deep: '42, 75, 66', aurora: '53, 112, 103', midnight: '72, 83, 126', solar: '157, 111, 65', nebula: '124, 91, 122', minimal: '67, 99, 86' };
+            const starColor = palette[state.preferences.spaceTheme] || palette.deep;
+            const motionFactor = { subtle: .45, gentle: .75, lively: 1.15 }[state.preferences.motionIntensity] || .45;
+            stars = Array.from({ length: count }, () => ({ x: Math.random() * width, y: Math.random() * height, depth: .25 + Math.random() * .75, phase: Math.random() * 6.28, radius: .45 + Math.random() * .8 }));
+            const paint = (time) => {
+                frameId = 0;
+                context.clearRect(0, 0, width, height);
+                for (const star of stars) {
+                    const parallaxX = motionPaused ? 0 : lastPointer.x * star.depth * 9 * motionFactor;
+                    const parallaxY = motionPaused ? 0 : (lastPointer.y + scrollDepth) * star.depth * 9 * motionFactor;
+                    const pulse = motionPaused ? .34 : .22 + (Math.sin(time * .0005 + star.phase) + 1) * .16;
+                    context.beginPath(); context.fillStyle = `rgba(${starColor}, ${pulse})`;
+                    context.arc(star.x + parallaxX, star.y + parallaxY, star.radius, 0, Math.PI * 2); context.fill();
+                }
+                if (!motionPaused && !document.hidden) frameId = requestAnimationFrame(paint);
+            };
+            paint(performance.now());
+        }
+        function setMotion(paused, persist = true) {
+            motionPaused = paused;
+            const button = document.getElementById('motionToggle');
+            button.textContent = paused ? '▶' : 'Ⅱ';
+            button.setAttribute('aria-label', paused ? 'Resume background motion' : 'Pause background motion');
+            button.title = paused ? 'Resume background motion' : 'Pause background motion';
+            button.disabled = reducedMotionMedia.matches;
+            if (persist) { state.preferences.reduceMotion = paused; saveState(); }
+            if (frameId) cancelAnimationFrame(frameId);
+            frameId = 0; drawSky();
+        }
+        function renderTemplates() {
+            const root = document.getElementById('templateChoices'); root.replaceChildren();
+            for (const template of HABIT_TEMPLATES) {
+                const button = document.createElement('button'); button.className = 'template-choice'; button.type = 'button';
+                const name = document.createElement('strong'); name.textContent = template.name;
+                const detail = document.createElement('span'); detail.textContent = `${template.pillar} · ${template.target} ${template.unit}`;
+                button.append(name, detail);
+                button.addEventListener('click', () => { closeDialog(document.getElementById('templateDialog')); openHabitForm(template); });
+                root.append(button);
+            }
+        }
+
+        for (let day = 0; day < 7; day++) {
+            const label = document.createElement('label'); label.className = 'weekday-choice';
+            const input = document.createElement('input'); input.type = 'checkbox'; input.value = String(day); input.checked = true;
+            label.append(input, document.createTextNode(WEEKDAYS[day])); document.getElementById('weekdayOptions').append(label);
+        }
+
+        document.getElementById('addHabitButton').addEventListener('click', () => openHabitForm());
+        document.getElementById('templateButton').addEventListener('click', () => { renderTemplates(); openDialog(document.getElementById('templateDialog')); });
+        document.getElementById('focusToggle').addEventListener('click', () => {
+            if (focusElapsedSeconds >= focusDurationSeconds) {
+                focusElapsedSeconds = 0;
+                document.getElementById('focusClock').textContent = focusClockText(focusDurationSeconds);
+                document.getElementById('focusElapsed').textContent = 'Nothing is logged until you choose to finish.';
+            }
+            setFocusRunning(!focusTimerId);
+        });
+        document.getElementById('focusReset').addEventListener('click', () => {
+            if (focusTimerId) window.clearInterval(focusTimerId);
+            focusTimerId = null; focusElapsedSeconds = 0;
+            document.getElementById('focusClock').textContent = focusClockText(focusDurationSeconds);
+            document.getElementById('focusElapsed').textContent = 'Nothing is logged until you choose to finish.';
+            document.getElementById('focusToggle').textContent = 'Start';
+        });
+        document.getElementById('focusCancel').addEventListener('click', () => closeDialog(document.getElementById('focusDialog')));
+        document.getElementById('focusFinish').addEventListener('click', finishFocus);
+        document.getElementById('focusDialog').addEventListener('close', () => { if (focusTimerId) window.clearInterval(focusTimerId); focusTimerId = null; });
+        document.getElementById('habitForm').addEventListener('submit', saveHabit);
+        document.getElementById('deleteHabitButton').addEventListener('click', () => {
+            const habitId = document.getElementById('habitId').value;
+            const habit = state.habits.find(item => item.id === habitId);
+            if (!habit || !window.confirm(`Delete “${habit.name}” and its check-ins from this browser? This cannot be undone.`)) return;
+            state.habits = state.habits.filter(item => item.id !== habitId);
+            state.logs = state.logs.filter(log => log.habitId !== habitId);
+            saveState(); closeDialog(document.getElementById('habitDialog')); renderHabits();
+            showToast('Habit and its local history deleted.');
+        });
+        document.getElementById('pauseHabitButton').addEventListener('click', () => {
+            const habit = state.habits.find(item => item.id === document.getElementById('habitId').value);
+            if (!habit) return;
+            habit.paused = true; habit.pauseRanges = [...(habit.pauseRanges || []), { start: today, end: null }];
+            saveState(); closeDialog(document.getElementById('habitDialog')); renderHabits(); showToast('Paused. Come back when it fits again.');
+        });
+        document.getElementById('archiveHabitButton').addEventListener('click', () => {
+            const habit = state.habits.find(item => item.id === document.getElementById('habitId').value);
+            if (!habit || !window.confirm(`Quietly archive “${habit.name}”? Its history stays available.`)) return;
+            habit.archived = true; habit.archiveRanges = [...(habit.archiveRanges || []), { start: today, end: null }];
+            saveState(); closeDialog(document.getElementById('habitDialog')); renderHabits(); showToast('Archived, not erased.');
+        });
+        document.getElementById('scheduleType').addEventListener('change', updateScheduleFields);
+        document.getElementById('healthKeep').addEventListener('click', () => finishHealthReview('keep'));
+        document.getElementById('healthEdit').addEventListener('click', () => finishHealthReview('edit'));
+        document.getElementById('healthPause').addEventListener('click', () => finishHealthReview('pause'));
+        document.getElementById('healthReduce').addEventListener('click', () => finishHealthReview('reduce'));
+        document.getElementById('healthArchive').addEventListener('click', () => finishHealthReview('archive'));
+        document.getElementById('recoveryButton').addEventListener('click', () => openDialog(document.getElementById('recoveryDialog')));
+        document.getElementById('recoveryReview').addEventListener('click', () => {
+            closeDialog(document.getElementById('recoveryDialog'));
+            const habit = [...activeHabits()].sort((a, b) => completionRate(a) - completionRate(b))[0];
+            if (habit) openHealthReview(habit); else openHabitForm();
+        });
+        document.getElementById('recoveryBoost').addEventListener('click', () => { closeDialog(document.getElementById('recoveryDialog')); startBoost(); });
+        document.getElementById('weeklyReviewButton').addEventListener('click', openWeeklyReview);
+        document.getElementById('weeklyForm').addEventListener('submit', event => {
+            event.preventDefault();
+            const weekStart = dateKey(addDays(new Date(), -6));
+            const review = { weekStart, worked: document.getElementById('weeklyWorked').value.trim(), change: document.getElementById('weeklyChange').value.trim() };
+            const index = state.reviews.findIndex(item => item.weekStart === weekStart);
+            if (index < 0) state.reviews.push(review); else state.reviews[index] = review;
+            saveState(); closeDialog(document.getElementById('weeklyDialog')); showToast('A note for next week, saved.');
+        });
+        document.getElementById('consistencyExplain').addEventListener('click', () => {
+            const result = consistencyScore();
+            document.getElementById('consistencyDetails').textContent = `${result.completed} of ${result.due} scheduled habit-days were completed in the last 30 days (${result.score}%). Habits begin counting on their start date; paused and archived days do not count.`;
+            openDialog(document.getElementById('consistencyDialog'));
+        });
+        document.getElementById('exportJsonButton').addEventListener('click', exportJson);
+        document.getElementById('exportCsvButton').addEventListener('click', exportCsv);
+        document.getElementById('importDataButton').addEventListener('click', () => document.getElementById('importFile').click());
+        document.getElementById('importFile').addEventListener('change', event => { importJsonFile(event.target.files[0]); event.target.value = ''; });
+        document.getElementById('deleteLocalDataButton').addEventListener('click', deleteLocalData);
+        document.querySelectorAll('[data-close]').forEach(button => button.addEventListener('click', () => closeDialog(button.closest('dialog'))));
+        document.getElementById('journalForm').addEventListener('submit', event => { event.preventDefault(); saveNote(document.getElementById('journalHabitId').value, document.getElementById('journalNote').value, document.getElementById('journalMood').value); });
+        document.getElementById('skipJournal').addEventListener('click', () => closeDialog(document.getElementById('journalDialog')));
+        document.querySelectorAll('[data-starter]').forEach(button => button.addEventListener('click', () => addStarter(button.dataset.starter)));
+        document.getElementById('boostButton').addEventListener('click', startBoost);
+        document.getElementById('startChallenge').addEventListener('click', startChallengeTimer);
+        document.getElementById('completeChallenge').addEventListener('click', () => {
+            const habit = state.habits.find(item => item.id === challengeHabitId);
+            if (habit) {
+                state.logs.push({ id: crypto.randomUUID ? crypto.randomUUID() : `micro-${Date.now()}`, habitId: habit.id, date: today, amount: 0, note: `10-second start: ${document.getElementById('challengeText').textContent}`, createdAt: new Date().toISOString() });
+                saveState(); renderHabits(); showToast('Tiny start saved. Your measured target stays honest.');
+            }
+            window.clearInterval(challengeTimerId); challengeTimerId = null; closeDialog(document.getElementById('boostDialog'));
+        });
+        document.getElementById('boostDialog').addEventListener('close', () => { if (challengeTimerId) window.clearInterval(challengeTimerId); challengeTimerId = null; });
+        document.getElementById('heatHabit').addEventListener('change', event => { selectedHeatHabit = event.target.value; renderHeatmap(); });
+        document.getElementById('heatPeriod').addEventListener('change', renderHeatmap);
+        const heatMonth = document.getElementById('heatMonth');
+        for (let month = 0; month < 12; month++) heatMonth.add(new Option(new Intl.DateTimeFormat(undefined, { month: 'long' }).format(new Date(2020, month, 1)), String(month)));
+        heatMonth.value = String(new Date().getMonth());
+        heatMonth.addEventListener('change', renderHeatmap);
+        document.getElementById('yearBack').addEventListener('click', () => { selectedYear--; renderHeatmap(); });
+        document.getElementById('yearForward').addEventListener('click', () => { if (selectedYear < new Date().getFullYear()) selectedYear++; renderHeatmap(); });
+        document.getElementById('motionToggle').addEventListener('click', () => setMotion(!motionPaused));
+        document.getElementById('welcomeStart').addEventListener('click', () => {
+            if (globalThis.HABITPULSE_CONFIG.supabaseUrl) openAuth('signup');
+            else enterLocalMode();
+        });
+        document.getElementById('welcomeSignIn').addEventListener('click', () => openAuth('signin'));
+        document.getElementById('welcomeSignUp').addEventListener('click', () => openAuth('signup'));
+        document.getElementById('authLocalButton').addEventListener('click', () => { closeDialog(document.getElementById('authDialog')); enterLocalMode(); });
+        document.getElementById('accountAuthButton').addEventListener('click', () => openAuth(authUser ? 'signin' : 'signup'));
+        document.getElementById('signOutButton').addEventListener('click', async () => {
+            if (supabaseClient && authUser) await supabaseClient.auth.signOut();
+            else { localStorage.removeItem('habitpulse_guest_active'); enterWelcome(); }
+        });
+        document.getElementById('quotaProButton').addEventListener('click', () => { closeDialog(document.getElementById('quotaDialog')); openContact('pro'); });
+        document.getElementById('quotaDialog').addEventListener('close', () => { if (quotaCountdownTimer) window.clearInterval(quotaCountdownTimer); quotaCountdownTimer = null; });
+        document.querySelectorAll('[data-view]').forEach(button => button.addEventListener('click', () => {
+            document.querySelectorAll('[data-view]').forEach(item => item.removeAttribute('aria-current'));
+            button.setAttribute('aria-current', 'page');
+            if (button.dataset.view === 'insights') document.getElementById('insightSection').scrollIntoView({ behavior: motionPaused ? 'auto' : 'smooth', block: 'center' });
+            if (button.dataset.view === 'today') document.getElementById('today').scrollIntoView({ behavior: motionPaused ? 'auto' : 'smooth' });
+            if (button.dataset.view === 'account') {
+                document.getElementById('motivationTone').value = state.preferences.tone;
+                document.getElementById('weekStartsOn').value = String(state.preferences.weekStartsOn);
+                document.getElementById('spaceTheme').value = state.preferences.spaceTheme;
+                document.getElementById('spaceDensity').value = state.preferences.spaceDensity;
+                document.getElementById('motionIntensity').value = state.preferences.motionIntensity;
+                document.getElementById('reduceMotionPreference').checked = state.preferences.reduceMotion;
+                openDialog(document.getElementById('accountDialog'));
+            }
+        }));
+        document.getElementById('savePreferences').addEventListener('click', () => {
+            state.preferences = {
+                ...state.preferences,
+                tone: document.getElementById('motivationTone').value,
+                weekStartsOn: Number(document.getElementById('weekStartsOn').value),
+                spaceTheme: document.getElementById('spaceTheme').value,
+                spaceDensity: document.getElementById('spaceDensity').value,
+                motionIntensity: document.getElementById('motionIntensity').value,
+                reduceMotion: document.getElementById('reduceMotionPreference').checked
+            };
+            document.body.dataset.spaceTheme = state.preferences.spaceTheme;
+            setMotion(state.preferences.reduceMotion || reducedMotionMedia.matches, false);
+            saveState(); renderSummary(); renderInsights(); closeDialog(document.getElementById('accountDialog'));
+            showToast('Your week and voice are set to your preference.');
+        });
+        document.querySelectorAll('[data-contact]').forEach(button => button.addEventListener('click', () => openContact(button.dataset.contact)));
+        document.getElementById('privacyButton').addEventListener('click', async () => {
+            const summary = document.getElementById('trustSummary');
+            summary.textContent = `${state.habits.length} habits, ${state.logs.length} check-ins and ${state.logs.filter(log => log.note || log.mood).length} private reflections are stored in this browser. Connected services: ${globalThis.HABITPULSE_CONFIG.supabaseUrl ? 'Supabase sign-up only; habit sync is off' : 'none'}.`;
+            try { const estimate = await navigator.storage?.estimate(); if (estimate && estimate.usage) summary.textContent += ` Total origin storage estimate: about ${Math.round(estimate.usage / 1024)} KB.`; } catch (error) {}
+            openDialog(document.getElementById('privacyDialog'));
+        });
+        document.getElementById('helpButton').addEventListener('click', () => openDialog(document.getElementById('helpDialog')));
+        document.getElementById('emailContact').addEventListener('click', event => {
+            event.preventDefault();
+            const body = document.getElementById('customMessage').value.trim() || (contactKind === 'pro' ? 'Hello HabitPulse, I would like to ask about upgrading to Pro.' : 'Hello HabitPulse, I have a question and would appreciate a little help.');
+            const subject = contactKind === 'pro' ? 'HabitPulse Pro inquiry' : 'HabitPulse support';
+            window.location.href = `mailto:Amezougkhalil31@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+        });
+        document.getElementById('whatsappSupport').addEventListener('click', () => sendWhatsApp(document.getElementById('customMessage').value.trim() || 'Hello HabitPulse, I have a question and would appreciate a little help.'));
+        document.getElementById('whatsappPro').addEventListener('click', () => sendWhatsApp(document.getElementById('customMessage').value.trim() || 'Hello HabitPulse, I would like to ask about upgrading to Pro.'));
+        document.getElementById('whatsappCustom').addEventListener('click', () => {
+            const message = document.getElementById('customMessage').value.trim();
+            if (!message) { document.getElementById('customMessage').focus(); showToast('Write a quick note first, even a scrappy one.'); return; }
+            sendWhatsApp(message);
+        });
+        document.body.dataset.spaceTheme = state.preferences.spaceTheme;
+        document.getElementById('motionToggle').disabled = reducedMotionMedia.matches;
+        reducedMotionMedia.addEventListener('change', event => setMotion(state.preferences.reduceMotion || event.matches, false));
+        window.addEventListener('pointermove', event => {
+            lastPointer.x = (event.clientX / window.innerWidth - .5) * 2;
+            lastPointer.y = (event.clientY / window.innerHeight - .5) * 2;
+            if (!motionPaused && !frameId) drawSky();
+        }, { passive: true });
+        window.addEventListener('scroll', () => {
+            scrollDepth = Math.min(window.scrollY / Math.max(document.documentElement.scrollHeight - window.innerHeight, 1), 1);
+            if (!motionPaused && !frameId) drawSky();
+        }, { passive: true });
+        window.addEventListener('resize', drawSky, { passive: true });
+        document.addEventListener('visibilitychange', () => { if (document.hidden && frameId) { cancelAnimationFrame(frameId); frameId = 0; } else if (!document.hidden && !motionPaused) drawSky(); });
+        window.addEventListener('keydown', event => { if (event.key === 'Escape') { if (challengeTimerId) window.clearInterval(challengeTimerId); challengeTimerId = null; } });
+
+        renderDate(); setMotion(motionPaused, false); renderHabits();
+
+        if ('serviceWorker' in navigator && location.protocol !== 'file:') {
+            window.addEventListener('load', () => navigator.serviceWorker.register('./habitpulse-sw.js').catch(() => showToast('Offline setup did not finish; the tracker still works online.')));
+        }
+
+        const HABITPULSE_SUPABASE_URL = globalThis.HABITPULSE_CONFIG.supabaseUrl;
+        const HABITPULSE_SUPABASE_ANON_KEY = globalThis.HABITPULSE_CONFIG.supabaseAnonKey;
+        let supabaseClient = null;
+        let authMode = 'signup';
+        let usernameCheckTimer = 0;
+        let usernameCheckVersion = 0;
+        let usernameIsAvailable = false;
+        let authBusy = false;
+        const authEmail = document.getElementById('authEmail');
+        const authUsername = document.getElementById('authUsername');
+        const authPassword = document.getElementById('authPassword');
+        const confirmPassword = document.getElementById('confirmPassword');
+        const authSubmit = document.getElementById('authSubmit');
+        const authError = document.getElementById('authError');
+        const usernameStatus = document.getElementById('usernameStatus');
+        const hasCloudConfig = Boolean(HABITPULSE_SUPABASE_URL && HABITPULSE_SUPABASE_ANON_KEY);
+
+        function securePassword(value) { return value.length >= 12 && /[a-z]/.test(value) && /[A-Z]/.test(value) && /\d/.test(value) && /[^A-Za-z0-9]/.test(value); }
+        function enterLocalMode() {
+            authUser = null; authSession = null; accountPlan = 'free'; serverQuota = null; accountStorageKey = STORAGE_KEY;
+            state = loadState(STORAGE_KEY);
+            if (!state.startedAt) state.startedAt = today;
+            localStorage.setItem('habitpulse_guest_active', 'true');
+            document.body.dataset.gate = 'app';
+            closeDialog(document.getElementById('authDialog'));
+            renderDate(); setMotion(state.preferences.reduceMotion || reducedMotionMedia.matches, false); renderHabits();
+            showToast('Your private, device-only space is ready.');
+        }
+        function enterWelcome() {
+            document.body.dataset.gate = 'welcome';
+            document.getElementById('signOutButton').hidden = true;
+            document.getElementById('accountAuthButton').textContent = 'Sign in or create account';
+            document.getElementById('accountStatus').textContent = hasCloudConfig ? 'Your private account keeps its sign-in separate from local device data. Sync is not enabled in this copy.' : 'Accounts are not connected yet. Start free still works locally on this device.';
+        }
+        function openAuth(mode = 'signup') {
+            setAuthMode(mode);
+            authError.textContent = hasCloudConfig ? '' : 'Account service is not configured yet. You can still start free on this device.';
+            openDialog(document.getElementById('authDialog'));
+            window.setTimeout(() => (mode === 'signin' ? authEmail : authUsername).focus(), 30);
+        }
+        function setAuthMode(mode) {
+            authMode = mode;
+            const signup = mode === 'signup';
+            const recovery = mode === 'recovery';
+            document.getElementById('usernameField').hidden = !signup;
+            document.getElementById('confirmPasswordField').hidden = !signup && !recovery;
+            document.getElementById('emailCheckinsLabel').hidden = !signup;
+            document.getElementById('forgotPassword').hidden = signup || recovery;
+            document.getElementById('signupTab').hidden = recovery;
+            document.getElementById('signinTab').hidden = recovery;
+            document.getElementById('signupTab').setAttribute('aria-selected', String(signup));
+            document.getElementById('signinTab').setAttribute('aria-selected', String(mode === 'signin'));
+            document.getElementById('authTitle').textContent = signup ? 'Make your own space.' : recovery ? 'Choose a new password.' : 'Welcome back.';
+            document.getElementById('authIntro').textContent = signup ? 'Create an account, verify your email, then come back to this device.' : recovery ? 'Use a long, unique password you have not used elsewhere.' : 'Sign in with the email you verified.';
+            authSubmit.textContent = signup ? 'Create account' : recovery ? 'Save password' : 'Sign in';
+            authEmail.autocomplete = signup ? 'email' : 'username';
+            authPassword.autocomplete = signup || recovery ? 'new-password' : 'current-password';
+            authError.textContent = '';
+            refreshAuthSubmit();
+        }
+        function refreshAuthSubmit() {
+            const emailReady = authEmail.value.trim() && authEmail.validity.valid;
+            const passwordReady = authMode === 'signin' ? Boolean(authPassword.value) : securePassword(authPassword.value) && (authMode !== 'signup' || authPassword.value === confirmPassword.value);
+            authSubmit.disabled = !supabaseClient || authBusy || !emailReady || !passwordReady || (authMode === 'signup' && !usernameIsAvailable);
+        }
+        async function checkUsername() {
+            const requestVersion = ++usernameCheckVersion;
+            const username = authUsername.value.trim().toLowerCase();
+            usernameIsAvailable = false;
+            if (!supabaseClient) { usernameStatus.textContent = 'Username checks appear when account service is connected.'; refreshAuthSubmit(); return; }
+            if (!/^[a-z0-9_]{3,24}$/.test(username)) { usernameStatus.textContent = 'Use 3–24 letters, numbers, or underscores.'; refreshAuthSubmit(); return; }
+            usernameStatus.textContent = 'Checking that name…'; refreshAuthSubmit();
+            const { data, error } = await supabaseClient.rpc('is_username_available', { desired_username: username });
+            if (requestVersion !== usernameCheckVersion) return;
+            usernameIsAvailable = !error && data === true;
+            usernameStatus.textContent = error ? 'Could not check right now. Please try again shortly.' : usernameIsAvailable ? 'That name is free.' : 'Someone is already using that one.';
+            refreshAuthSubmit();
+        }
+        async function refreshAccountProfile(user) {
+            accountPlan = 'free'; serverQuota = null;
+            if (!supabaseClient || !user) { renderQuotaStatus(); return; }
+            const { data, error } = await supabaseClient.from('user_profiles')
+                .select('plan, free_window_started_at, free_habits_created, username').eq('user_id', user.id).maybeSingle();
+            if (error || !data) {
+                document.getElementById('accountStatus').textContent = 'Signed in, but plan details could not be checked. Free habit creation stays paused until the account can be verified.';
+                return;
+            }
+            accountPlan = data.plan === 'pro' ? 'pro' : 'free';
+            serverQuota = { used: Number(data.free_habits_created || 0), resetAt: Date.parse(data.free_window_started_at) + FREE_WINDOW_MS };
+            document.getElementById('accountStatus').textContent = `Signed in as ${data.username}. Habit sync is not enabled on this device yet.`;
+            renderQuotaStatus();
+        }
+        async function applyAuthSession(session) {
+            if (!session || !session.user) {
+                if (authUser) {
+                    authUser = null; authSession = null; accountPlan = 'free'; serverQuota = null;
+                    accountStorageKey = STORAGE_KEY; state = loadState(STORAGE_KEY);
+                    localStorage.removeItem('habitpulse_guest_active');
+                    renderHabits(); enterWelcome();
+                } else if (localStorage.getItem('habitpulse_guest_active') === 'true') document.body.dataset.gate = 'app';
+                return;
+            }
+            const nextUser = session.user;
+            authSession = session;
+            if (authUser && authUser.id === nextUser.id && accountStorageKey === `habitpulse_user_${nextUser.id}`) return;
+            authUser = nextUser; accountStorageKey = `habitpulse_user_${nextUser.id}`;
+            state = loadState(accountStorageKey);
+            if (!state.startedAt) { state.startedAt = today; saveState(); }
+            localStorage.removeItem('habitpulse_guest_active');
+            document.body.dataset.gate = 'app';
+            document.getElementById('signOutButton').hidden = false;
+            document.getElementById('accountAuthButton').textContent = 'Switch account';
+            await refreshAccountProfile(nextUser);
+            renderDate(); setMotion(state.preferences.reduceMotion || reducedMotionMedia.matches, false); renderHabits();
+            closeDialog(document.getElementById('authDialog'));
+        }
+        async function submitAuth(event) {
+            event.preventDefault();
+            if (!supabaseClient) { authError.textContent = 'Account service is not configured. Choose device-only mode or configure Supabase first.'; return; }
+            if (!authEmail.validity.valid) { authError.textContent = 'That email address needs another look.'; return; }
+            if (authMode === 'signup') {
+                if (!usernameIsAvailable) { authError.textContent = 'Choose an available username first.'; return; }
+                if (!securePassword(authPassword.value)) { authError.textContent = 'Use 12+ characters with uppercase, lowercase, a number, and a symbol.'; return; }
+                if (authPassword.value !== confirmPassword.value) { authError.textContent = 'Those passwords don’t match yet.'; return; }
+            }
+            if (authMode === 'recovery' && (!securePassword(authPassword.value) || authPassword.value !== confirmPassword.value)) { authError.textContent = 'Use a strong password and type it the same way twice.'; return; }
+            authBusy = true; refreshAuthSubmit(); authError.textContent = '';
+            try {
+                if (authMode === 'signup') {
+                    const redirectTo = new URL('./habitpulse.html', location.href).href;
+                    const { data, error } = await supabaseClient.auth.signUp({
+                        email: authEmail.value.trim(), password: authPassword.value,
+                        options: { emailRedirectTo: redirectTo, data: { username: authUsername.value.trim().toLowerCase(), email_checkins: document.getElementById('emailCheckins').checked } }
+                    });
+                    if (error) throw error;
+                    if (data.session) await applyAuthSession(data.session);
+                    else {
+                        authPassword.value = ''; confirmPassword.value = '';
+                        authIntro.textContent = `We sent a confirmation link to ${authEmail.value.trim()}. Open it to verify, then return to this tab to sign in.`;
+                        authError.textContent = 'Your welcome email will follow after the account is confirmed.';
+                    }
+                } else if (authMode === 'signin') {
+                    const { data, error } = await supabaseClient.auth.signInWithPassword({ email: authEmail.value.trim(), password: authPassword.value });
+                    if (error) throw error;
+                    if (!data.user.email_confirmed_at) { authError.textContent = 'Verify your email first, then sign in here.'; return; }
+                    await applyAuthSession(data.session);
+                } else {
+                    const { error } = await supabaseClient.auth.updateUser({ password: authPassword.value });
+                    if (error) throw error;
+                    setAuthMode('signin'); authError.textContent = 'Password updated. Sign in with the new one.';
+                }
+            } catch (error) {
+                const message = String(error.message || '');
+                authError.textContent = message.toLowerCase().includes('not confirmed') ? 'That email is not verified yet. Open its confirmation link first.' : message.toLowerCase().includes('already registered') ? 'That email already has an account. Choose Sign in.' : 'We couldn’t finish that request. Check your details and try again.';
+            } finally { authBusy = false; refreshAuthSubmit(); }
+        }
+        async function openAuth(mode = 'signup') {
+            setAuthMode(mode);
+            if (!hasCloudConfig) authError.textContent = 'Account service is not configured in this copy. Start free still works privately on this device.';
+            else if (!supabaseClient) authError.textContent = 'Connecting securely…';
+            openDialog(document.getElementById('authDialog'));
+            window.setTimeout(() => (mode === 'signin' ? authEmail : authUsername).focus(), 30);
+        }
+        function enterLocalMode() {
+            if (authUser && supabaseClient) return;
+            accountStorageKey = STORAGE_KEY; state = loadState(STORAGE_KEY); accountPlan = 'free'; serverQuota = null;
+            if (!state.startedAt) state.startedAt = today;
+            localStorage.setItem('habitpulse_guest_active', 'true'); document.body.dataset.gate = 'app';
+            renderDate(); setMotion(state.preferences.reduceMotion || reducedMotionMedia.matches, false); renderHabits();
+            closeDialog(document.getElementById('authDialog'));
+            if (!hasCloudConfig) showToast('Your private, device-only space is ready.');
+        }
+        function enterWelcome() { document.body.dataset.gate = 'welcome'; }
+        document.getElementById('signupTab').addEventListener('click', () => setAuthMode('signup'));
+        document.getElementById('signinTab').addEventListener('click', () => setAuthMode('signin'));
+        document.getElementById('authForm').addEventListener('submit', submitAuth);
+        authUsername.addEventListener('input', () => {
+            usernameIsAvailable = false; refreshAuthSubmit(); window.clearTimeout(usernameCheckTimer);
+            usernameCheckTimer = window.setTimeout(checkUsername, 350);
+        });
+        [authEmail, authPassword, confirmPassword].forEach(input => input.addEventListener('input', refreshAuthSubmit));
+        document.getElementById('forgotPassword').addEventListener('click', async () => {
+            if (!supabaseClient || !authEmail.value.trim() || !authEmail.validity.valid) { authError.textContent = 'Enter your account email first.'; return; }
+            const { error } = await supabaseClient.auth.resetPasswordForEmail(authEmail.value.trim(), { redirectTo: new URL('./habitpulse.html', location.href).href });
+            authError.textContent = error ? 'We could not send that reset link. Try again shortly.' : 'Password reset link sent. Check your inbox.';
+        });
+        authPassword.addEventListener('input', () => authPassword.setCustomValidity(authMode === 'signin' || securePassword(authPassword.value) || !authPassword.value ? '' : 'Use 12+ characters with uppercase, lowercase, a number, and a symbol.'));
+        document.getElementById('welcomeStart').addEventListener('click', () => hasCloudConfig ? openAuth('signup') : enterLocalMode());
+        document.getElementById('welcomeSignIn').addEventListener('click', () => openAuth('signin'));
+        document.getElementById('welcomeSignUp').addEventListener('click', () => openAuth('signup'));
+        document.getElementById('authLocalButton').addEventListener('click', enterLocalMode);
+        document.getElementById('accountAuthButton').addEventListener('click', () => openAuth(authUser ? 'signin' : 'signup'));
+        document.getElementById('signOutButton').addEventListener('click', async () => {
+            if (supabaseClient && authUser) await supabaseClient.auth.signOut();
+            else { localStorage.removeItem('habitpulse_guest_active'); enterWelcome(); }
+        });
+
+        if (hasCloudConfig) {
+            accountStatus.textContent = 'Connecting to secure account service…';
+            const supabaseScript = document.createElement('script');
+            supabaseScript.src = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2';
+            supabaseScript.onload = async () => {
+                supabaseClient = window.supabase.createClient(HABITPULSE_SUPABASE_URL, HABITPULSE_SUPABASE_ANON_KEY);
+                const { data } = await supabaseClient.auth.getSession();
+                if (data.session) await applyAuthSession(data.session);
+                else if (localStorage.getItem('habitpulse_guest_active') === 'true') document.body.dataset.gate = 'app';
+                accountStatus.textContent = 'Sign-in and signup are ready. Habit records stay on this device in this build.';
+                refreshAuthSubmit(); renderQuotaStatus();
+                supabaseClient.auth.onAuthStateChange((_event, session) => window.setTimeout(() => applyAuthSession(session), 0));
+            };
+            supabaseScript.onerror = () => { accountStatus.textContent = 'Could not load secure sign-in. Device-only mode still works.'; authError.textContent = 'Secure account service could not load.'; };
+            document.head.append(supabaseScript);
+        } else {
+            accountStatus.textContent = 'Device-only mode. Configure Supabase to enable verified accounts and multi-device identity.';
+            authSubmit.disabled = true;
+            if (localStorage.getItem('habitpulse_guest_active') === 'true') document.body.dataset.gate = 'app';
+        }
+        document.getElementById('accountPlanStatus').textContent = 'Free plan · 5 active habits · 5 new habits every 72 hours. Pro removes the creation limit.';
+    </script>
+</body>
+</html>

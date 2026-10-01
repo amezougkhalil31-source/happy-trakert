@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enterprise CRM Suite - Ultimate Pro Edition v7.0</title>
+    
+    <link rel="icon" type="image/png" href="logo.png">
+    
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#2563eb">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="apple-touch-icon" href="logo.png">
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-body: #f8fafc;
+            --bg-container: #ffffff;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --border-color: #e2e8f0;
+            --card-bg: #f1f5f9;
+            --input-bg: #ffffff;
+            --shadow: 0 10px 30px rgba(15, 23, 42, 0.04);
+            --primary: #2563eb;
+            --primary-hover: #1d4ed8;
+            --success: #10b981;
+            --success-hover: #059669;
+            --danger: #ef4444;
+            --danger-hover: #dc2626;
+            --warning: #f59e0b;
+            --warning-hover: #d97706;
+            --whatsapp: #25d366;
+            --whatsapp-hover: #128c7e;
+        }
+
+        .dark-theme {
+            --bg-body: #0b1329;
+            --bg-container: #1c2541;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --border-color: #3a506b;
+            --card-bg: #131a31;
+            --input-bg: #0b1329;
+            --shadow: 0 10px 40px rgba(0, 0, 0, 0.25);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; transition: background-color 0.2s, border-color 0.2s; }
+        body { background-color: var(--bg-body); padding: 20px; min-height: 100vh; color: var(--text-main); display: flex; justify-content: center; -webkit-tap-highlight-color: transparent; }
+        .container { background: var(--bg-container); padding: 30px; border-radius: 20px; box-shadow: var(--shadow); width: 100%; max-width: 1600px; position: relative; }
+        
+        @media (min-width: 768px) { body { padding: 30px; } .container { padding: 40px; } }
+
+        .top-controls { position: absolute; top: 30px; right: 30px; display: flex; gap: 10px; }
+        
+        .control-btn { background: var(--card-bg); border: 1px solid var(--border-color); color: var(--text-main); padding: 12px 18px; border-radius: 12px; cursor: pointer; font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 8px; touch-action: manipulation; }
+        .control-btn:active, .action-button:active, .btn-table:active, .template-option:active { transform: scale(0.97); }
+        
+        h1 { color: var(--text-main); margin-bottom: 6px; font-weight: 800; font-size: 28px; letter-spacing: -1px; }
+        @media (min-width: 768px) { h1 { font-size: 32px; } }
+        .sub-header { color: var(--text-muted); font-size: 14px; margin-bottom: 35px; display: block; }
+        
+        .main-layout { display: flex; flex-direction: column; gap: 35px; }
+        @media (min-width: 1100px) {
+            .main-layout { flex-direction: row; align-items: flex-start; }
+            .sidebar-panel { width: 380px; min-width: 380px; position: sticky; top: 30px; }
+            .content-panel { flex: 1; width: calc(100% - 415px); }
+        }
+
+        .stats-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 20px; }
+        .stat-card { background: var(--card-bg); border: 1px solid var(--border-color); padding: 15px; border-radius: 14px; }
+        .stat-card h3 { font-size: 10px; color: var(--text-muted); text-transform: uppercase; margin-bottom: 6px; font-weight: 700; }
+        .stat-card p { font-size: 22px; font-weight: 800; color: var(--text-main); }
+        .stat-card.revenue-card p { color: var(--success); }
+        .stat-card.risk-card p { color: var(--warning); }
+
+        .chart-box { background: var(--card-bg); border: 1px solid var(--border-color); padding: 20px; border-radius: 14px; margin-bottom: 25px; }
+        .form-card { background: var(--card-bg); border: 1px solid var(--border-color); padding: 25px; border-radius: 14px; margin-bottom: 20px; }
+        .form-group { margin-bottom: 18px; }
+        label { display: block; margin-bottom: 8px; font-weight: 600; font-size: 13px; }
+        
+        .input-wrapper { position: relative; display: flex; align-items: center; width: 100%; }
+        input { padding: 14px 16px; font-size: 15px; border-radius: 12px; border: 1px solid var(--border-color); width: 100%; outline: none; background-color: var(--input-bg); color: var(--text-main); }
+        input:focus { border-color: var(--primary); box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.15); }
+        
+        .pass-toggle-btn, .voice-search-btn { position: absolute; right: 14px; background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 16px; padding: 6px; display: flex; align-items: center; justify-content: center; }
+        
+        .action-button { padding: 15px 20px; color: white; border: none; border-radius: 12px; font-size: 15px; cursor: pointer; width: 100%; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 10px; touch-action: manipulation; }
+        .btn-green { background-color: var(--success); } .btn-green:hover { background-color: var(--success-hover); }
+        .btn-blue { background-color: var(--primary); } .btn-blue:hover { background-color: var(--primary-hover); }
+        
+        .search-controls { display: flex; flex-direction: column; gap: 15px; margin-bottom: 25px; }
+        @media (min-width: 768px) { .search-controls { flex-direction: row; justify-content: space-between; align-items: center; } .search-box-container { flex: 1; } }
+        .filter-buttons { display: flex; gap: 8px; flex-wrap: wrap; }
+        .filter-btn { background: var(--card-bg); border: 1px solid var(--border-color); color: var(--text-main); padding: 12px 18px; border-radius: 12px; cursor: pointer; font-size: 13px; font-weight: 600; white-space: nowrap; touch-action: manipulation; }
+        .filter-btn.active-filter { background-color: var(--primary); color: white; border-color: var(--primary); }
+
+        .table-responsive { width: 100%; overflow-x: auto; border-radius: 14px; border: 1px solid var(--border-color); }
+        table { width: 100%; border-collapse: collapse; background: var(--bg-container); min-width: 1100px; }
+        th, td { padding: 16px 20px; text-align: left; border-bottom: 1px solid var(--border-color); font-size: 14px; }
+        th { background-color: var(--card-bg); color: var(--text-muted); font-weight: 700; text-transform: uppercase; font-size: 11px; }
+        
+        .client-id-tag { font-family: monospace; font-weight: 700; color: var(--primary); background: rgba(37, 99, 235, 0.1); padding: 6px 10px; border-radius: 8px; }
+        .status-badge { padding: 6px 12px; border-radius: 8px; font-weight: 700; font-size: 12px; display: inline-flex; align-items: center; gap: 6px; }
+        .status-active { background-color: rgba(16, 185, 129, 0.15); color: var(--success); }
+        .status-warning { background-color: rgba(245, 158, 11, 0.15); color: var(--warning); }
+        .status-expired { background-color: rgba(239, 68, 68, 0.15); color: var(--danger); }
+        
+        .actions-flex-container { display: flex; gap: 8px; align-items: center; }
+        .btn-table { padding: 10px 14px; font-size: 13px; color: white; font-weight: 600; border: none; border-radius: 10px; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; touch-action: manipulation; }
+        .btn-edit { background-color: #64748b; } .btn-print { background-color: var(--primary); } .btn-whatsapp { background-color: var(--whatsapp); } .btn-delete { background-color: var(--danger); }
+
+        .insight-box { background: rgba(37, 99, 235, 0.05); border: 1px solid rgba(37, 99, 235, 0.15); padding: 15px; border-radius: 12px; margin-top: 20px; font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 10px; }
+
+        #dashboardPage { display: none; width: 100%; }
+
+        .toast-container { position: fixed; bottom: 30px; right: 30px; z-index: 9999; }
+        .toast { color: white; padding: 16px 25px; border-radius: 12px; font-size: 14px; font-weight: 600; box-shadow: 0 10px 25px rgba(0,0,0,0.15); margin-top: 12px; display: flex; align-items: center; gap: 10px; animation: slideIn 0.3s ease-out forwards; }
+        .toast.success { background: var(--success); }
+        .toast.warning { background: var(--warning); }
+        .toast.danger { background: var(--danger); }
+
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 10000; justify-content: center; align-items: center; }
+        .modal-content { background: var(--bg-container); padding: 30px; border-radius: 16px; max-width: 450px; width: 90%; box-shadow: var(--shadow); }
+        .modal-title { font-size: 18px; font-weight: 800; margin-bottom: 15px; }
+        .template-option { background: var(--card-bg); border: 1px solid var(--border-color); padding: 14px; border-radius: 12px; margin-bottom: 12px; cursor: pointer; font-weight: 600; font-size: 15px; display: flex; align-items: center; gap: 10px; color: var(--text-main); }
+        .template-option:hover { border-color: var(--whatsapp); background: rgba(37, 211, 102, 0.05); }
+    </style>
+</head>
+<body>
+
+    <div class="toast-container" id="toastContainer"></div>
+
+    <div id="whatsappModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-title"><i class="fa-brands fa-whatsapp" style="color:var(--whatsapp)"></i> <span class="lang-whatsapp-title">Select Message Template</span></div>
+            <div class="template-option" onclick="sendSelectedTemplate(1)"><i class="fa-solid fa-bell"></i> <span class="lang-temp-1">Send Expiry Alert</span></div>
+            <div class="template-option" onclick="sendSelectedTemplate(2)"><i class="fa-solid fa-handshake"></i> <span class="lang-temp-2">Send Welcome Message</span></div>
+            <div class="template-option" onclick="sendSelectedTemplate(3)"><i class="fa-solid fa-tags"></i> <span class="lang-temp-3">Send Promotional Offer</span></div>
+            <button class="action-button btn-edit lang-cancel" style="margin-top:10px;" onclick="closeModal()">Cancel</button>
+        </div>
+    </div>
+
+    <div id="loginPage" class="container" style="max-width: 450px; margin-top: 10vh;">
+        <div style="text-align: center; margin-bottom: 30px;">
+            <i class="fa-solid fa-shield-halved" style="font-size: 45px; color: var(--primary); margin-bottom: 15px;"></i>
+            <h1 class="lang-secure-login">Secure Login</h1>
+            <span class="lang-gateway" style="color: var(--text-muted); font-size: 14px;">Enterprise Private Network Gateway</span>
+        </div>
+        <div class="form-group">
+            <label class="lang-username-label">Username</label>
+            <div class="input-wrapper">
+                <input type="text" id="adminUser" placeholder="Enter username...">
+            </div>
+        </div>
+        <div class="form-group" style="margin-bottom: 35px;">
+            <label class="lang-password-label">Password</label>
+            <div class="input-wrapper">
+                <input type="password" id="adminPass" placeholder="Enter master password...">
+                <button type="button" class="pass-toggle-btn" onclick="togglePasswordVisibility()"><i class="fa-solid fa-eye" id="eyeIcon"></i></button>
+            </div>
+        </div>
+        <button type="button" class="action-button btn-green" onclick="handleAdminLogin()">
+            <i class="fa-solid fa-key"></i> <span class="lang-authenticate">Authenticate Session</span>
+        </button>
+    </div>
+
+    <div id="dashboardPage" class="container">
+        <div class="top-controls">
+            <button class="control-btn" onclick="toggleLanguage()" id="langBtn"><i class="fa-solid fa-globe"></i> EN / FR</button>
+            <button class="control-btn" onclick="toggleAudio()" id="audioBtn"><i class="fa-solid fa-volume-high"></i> Sounds On</button>
+            <button class="control-btn" onclick="toggleTheme()" id="themeBtn"><i class="fa-solid fa-moon"></i> Dark Mode</button>
+        </div>
+        
+        <h1 class="lang-title">Enterprise CRM Suite</h1>
+        <span class="sub-header">v7.0 AI Pro - Cognitive Analytics & Intelligent Ledger</span>
+        
+        <div class="main-layout">
+            <div class="sidebar-panel">
+                <div class="stats-grid">
+                    <div class="stat-card"><h3 class="lang-stat-total">Total Accounts</h3><p id="statTotal">0</p></div>
+                    <div class="stat-card revenue-card"><h3 class="lang-stat-revenue">Active ARR</h3><p id="statRevenue">0 DH</p></div>
+                    <div class="stat-card risk-card"><h3 class="lang-stat-risk">At Risk ARR</h3><p id="statRisk">0 DH</p></div>
+                    <div class="stat-card" style="background: rgba(37,99,235,0.05); border-color: var(--primary);"><h3 class="lang-stat-health">Health Score</h3><p id="statHealth">100%</p></div>
+                </div>
+
+                <div class="chart-box">
+                    <h3 class="lang-chart-title" style="font-size: 11px; text-transform: uppercase; margin-bottom: 10px; color: var(--text-muted);">Account Retention Distribution</h3>
+                    <canvas id="retentionChart" style="max-height: 130px;"></canvas>
+                </div>
+
+                <div class="form-card">
+                    <h3 class="lang-mgmt-title" style="font-size: 15px; margin-bottom: 15px;"><i class="fa-solid fa-user-plus"></i> Account Management</h3>
+                    <input type="hidden" id="editIndex" value="-1">
+                    <div class="form-group"><label class="lang-lbl-name">Full Name</label><input type="text" id="username" placeholder="John Doe"></div>
+                    <div class="form-group"><label class="lang-lbl-phone">Phone Number</label><input type="tel" id="phone" placeholder="212600000000"></div>
+                    <div class="form-group"><label class="lang-lbl-address">Address</label><input type="text" id="adresse" placeholder="Casablanca"></div>
+                    <div class="form-group"><label class="lang-lbl-cin">CIN Number</label><input type="text" id="cin" placeholder="EE123456"></div>
+                    <div class="form-group"><label class="lang-lbl-fee">Subscription Fee (DH)</label><input type="number" id="price" placeholder="500"></div>
+                    <div class="form-group" style="margin-bottom: 25px;"><label class="lang-lbl-date">Expiry Date</label><input type="date" id="expiryDate"></div>
+
+                    <button type="button" class="action-button btn-green" onclick="saveClientSecure()" id="saveBtn"><i class="fa-solid fa-floppy-disk"></i> <span class="lang-btn-commit">Commit Record</span></button>
+                    <button type="button" class="action-button btn-blue" onclick="exportToCSV()"><i class="fa-solid fa-file-csv"></i> <span class="lang-btn-export">Export Dataset (CSV)</span></button>
+                </div>
+
+                <div class="form-card">
+                    <h3 class="lang-expense-title" style="font-size: 15px; margin-bottom: 15px;"><i class="fa-solid fa-wallet"></i> Expenses Manager</h3>
+                    <div class="form-group"><label class="lang-lbl-exp-name">Expense Label</label><input type="text" id="expenseLabel" placeholder="Rent, Electricity..."></div>
+                    <div class="form-group"><label class="lang-lbl-exp-amount">Amount (DH)</label><input type="number" id="expenseAmount" placeholder="1500"></div>
+                    <button type="button" class="action-button btn-blue" onclick="addExpense()"><i class="fa-solid fa-plus"></i> <span class="lang-btn-expense">Add Expense</span></button>
+                </div>
+
+                <div class="form-card" style="margin-bottom: 0;">
+                    <h3 class="lang-db-title" style="font-size: 14px; margin-bottom: 12px;"><i class="fa-solid fa-database"></i> Database Cloud Terminal</h3>
+                    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+                        <button class="filter-btn lang-btn-backup" onclick="backupDatabase()" style="width:100%; justify-content:center; display:flex; align-items:center; gap:6px;"><i class="fa-solid fa-download"></i> Backup</button>
+                        <button class="filter-btn lang-btn-restore" onclick="triggerRestore()" style="width:100%; justify-content:center; display:flex; align-items:center; gap:6px;"><i class="fa-solid fa-upload"></i> Restore</button>
+                    </div>
+                    <input type="file" id="restoreFile" style="display:none;" onchange="restoreDatabase(this)">
+                </div>
+            </div>
+
+            <div class="content-panel">
+                <div class="search-controls">
+                    <div class="search-box-container">
+                        <div class="input-wrapper">
+                            <input type="text" id="searchFilter" placeholder="Real-time search index..." onkeyup="filterClientsTable()">
+                            <button class="voice-search-btn" onclick="startVoiceSearch()" id="micBtn"><i class="fa-solid fa-microphone"></i></button>
+                        </div>
+                    </div>
+                    <div class="filter-buttons-container">
+                        <div class="filter-buttons">
+                            <button class="filter-btn active-filter lang-filter-all" onclick="filterByStatus('all', this)">All Accounts</button>
+                            <button class="filter-btn lang-filter-active" onclick="filterByStatus('active', this)">Active</button>
+                            <button class="filter-btn lang-filter-warning" onclick="filterByStatus('warning', this)">Expiring Soon</button>
+                            <button class="filter-btn lang-filter-expired" onclick="filterByStatus('expired', this)">Expired</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th class="lang-th-id">Client ID</th>
+                                <th class="lang-th-name">Full Name</th>
+                                <th class="lang-th-phone">Phone</th>
+                                <th class="lang-th-address">Address</th>
+                                <th class="lang-th-cin">CIN</th>
+                                <th class="lang-th-fee">Fee</th>
+                                <th class="lang-th-date">Expiry Date</th>
+                                <th class="lang-th-status">Status</th>
+                                <th class="lang-th-actions">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="clientTableBody">
+                            <tr><td colspan="9" style="text-align: center; color: var(--text-muted); padding: 40px;">No records found.</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="insight-box">
+                    <i class="fa-solid fa-brain" style="color:var(--primary); font-size:18px;"></i>
+                    <span id="aiInsightText">Analyzing system ledger data...</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        var clientsList = [];
+        var expensesList = [];
+        var currentFilter = "all";
+        var myChart = null;
+        var activeWhatsappClient = null;
+        var soundEnabled = true;
+        var currentLang = "en";
+
+        // كود تفعيل الـ Service Worker لتمكين التثبيت
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function() {
+                navigator.serviceWorker.register('sw.js').then(function(reg) {
+                    console.log('ServiceWorker registered success.');
+                }).catch(function(err) {
+                    console.log('ServiceWorker registration failed: ', err);
+                });
+            });
+        }
+
+        var translations = {
+            en: {
+                secureLogin: "Secure Login",
+                gateway: "Enterprise Private Network Gateway",
+                username: "Username",
+                password: "Password",
+                authenticate: "Authenticate Session",
+                title: "Enterprise CRM Suite",
+                statTotal: "Total Accounts",
+                statRevenue: "Active ARR",
+                statRisk: "At Risk ARR",
+                statHealth: "Health Score",
+                chartTitle: "Account Retention Distribution",
+                mgmtTitle: "Account Management",
+                lblName: "Full Name",
+                lblPhone: "Phone Number",
+                lblAddress: "Address",
+                lblCin: "CIN Number",
+                lblFee: "Subscription Fee (DH)",
+                lblDate: "Expiry Date",
+                btnCommit: "Commit Record",
+                btnExport: "Export Dataset (CSV)",
+                expenseTitle: "Expenses Manager",
+                lblExpName: "Expense Label",
+                lblExpAmount: "Amount (DH)",
+                btnExpense: "Add Expense",
+                dbTitle: "Database Cloud Terminal",
+                btnBackup: "Backup",
+                btnRestore: "Restore",
+                searchPlaceholder: "Real-time search index...",
+                filterAll: "All Accounts",
+                filterActive: "Active",
+                filterWarning: "Expiring Soon",
+                filterExpired: "Expired",
+                thId: "Client ID",
+                thName: "Full Name",
+                thPhone: "Phone",
+                thAddress: "Address",
+                thCin: "CIN",
+                thFee: "Fee",
+                thDate: "Expiry Date",
+                thStatus: "Status",
+                thActions: "Actions",
+                whatsappTitle: "Select Message Template",
+                temp1: "Send Expiry Alert",
+                temp2: "Send Welcome Message",
+                temp3: "Send Promotional Offer",
+                cancel: "Cancel"
+            },
+            fr: {
+                secureLogin: "Connexion Sécurisée",
+                gateway: "Passerelle de Réseau Privé d'Entreprise",
+                username: "Nom d'utilisateur",
+                password: "Mot de passe",
+                authenticate: "Authentifier la Session",
+                title: "Suite CRM Entreprise",
+                statTotal: "Total des Comptes",
+                statRevenue: "Revenu Actif",
+                statRisk: "Revenu à Risque",
+                statHealth: "Score de Santé",
+                chartTitle: "Distribution de Rétention des Comptes",
+                mgmtTitle: "Gestion des Comptes",
+                lblName: "Nom Complet",
+                lblPhone: "Numéro de Téléphone",
+                lblAddress: "Adresse",
+                lblCin: "Numéro CIN",
+                lblFee: "Frais d'Abonnement (DH)",
+                lblDate: "Date d'Expiration",
+                btnCommit: "Enregistrer l'Entrée",
+                btnExport: "Exporter les Données (CSV)",
+                expenseTitle: "Gestionnaire des Dépenses",
+                lblExpName: "Libellé de la Dépense",
+                lblExpAmount: "Montant (DH)",
+                btnExpense: "Ajouter la Dépense",
+                dbTitle: "Terminal Cloud de Base de Données",
+                btnBackup: "Sauvegarde",
+                btnRestore: "Restaurer",
+                searchPlaceholder: "Recherche en temps réel...",
+                filterAll: "Tous les Comptes",
+                filterActive: "Actifs",
+                filterWarning: "Expire Bientôt",
+                filterExpired: "Expirés",
+                thId: "ID Client",
+                thName: "Nom Complet",
+                thPhone: "Téléphone",
+                thAddress: "Adresse",
+                thCin: "CIN",
+                thFee: "Frais",
+                thDate: "Date d'Expiration",
+                thStatus: "Statut",
+                thActions: "Actions",
+                whatsappTitle: "Sélectionner le Modèle de Message",
+                temp1: "Alerte d'Expiration",
+                temp2: "Message de Bienvenue",
+                temp3: "Offre Promotionnelle",
+                cancel: "Annuler"
+            }
+        };
+
+        function toggleLanguage() {
+            currentLang = currentLang === "en" ? "fr" : "en";
+            applyTranslations();
+        }
+
+        function applyTranslations() {
+            var t = translations[currentLang];
+            document.querySelector(".lang-secure-login").innerText = t.secureLogin;
+            document.querySelector(".lang-gateway").innerText = t.gateway;
+            document.querySelector(".lang-username-label").innerText = t.username;
+            document.querySelector(".lang-password-label").innerText = t.password;
+            document.querySelector(".lang-authenticate").innerText = t.authenticate;
+            document.querySelector(".lang-title").innerText = t.title;
+            document.querySelector(".lang-stat-total").innerText = t.statTotal;
+            document.querySelector(".lang-stat-revenue").innerText = t.statRevenue;
+            document.querySelector(".lang-stat-risk").innerText = t.statRisk;
+            document.querySelector(".lang-stat-health").innerText = t.statHealth;
+            document.querySelector(".lang-chart-title").innerText = t.chartTitle;
+            document.querySelector(".lang-mgmt-title").innerHTML = '<i class="fa-solid fa-user-plus"></i> ' + t.mgmtTitle;
+            document.querySelector(".lang-lbl-name").innerText = t.lblName;
+            document.querySelector(".lang-lbl-phone").innerText = t.lblPhone;
+            document.querySelector(".lang-lbl-address").innerText = t.lblAddress;
+            document.querySelector(".lang-lbl-cin").innerText = t.lblCin;
+            document.querySelector(".lang-lbl-fee").innerText = t.lblFee;
+            document.querySelector(".lang-lbl-date").innerText = t.lblDate;
+            document.getElementById("saveBtn").innerHTML = '<i class="fa-solid fa-floppy-disk"></i> ' + t.btnCommit;
+            document.querySelector(".lang-btn-export").innerHTML = t.btnExport;
+            document.querySelector(".lang-expense-title").innerHTML = '<i class="fa-solid fa-wallet"></i> ' + t.expenseTitle;
+            document.querySelector(".lang-lbl-exp-name").innerText = t.lblExpName;
+            document.querySelector(".lang-lbl-exp-amount").innerText = t.lblExpAmount;
+            document.querySelector(".lang-btn-expense").innerHTML = t.btnExpense;
+            document.querySelector(".lang-db-title").innerHTML = '<i class="fa-solid fa-database"></i> ' + t.dbTitle;
+            document.querySelector(".lang-btn-backup").innerHTML = '<i class="fa-solid fa-download"></i> ' + t.btnBackup;
+            document.querySelector(".lang-btn-restore").innerHTML = '<i class="fa-solid fa-upload"></i> ' + t.btnRestore;
+            document.getElementById("searchFilter").placeholder = t.searchPlaceholder;
+            document.querySelector(".lang-filter-all").innerText = t.filterAll;
+            document.querySelector(".lang-filter-active").innerText = t.filterActive;
+            document.querySelector(".lang-filter-warning").innerText = t.filterWarning;
+            document.querySelector(".lang-filter-expired").innerText = t.filterExpired;
+            document.querySelector(".lang-th-id").innerText = t.thId;
+            document.querySelector(".lang-th-name").innerText = t.thName;
+            document.querySelector(".lang-th-phone").innerText = t.thPhone;
+            document.querySelector(".lang-th-address").innerText = t.thAddress;
+            document.querySelector(".lang-th-cin").innerText = t.thCin;
+            document.querySelector(".lang-th-fee").innerText = t.thFee;
+            document.querySelector(".lang-th-date").innerText = t.thDate;
+            document.querySelector(".lang-th-status").innerText = t.thStatus;
+            document.querySelector(".lang-th-actions").innerText = t.thActions;
+            document.querySelector(".lang-whatsapp-title").innerHTML = '<i class="fa-brands fa-whatsapp" style="color:var(--whatsapp)"></i> ' + t.whatsappTitle;
+            document.querySelector(".lang-temp-1").innerText = t.temp1;
+            document.querySelector(".lang-temp-2").innerText = t.temp2;
+            document.querySelector(".lang-temp-3").innerText = t.temp3;
+            document.querySelector(".lang-cancel").innerText = t.cancel;
+        }
+
+        function togglePasswordVisibility() {
+            var passInput = document.getElementById('adminPass');
+            var eyeIcon = document.getElementById('eyeIcon');
+            if (passInput.type === "password") {
+                passInput.type = "text";
+                eyeIcon.className = "fa-solid fa-eye-slash";
+            } else {
+                passInput.type = "password";
+                eyeIcon.className = "fa-solid fa-eye";
+            }
+        }
+
+        function playSystemSound(frequency, type, duration) {
+            if (!soundEnabled) return;
+            try {
+                var audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                var oscillator = audioCtx.createOscillator();
+                var gainNode = audioCtx.createGain();
+                oscillator.type = type; oscillator.frequency.value = frequency;
+                gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
+                oscillator.connect(gainNode); gainNode.connect(audioCtx.destination);
+                oscillator.start(); oscillator.stop(audioCtx.currentTime + duration);
+            } catch(e){}
+        }
+
+        function toggleAudio() {
+            soundEnabled = !soundEnabled;
+            document.getElementById('audioBtn').innerHTML = soundEnabled ? '<i class="fa-solid fa-volume-high"></i> Sounds On' : '<i class="fa-solid fa-volume-xmark"></i> Muted';
+        }
+
+        try {
+            var saved = localStorage.getItem('myDashboardData');
+            if(saved) { clientsList = JSON.parse(saved); }
+            var savedExpenses = localStorage.getItem('myExpensesData');
+            if(savedExpenses) { expensesList = JSON.parse(savedExpenses); }
+        } catch(e) { 
+            clientsList = []; 
+            expensesList = [];
+        }
+
+        function initChart(active, warning, expired) {
+            var ctx = document.getElementById('retentionChart').getContext('2d');
+            if(myChart) { myChart.destroy(); }
+            myChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Active', 'Expiring Soon', 'Expired'],
+                    datasets: [{ data: [active, warning, expired], backgroundColor: ['#10b981', '#f59e0b', '#ef4444'], borderWidth: 0 }]
+                },
+                options: {
+                    plugins: { legend: { display: true, position: 'right', labels: { color: '#64748b', boxWidth: 12 } } },
+                    responsive: true, maintainAspectRatio: false
+                }
+            });
+        }
+
+        function toggleTheme() {
+            var body = document.body;
+            var btn = document.getElementById('themeBtn');
+            if (body.classList.contains('dark-theme')) {
+                body.classList.remove('dark-theme');
+                btn.innerHTML = '<i class="fa-solid fa-moon"></i> Dark Mode';
+            } else {
+                body.classList.add('dark-theme');
+                btn.innerHTML = '<i class="fa-solid fa-sun"></i> Light Mode';
+            }
+        }
+
+        function showNotification(message, type = "success") {
+            var container = document.getElementById('toastContainer');
+            var toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            var icon = type === "success" ? "fa-circle-check" : (type === "warning" ? "fa-circle-exclamation" : "fa-triangle-exclamation");
+            toast.innerHTML = `<i class="fa-solid ${icon}"></i> <span>${message}</span>`;
+            container.appendChild(toast);
+            setTimeout(function() {
+                toast.style.animation = 'slideIn 0.3s ease-out reverse';
+                setTimeout(function() { toast.remove(); }, 300);
+            }, 3000);
+        }
+
+        function handleAdminLogin() {
+            var user = document.getElementById('adminUser').value.trim();
+            var pass = document.getElementById('adminPass').value.trim();
+            
+            if (user === "admin" && pass === "admin123") {
+                document.getElementById('loginPage').style.display = 'none';
+                document.getElementById('dashboardPage').style.display = 'block';
+                playSystemSound(523.25, 'sine', 0.15);
+                updateClientTable();
+                showNotification("Secure session authorized.", "success");
+            } else {
+                playSystemSound(150, 'sawtooth', 0.3);
+                showNotification("Invalid security credentials.", "danger");
+            }
+        }
+
+        function saveClientSecure() {
+            var username = document.getElementById('username').value.trim();
+            var phone = document.getElementById('phone').value.trim();
+            var adresse = document.getElementById('adresse').value.trim();
+            var cin = document.getElementById('cin').value.trim();
+            var price = document.getElementById('price').value.trim() || "0";
+            var expiryDate = document.getElementById('expiryDate').value;
+            var editIndex = parseInt(document.getElementById('editIndex').value);
+
+            if (!username || !phone || !adresse || !cin || !expiryDate) {
+                playSystemSound(300, 'triangle', 0.2);
+                showNotification("All data fields are critical.", "warning");
+                return;
+            }
+
+            if (editIndex === -1) {
+                var nextId = "C-" + String(clientsList.length + 1).padStart(3, '0');
+                clientsList.push({ id: nextId, username: username, phone: phone, adresse: adresse, cin: cin, price: price, expiryDate: expiryDate });
+                playSystemSound(600, 'sine', 0.1);
+                showNotification("New client index committed.", "success");
+            } else {
+                clientsList[editIndex] = { id: clientsList[editIndex].id, username: username, phone: phone, adresse: adresse, cin: cin, price: price, expiryDate: expiryDate };
+                document.getElementById('editIndex').value = "-1";
+                document.getElementById('saveBtn').innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Commit Record';
+                document.getElementById('saveBtn').className = "action-button btn-green";
+                playSystemSound(450, 'sine', 0.1);
+                showNotification("Record structure modified.", "success");
+            }
+            
+            localStorage.setItem('myDashboardData', JSON.stringify(clientsList));
+            updateClientTable();
+            clearForm();
+        }
+
+        function addExpense() {
+            var label = document.getElementById('expenseLabel').value.trim();
+            var amount = parseFloat(document.getElementById('expenseAmount').value.trim());
+
+            if (!label || isNaN(amount) || amount <= 0) {
+                showNotification("Please provide valid expense data.", "warning");
+                return;
+            }
+
+            expensesList.push({ label: label, amount: amount, date: new Date().toISOString().split('T')[0] });
+            localStorage.setItem('myExpensesData', JSON.stringify(expensesList));
+            
+            document.getElementById('expenseLabel').value = "";
+            document.getElementById('expenseAmount').value = "";
+            
+            showNotification("Expense added successfully.", "success");
+            updateClientTable();
+        }
+
+        function clearForm() {
+            document.getElementById('username').value = ""; document.getElementById('phone').value = "";
+            document.getElementById('adresse').value = ""; document.getElementById('cin').value = "";
+            document.getElementById('price').value = ""; document.getElementById('expiryDate').value = "";
+        }
+
+        function openWhatsappWizard(index) {
+            activeWhatsappClient = clientsList[index];
+            document.getElementById('whatsappModal').style.display = 'flex';
+        }
+        function closeModal() { document.getElementById('whatsappModal').style.display = 'none'; }
+
+        function sendSelectedTemplate(typeId) {
+            if(!activeWhatsappClient) return;
+            var client = activeWhatsappClient;
+            var cleanPhone = client.phone.replace(/\D/g, '');
+            if(!cleanPhone.startsWith('212') && cleanPhone.startsWith('0')) cleanPhone = '212' + cleanPhone.substring(1);
+            var msg = "";
+            if(typeId === 1) msg = "Salam " + client.username + ",\n\nNfakrokom anna l-ishtraky dyalkom ghadi ysali f " + client.expiryDate + ". Arjou tajdid l-ishtraky bash l-khedma tstamer.";
+            else if(typeId === 2) msg = "Marhaban bik m3ana " + client.username + ",\n\nKays3adna l-indimam dyalkom lina! L-hissab dyalkom tfa33el b-najah b-raqm: " + client.id;
+            else if(typeId === 3) msg = "Ahlan " + client.username + ",\n\nB-monasabat l-wafa dyalkom lina, kanqaddmo likom 3ard khass 3and tajdid l-ishtraky l-jay. Twaslo m3ana l-istifada!";
+            
+            window.open("https://wa.me/" + cleanPhone + "?text=" + encodeURIComponent(msg), '_blank');
+            closeModal();
+        }
+
+        function updateClientTable() {
+            var tbody = document.getElementById('clientTableBody');
+            if (!tbody) return; tbody.innerHTML = "";
+
+            var todayStr = new Date().toISOString().split('T')[0];
+            var targetStr = new Date(Date.now() + 5 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+
+            var activeCount = 0; var warningCount = 0; var expiredCount = 0;
+            var totalRevenue = 0; var riskRevenue = 0;
+
+            if (clientsList.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="9" style="text-align: center; color: var(--text-muted); padding:40px;">No operational records found.</td></tr>';
+                document.getElementById('aiInsightText').innerText = "System ledger is empty. Ready for client nodes.";
+                initChart(0,0,0); return;
+            }
+
+            for (var i = 0; i < clientsList.length; i++) {
+                var client = clientsList[i];
+                var statusText = "Active"; var statusClass = "status-active"; var filterType = "active";
+                var fee = parseFloat(client.price || 0);
+
+                if (client.expiryDate < todayStr) {
+                    statusText = "Expired"; statusClass = "status-expired"; filterType = "expired";
+                    expiredCount++;
+                } else if (client.expiryDate <= targetStr) {
+                    statusText = "Expiring"; statusClass = "status-warning"; filterType = "warning";
+                    warningCount++; riskRevenue += fee; totalRevenue += fee;
+                } else {
+                    activeCount++; totalRevenue += fee;
+                }
+
+                if (currentFilter !== "all" && currentFilter !== filterType) continue;
+
+                var row = document.createElement('tr');
+                row.className = "client-row-item";
+                row.innerHTML = "<td><span class='client-id-tag'>" + client.id + "</span></td>" +
+                    "<td style='font-weight:700;'>" + client.username + "</td>" +
+                    "<td>" + client.phone + "</td>" +
+                    "<td>" + client.adresse + "</td>" +
+                    "<td>" + client.cin + "</td>" +
+                    "<td style='font-weight:700; color:var(--primary);'>" + client.price + " DH</td>" +
+                    "<td>" + client.expiryDate + "</td>" +
+                    "<td><span class='status-badge " + statusClass + "'>" + statusText + "</span></td>" +
+                    "<td>" +
+                        "<div class='actions-flex-container'>" +
+                            "<button class='btn-table btn-edit' onclick='loadClientToForm(" + i + ")'><i class='fa-solid fa-pen'></i></button> " +
+                            "<button class='btn-table btn-print' onclick='printSingleClient(" + i + ")'><i class='fa-solid fa-print'></i></button> " +
+                            "<button class='btn-table btn-whatsapp' onclick='openWhatsappWizard(" + i + ")'><i class='fa-brands fa-whatsapp'></i> Ping</button> " +
+                            "<button class='btn-table btn-delete' onclick='deleteClient(" + i + ")'><i class='fa-solid fa-trash'></i></button>" +
+                        "</div>" +
+                    "</td>";
+                tbody.appendChild(row);
+            }
+
+            var totalExpenses = expensesList.reduce(function(acc, curr) { return acc + curr.amount; }, 0);
+            var netRevenue = totalRevenue - totalExpenses;
+
+            document.getElementById('statTotal').innerText = clientsList.length;
+            document.getElementById('statRevenue').innerText = netRevenue + " DH";
+            document.getElementById('statRisk').innerText = riskRevenue + " DH";
+            document.getElementById('statHealth').innerText = Math.round(((clientsList.length - expiredCount) / clientsList.length) * 100) + "%";
+
+            var insight = "All operational nodes healthy. Retention curves stable.";
+            if(warningCount > 0) insight = "Attention required: " + warningCount + " contracts expiring in 5 days. Recommend WhatsApp notifications.";
+            else if(expiredCount > 0) insight = "Notice: " + expiredCount + " accounts have lapsed. Outreach suggested.";
+            document.getElementById('aiInsightText').innerText = insight;
+
+            initChart(activeCount, warningCount, expiredCount);
+        }
+
+        function loadClientToForm(index) {
+            var client = clientsList[index];
+            document.getElementById('username').value = client.username; document.getElementById('phone').value = client.phone;
+            document.getElementById('adresse').value = client.adresse; document.getElementById('cin').value = client.cin;
+            document.getElementById('price').value = client.price; document.getElementById('expiryDate').value = client.expiryDate;
+            document.getElementById('editIndex').value = index;
+            document.getElementById('saveBtn').innerHTML = '<i class="fa-solid fa-arrows-rotate"></i> Update Index';
+            document.getElementById('saveBtn').className = "action-button btn-blue";
+        }
+
+        function filterClientsTable() {
+            var filter = document.getElementById("searchFilter").value.toLowerCase();
+            var rows = document.getElementsByClassName("client-row-item");
+            for (var i = 0; i < rows.length; i++) { rows[i].style.display = rows[i].innerText.toLowerCase().includes(filter) ? "" : "none"; }
+        }
+
+        function filterByStatus(status, element) {
+            currentFilter = status;
+            var buttons = document.getElementsByClassName('filter-btn');
+            for (var i = 0; i < buttons.length; i++) { buttons[i].classList.remove('active-filter'); }
+            element.classList.add('active-filter');
+            updateClientTable();
+        }
+
+        function deleteClient(index) {
+            if (confirm("Execute irreversible drop?")) {
+                clientsList.splice(index, 1);
+                localStorage.setItem('myDashboardData', JSON.stringify(clientsList));
+                playSystemSound(200, 'sawtooth', 0.25);
+                updateClientTable();
+                showNotification("Record dropped successfully.", "danger");
+            }
+        }
+
+        function startVoiceSearch() {
+            var SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            if (!SpeechRecognition) {
+                alert("Voice features not supported on this device ecosystem."); return;
+            }
+            var recognition = new SpeechRecognition();
+            var mic = document.getElementById('micBtn');
+            recognition.lang = 'en-US';
+            recognition.onstart = function() { mic.classList.add('listening'); };
+            recognition.onerror = function() { mic.classList.remove('listening'); };
+            recognition.onend = function() { mic.classList.remove('listening'); };
+            recognition.onresult = function(event) {
+                var text = event.results[0][0].transcript;
+                document.getElementById('searchFilter').value = text;
+                filterClientsTable();
+                showNotification("Filtering logs by: " + text, "success");
+            };
+            recognition.start();
+        }
+
+        function backupDatabase() {
+            var databaseObject = {
+                clients: clientsList,
+                expenses: expensesList
+            };
+            var dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(databaseObject));
+            var dlAnchorElem = document.createElement('a');
+            dlAnchorElem.setAttribute("href", dataStr);
+            dlAnchorElem.setAttribute("download", "crm_secure_backup.json");
+            dlAnchorElem.click();
+            showNotification("Database archive compiled.", "success");
+        }
+
+        function triggerRestore() { document.getElementById('restoreFile').click(); }
+        function restoreDatabase(input) {
+            var file = input.files[0];
+            if (!file) return;
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    var importedData = JSON.parse(e.target.result);
+                    if (importedData && importedData.clients && Array.isArray(importedData.clients)) {
+                        clientsList = importedData.clients;
+                        expensesList = importedData.expenses || [];
+                        localStorage.setItem('myDashboardData', JSON.stringify(clientsList));
+                        localStorage.setItem('myExpensesData', JSON.stringify(expensesList));
+                        updateClientTable();
+                        playSystemSound(523.25, 'sine', 0.2);
+                        showNotification("Database state restored.", "success");
+                    } else if (Array.isArray(importedData)) {
+                        clientsList = importedData;
+                        localStorage.setItem('myDashboardData', JSON.stringify(clientsList));
+                        updateClientTable();
+                        playSystemSound(523.25, 'sine', 0.2);
+                        showNotification("Database state restored.", "success");
+                    } else { alert("Bad archive file structure."); }
+                } catch(err) { alert("Data corruption detected."); }
+            };
+            reader.readAsText(file);
+        }
+
+        function printSingleClient(index) {
+            var client = clientsList[index];
+            var w = window.open();
+            w.document.write("<h2>CUSTOMER INVOICE</h2><hr><p><b>ID:</b> " + client.id + "</p><p><b>Name:</b> " + client.username + "</p><p><b>CIN:</b> " + client.cin + "</p><p><b>Fee:</b> " + client.price + " DH</p><p><b>Expiry:</b> " + client.expiryDate + "</p>");
+            w.print(); w.close();
+        }
+
+        function exportToCSV() {
+            var csvRows = [["Client ID", "Username", "Phone", "Address", "CIN", "Fee", "Expiry Date"].join(",")];
+            for (var i = 0; i < clientsList.length; i++) {
+                var c = clientsList[i]; csvRows.push(['"' + c.id + '"', '"' + c.username + '"', '"' + c.phone + '"', '"' + c.adresse + '"', '"' + c.cin + '"', '"' + c.price + '"', '"' + c.expiryDate + '"'].join(","));
+            }
+            var blob = new Blob(["\uFEFF" + csvRows.join("\n")], { type: 'text/csv;charset=utf-8;' });
+            var link = document.createElement("a"); link.href = URL.createObjectURL(blob); link.download = "crm_ledger.csv"; link.click();
+        }
+    </script>
+</body>
+</html>

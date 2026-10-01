@@ -1,0 +1,2099 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nexus Task Ultimate Pro Max</title>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6099629626386925"
+     crossorigin="anonymous"></script>
+
+    <style>
+        :root {
+            --bg-1: #030712;
+            --bg-2: #0a1022;
+            --bg-3: #111827;
+            --panel: rgba(15, 23, 42, 0.56);
+            --panel-strong: rgba(15, 23, 42, 0.9);
+            --glass: rgba(15, 23, 42, 0.58);
+            --card: rgba(12, 18, 32, 0.8);
+            --card-soft: rgba(17, 24, 39, 0.92);
+            --text: #e2e8f0;
+            --muted: #94a3b8;
+            --accent: #7dd3fc;
+            --accent-2: #8b5cf6;
+            --success: #34d399;
+            --warning: #fbbf24;
+            --danger: #f87171;
+            --border: rgba(148, 163, 184, 0.18);
+            --shadow: 0 30px 60px rgba(2, 6, 23, 0.55);
+            --input-bg: rgba(15, 23, 42, 0.8);
+            --tag-bg: rgba(125, 211, 252, 0.12);
+            --li-bg: rgba(15, 23, 42, 0.72);
+        }
+
+        body[data-theme="light"] {
+            --bg-1: #ecf7ff;
+            --bg-2: #dbeafe;
+            --bg-3: #eff6ff;
+            --panel: rgba(255,255,255,0.72);
+            --panel-strong: rgba(255,255,255,0.92);
+            --glass: rgba(255,255,255,0.64);
+            --card: rgba(255,255,255,0.8);
+            --card-soft: rgba(248,250,252,0.98);
+            --text: #0f172a;
+            --muted: #475569;
+            --accent: #2563eb;
+            --accent-2: #7c3aed;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --border: rgba(148,163,184,0.36);
+            --shadow: 0 20px 50px rgba(37, 99, 235, 0.12);
+            --input-bg: rgba(255,255,255,0.8);
+            --tag-bg: rgba(37, 99, 235, 0.08);
+            --li-bg: rgba(255,255,255,0.9);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 18px;
+            color: var(--text);
+            background:
+                radial-gradient(circle at top left, rgba(124, 58, 237, 0.3), transparent 28%),
+                radial-gradient(circle at right, rgba(34, 211, 238, 0.22), transparent 30%),
+                linear-gradient(135deg, var(--bg-1), var(--bg-2) 48%, var(--bg-3));
+            transition: background 0.35s ease, color 0.35s ease;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body[data-space="off"] {
+            background: linear-gradient(135deg, var(--bg-1), var(--bg-2) 48%, var(--bg-3));
+        }
+
+        .space-background {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            overflow: hidden;
+            z-index: 0;
+            isolation: isolate;
+        }
+
+        .space-background::before,
+        .space-background::after {
+            content: '';
+            position: absolute;
+            inset: -12%;
+            opacity: 0.42;
+            transition: opacity 0.5s ease;
+        }
+
+        .space-background::before {
+            background: radial-gradient(ellipse at 22% 28%, rgba(21, 121, 157, 0.19), transparent 29%), radial-gradient(ellipse at 79% 63%, rgba(99, 72, 147, 0.17), transparent 31%);
+            filter: blur(28px);
+            transform: translate3d(var(--space-x, 0), var(--space-y, 0), 0);
+        }
+
+        .space-background::after {
+            background: radial-gradient(ellipse at 52% 89%, rgba(29, 105, 117, 0.14), transparent 27%);
+            filter: blur(48px);
+            transform: translate3d(calc(var(--space-x, 0) * -0.6), calc(var(--space-y, 0) * -0.6), 0);
+        }
+
+        #spaceCanvas {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.9;
+        }
+
+        body[data-space="off"] .space-background::before,
+        body[data-space="off"] .space-background::after,
+        body[data-space="static"] .space-background::before,
+        body[data-space="static"] .space-background::after {
+            opacity: 0;
+            transform: none;
+        }
+
+        body[data-space="static"] #spaceCanvas {
+            opacity: 0.5;
+        }
+
+        body[data-space="off"] #spaceCanvas {
+            display: none;
+        }
+
+        .space-controls {
+            margin: 0 0 16px;
+            border-bottom: 1px solid var(--border);
+            color: var(--muted);
+        }
+
+        .space-controls summary {
+            width: fit-content;
+            padding: 7px 2px 12px;
+            color: var(--text);
+            font-size: 0.8rem;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .space-options {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px 16px;
+            padding: 0 0 14px;
+            font-size: 0.76rem;
+        }
+
+        .space-options label {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            min-height: 34px;
+        }
+
+        .space-options input[type="checkbox"] {
+            accent-color: var(--accent);
+            width: 16px;
+            height: 16px;
+        }
+
+        .space-options select,
+        .space-options button {
+            min-height: 34px;
+            padding: 6px 10px;
+            border: 1px solid var(--border);
+            border-radius: 9px;
+            background: var(--card-soft);
+            color: var(--text);
+            font: inherit;
+        }
+
+        .space-options button {
+            cursor: pointer;
+        }
+
+        .space-options button:disabled {
+            cursor: not-allowed;
+            opacity: 0.55;
+        }
+
+        .space-status {
+            flex-basis: 100%;
+            min-height: 1em;
+            color: var(--muted);
+        }
+
+        .app-shell {
+            width: min(1100px, 100%);
+            position: relative;
+            z-index: 2;
+            background: var(--panel);
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow);
+            backdrop-filter: blur(22px);
+            -webkit-backdrop-filter: blur(22px);
+            border-radius: 28px;
+            padding: 20px;
+            overflow: hidden;
+        }
+
+        .topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 18px;
+            padding: 8px 6px 16px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .brand-mark {
+            width: 48px;
+            height: 48px;
+            display: grid;
+            place-items: center;
+            border-radius: 16px;
+            background: linear-gradient(135deg, var(--accent), var(--accent-2));
+            color: white;
+            font-weight: 800;
+            box-shadow: 0 18px 34px rgba(124, 58, 237, 0.35);
+        }
+
+        .brand small {
+            display: block;
+            color: var(--muted);
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            font-size: 10px;
+            margin-bottom: 3px;
+        }
+
+        .brand h2 {
+            font-size: clamp(1.4rem, 2vw, 2rem);
+            font-weight: 800;
+        }
+
+        .top-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .streak-badge {
+            border: 1px solid rgba(251, 191, 36, 0.28);
+            background: rgba(251, 191, 36, 0.1);
+            color: #f8d76a;
+            padding: 8px 12px;
+            border-radius: 999px;
+            font-size: 0.83rem;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .theme-btn {
+            background: var(--card-soft);
+            color: var(--text);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            width: 42px;
+            height: 42px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
+        }
+
+        .language-select {
+            background: var(--card-soft);
+            color: var(--text);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 9px 12px;
+            font-weight: 700;
+            font-size: 0.8rem;
+            outline: none;
+            min-width: 110px;
+            cursor: pointer;
+        }
+
+        .theme-btn:hover,
+        .pomo-btn:hover,
+        .add-btn:hover,
+        .edit-btn:hover,
+        .delete-btn:hover,
+        .clear-all:hover,
+        .filter-btn:hover,
+        .quick-tag:hover,
+        .ghost-btn:hover {
+            transform: translateY(-1px);
+        }
+
+        .hero-panel {
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            gap: 18px;
+            margin-bottom: 18px;
+        }
+
+        .focus-card,
+        .mini-stat,
+        .panel,
+        .tips-panel {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.05);
+        }
+
+        .focus-card {
+            padding: 18px 18px 16px;
+            background: linear-gradient(135deg, rgba(37,99,235,0.18), rgba(168,85,247,0.14));
+        }
+
+        .focus-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: var(--muted);
+            font-size: 0.76rem;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            margin-bottom: 16px;
+        }
+
+        .live-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(52, 211, 153, 0.08);
+            border: 1px solid rgba(52, 211, 153, 0.2);
+            color: var(--success);
+            padding: 6px 10px;
+            border-radius: 999px;
+        }
+
+        .live-pill .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--success);
+            box-shadow: 0 0 12px rgba(52, 211, 153, 0.8);
+            animation: pulse 1.6s infinite ease-in-out;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.4); opacity: 0.7; }
+        }
+
+        .pomodoro-time {
+            font-size: clamp(2rem, 5vw, 3.1rem);
+            font-weight: 800;
+            letter-spacing: 0.08em;
+            margin-bottom: 16px;
+            color: #f8fbff;
+            text-shadow: 0 0 18px rgba(125,211,252,0.38);
+        }
+
+        .pomodoro-btns {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .pomo-btn,
+        .add-btn,
+        .edit-btn,
+        .delete-btn,
+        .filter-btn,
+        .ghost-btn,
+        .quick-tag {
+            border: none;
+            cursor: pointer;
+            transition: all 0.25s ease;
+        }
+
+        .pomo-btn {
+            padding: 10px 16px;
+            border-radius: 14px;
+            font-weight: 700;
+            color: white;
+            background: linear-gradient(135deg, var(--accent), var(--accent-2));
+            box-shadow: 0 18px 32px rgba(124, 58, 237, 0.18);
+        }
+
+        .pomo-btn.reset {
+            background: linear-gradient(135deg, #f59e0b, #f97316);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 12px;
+        }
+
+        .mini-stat {
+            padding: 18px 16px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            min-height: 120px;
+        }
+
+        .mini-stat span {
+            font-size: 0.72rem;
+            color: var(--muted);
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        .mini-stat strong {
+            margin-top: 10px;
+            font-size: clamp(1.8rem, 3vw, 2.5rem);
+            font-weight: 800;
+        }
+
+        .workspace {
+            display: grid;
+            grid-template-columns: minmax(320px, 0.95fr) minmax(0, 1.45fr);
+            gap: 18px;
+        }
+
+        .panel {
+            padding: 18px;
+            background: rgba(15, 23, 42, 0.5);
+        }
+
+        .panel-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 14px;
+        }
+
+        .panel-head h3 {
+            font-size: 1.08rem;
+            font-weight: 800;
+        }
+
+        .chip {
+            padding: 6px 10px;
+            border-radius: 999px;
+            font-size: 0.7rem;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            color: var(--muted);
+            background: var(--tag-bg);
+            border: 1px solid var(--border);
+        }
+
+        .search-box {
+            width: 100%;
+            padding: 14px 16px;
+            margin-bottom: 14px;
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            background: var(--input-bg);
+            color: var(--text);
+            outline: none;
+            font-size: 0.94rem;
+        }
+
+        .search-box:focus,
+        input[type="text"]:focus,
+        input[type="datetime-local"]:focus,
+        select:focus {
+            border-color: rgba(125, 211, 252, 0.7);
+            box-shadow: 0 0 0 4px rgba(125, 211, 252, 0.12);
+        }
+
+        .quick-pills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 18px;
+        }
+
+        .quick-tag {
+            background: var(--tag-bg);
+            color: var(--text);
+            border: 1px solid var(--border);
+            padding: 9px 12px;
+            border-radius: 999px;
+            font-size: 0.76rem;
+            font-weight: 700;
+        }
+
+        .input-section {
+            display: grid;
+            gap: 12px;
+        }
+
+        input[type="text"], input[type="datetime-local"], select {
+            width: 100%;
+            padding: 12px 14px;
+            border-radius: 14px;
+            border: 1px solid var(--border);
+            background: var(--input-bg);
+            color: var(--text);
+            outline: none;
+            font-size: 0.93rem;
+        }
+
+        .input-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .add-btn {
+            margin-top: 4px;
+            width: 100%;
+            padding: 14px 18px;
+            border-radius: 16px;
+            background: linear-gradient(135deg, var(--accent), var(--accent-2));
+            color: white;
+            font-weight: 800;
+            letter-spacing: 0.02em;
+        }
+
+        .filter-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            flex: 1 1 0;
+            min-width: 86px;
+            padding: 10px 12px;
+            border-radius: 12px;
+            background: var(--input-bg);
+            color: var(--text);
+            border: 1px solid var(--border);
+            font-weight: 700;
+        }
+
+        .filter-btn.active {
+            background: linear-gradient(135deg, var(--accent), var(--accent-2));
+            border-color: transparent;
+            color: white;
+        }
+
+        .progress-wrap {
+            margin-bottom: 16px;
+        }
+
+        .progress-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 8px;
+            color: var(--muted);
+            font-size: 0.78rem;
+            font-weight: 600;
+        }
+
+        .progress-container {
+            width: 100%;
+            height: 12px;
+            border-radius: 999px;
+            background: rgba(148, 163, 184, 0.16);
+            overflow: hidden;
+            border: 1px solid var(--border);
+        }
+
+        .progress-bar {
+            height: 100%;
+            width: 0%;
+            border-radius: 999px;
+            background: linear-gradient(90deg, var(--success), var(--accent));
+            box-shadow: 0 0 16px rgba(52, 211, 153, 0.35);
+            transition: width 0.35s ease;
+        }
+
+        ul {
+            list-style: none;
+            max-height: 420px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            padding-right: 4px;
+        }
+
+        li {
+            background: var(--li-bg);
+            color: var(--text);
+            padding: 14px 12px;
+            border-radius: 18px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            border-left: 4px solid rgba(125, 211, 252, 0.9);
+            border: 1px solid var(--border);
+            box-shadow: 0 8px 20px rgba(15, 23, 42, 0.08);
+            animation: fadeIn 0.35s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        li.completed {
+            opacity: 0.72;
+            text-decoration: line-through;
+            border-left-color: var(--success);
+        }
+
+        li.expired {
+            border-left-color: var(--danger) !important;
+            background: rgba(248, 113, 113, 0.08);
+        }
+
+        .task-info {
+            cursor: pointer;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
+        }
+
+        .task-title {
+            font-size: 0.96rem;
+            font-weight: 700;
+            word-break: break-word;
+        }
+
+        .task-details {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            font-size: 0.72rem;
+            color: var(--muted);
+        }
+
+        .badge,
+        .repeat-badge {
+            padding: 4px 7px;
+            border-radius: 8px;
+            font-size: 0.68rem;
+            font-weight: 800;
+            letter-spacing: 0.02em;
+        }
+
+        .badge {
+            background: rgba(59, 130, 246, 0.14);
+            color: #93c5fd;
+        }
+
+        .repeat-badge {
+            background: rgba(251, 191, 36, 0.12);
+            color: #fcd34d;
+        }
+
+        .task-actions {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .edit-btn,
+        .delete-btn {
+            padding: 8px 10px;
+            border-radius: 10px;
+            color: white;
+            font-size: 0.72rem;
+            font-weight: 700;
+        }
+
+        .edit-btn { background: linear-gradient(135deg, #f59e0b, #fb7185); }
+        .delete-btn { background: linear-gradient(135deg, #ef4444, #f43f5e); }
+
+        .ghost-btn,
+        .clear-all {
+            width: 100%;
+            padding: 12px 14px;
+            border-radius: 14px;
+            border: 1px solid rgba(248,113,113,0.28);
+            background: rgba(239,68,68,0.06);
+            color: #fca5a5;
+            font-weight: 700;
+        }
+
+        .tips-panel {
+            margin-top: 18px;
+            padding: 18px;
+        }
+
+        .tips-panel h4 {
+            font-size: 1rem;
+            font-weight: 800;
+            margin-bottom: 14px;
+        }
+
+        .tip-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 12px;
+        }
+
+        .tip-card {
+            padding: 14px;
+            border-radius: 18px;
+            background: rgba(124, 58, 237, 0.08);
+            border: 1px solid var(--border);
+        }
+
+        .tip-card .icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 34px;
+            height: 34px;
+            border-radius: 10px;
+            background: rgba(125, 211, 252, 0.12);
+            margin-bottom: 8px;
+            font-size: 1.1rem;
+        }
+
+        .tip-card h5 {
+            margin-bottom: 6px;
+            font-size: 0.95rem;
+        }
+
+        .tip-card p {
+            color: var(--muted);
+            line-height: 1.5;
+            font-size: 0.8rem;
+        }
+
+        .site-footer {
+            margin-top: 16px;
+            display: flex;
+            justify-content: center;
+            gap: 18px;
+            color: var(--muted);
+            font-size: 0.75rem;
+            flex-wrap: wrap;
+        }
+
+        .site-footer span {
+            cursor: pointer;
+            transition: color 0.2s ease;
+        }
+
+        .site-footer span:hover {
+            color: var(--text);
+        }
+
+        #toast {
+            position: fixed;
+            top: 18px;
+            left: 50%;
+            transform: translateX(-50%) translateY(-30px);
+            background: linear-gradient(135deg, var(--success), #2dd4bf);
+            color: white;
+            padding: 10px 16px;
+            border-radius: 999px;
+            font-size: 0.82rem;
+            font-weight: 700;
+            box-shadow: 0 16px 36px rgba(16, 185, 129, 0.25);
+            opacity: 0;
+            transition: opacity 0.25s ease, transform 0.25s ease;
+            z-index: 50;
+            pointer-events: none;
+        }
+
+        #toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        @media (max-width: 900px) {
+            .workspace,
+            .hero-panel {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 640px) {
+            body {
+                padding: 12px;
+            }
+
+            .app-shell {
+                padding: 14px;
+                border-radius: 20px;
+            }
+
+            .topbar {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .top-actions {
+                width: 100%;
+                justify-content: space-between;
+            }
+
+            .input-row,
+            .tip-grid,
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .filter-tabs {
+                display: grid;
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+            }
+
+            .task-actions {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+    </style>
+</head>
+<body data-theme="dark">
+
+    <div class="space-background">
+        <canvas id="spaceCanvas" aria-hidden="true"></canvas>
+    </div>
+
+    <div class="app-shell">
+        <div id="toast">Notification Message</div>
+
+        <header class="topbar">
+            <div class="brand">
+                <div class="brand-mark">N</div>
+                <div>
+                    <small id="brandTag">Orbit Planner</small>
+                    <h2 id="pageTitle">Nexus Task</h2>
+                </div>
+            </div>
+            <div class="top-actions">
+                <span class="streak-badge" id="streakText">🔥 1 Day</span>
+                <select class="language-select" id="languageSelect" aria-label="Select language">
+                    <option value="en">English</option>
+                    <option value="fr">Français</option>
+                    <option value="ar">العربية</option>
+                    <option value="es">Español</option>
+                    <option value="de">Deutsch</option>
+                    <option value="tr">Türkçe</option>
+                </select>
+                <button class="theme-btn" id="themeToggle" title="Toggle Theme">🌙</button>
+            </div>
+        </header>
+
+        <details class="space-controls" id="spaceControls">
+            <summary id="spaceSettingsTitle">Personal space settings</summary>
+            <div class="space-options">
+                <label for="spaceQuality"><span id="spaceQualityLabel">Quality</span>
+                    <select id="spaceQuality">
+                        <option value="high">High</option>
+                        <option value="balanced" selected>Balanced</option>
+                        <option value="battery">Battery saver</option>
+                    </select>
+                </label>
+                <label><input type="checkbox" id="reduceMotion"><span id="reduceMotionLabel">Reduce motion</span></label>
+                <label><input type="checkbox" id="staticSpace"><span id="staticSpaceLabel">Static background</span></label>
+                <label><input type="checkbox" id="disableSpace"><span id="disableSpaceLabel">Disable space effects</span></label>
+                <button type="button" id="motionPermission">Enable device motion</button>
+                <button type="button" id="cameraToggle">Enable camera interaction</button>
+                <span class="space-status" id="spaceStatus" role="status" aria-live="polite"></span>
+            </div>
+        </details>
+
+        <section class="hero-panel">
+            <div class="focus-card">
+                <div class="focus-header">
+                    <span id="focusModeLabel">Focus Mode</span>
+                    <span class="live-pill"><span class="dot"></span><span id="liveBadge">Live</span></span>
+                </div>
+                <div class="pomodoro-time" id="pomoTimer">25:00</div>
+                <div class="pomodoro-btns">
+                    <button class="pomo-btn" id="pomoStart">Start Focus</button>
+                    <button class="pomo-btn reset" id="pomoReset">Reset</button>
+                </div>
+            </div>
+
+            <div class="stats-grid">
+                <div class="mini-stat">
+                    <span id="totalLabel">Total</span>
+                    <strong id="totalStat">0</strong>
+                </div>
+                <div class="mini-stat">
+                    <span id="activeLabel">Active</span>
+                    <strong id="activeStat">0</strong>
+                </div>
+                <div class="mini-stat">
+                    <span id="doneLabel">Done</span>
+                    <strong id="completedStat">0</strong>
+                </div>
+                <div class="mini-stat">
+                    <span id="streakLabel">Streak</span>
+                    <strong id="streakStat">1d</strong>
+                </div>
+            </div>
+        </section>
+
+        <main class="workspace">
+            <section class="panel composer-panel">
+                <div class="panel-head">
+                    <h3 id="quickAddTitle">Quick Add</h3>
+                    <span class="chip" id="aiPlanChip">AI Plan</span>
+                </div>
+
+                <input type="text" id="searchBox" class="search-box" placeholder="🔍 Search tasks...">
+
+                <div class="quick-pills">
+                    <button class="quick-tag" data-text="Deep Work Sprint">Deep Work</button>
+                    <button class="quick-tag" data-text="Review daily goals">Review</button>
+                    <button class="quick-tag" data-text="Workout and reset">Wellness</button>
+                    <button class="quick-tag" data-text="Inbox zero">Inbox</button>
+                </div>
+
+                <div class="input-section">
+                    <input type="text" id="taskInput" placeholder="What needs to be done?">
+                    <div class="input-row">
+                        <select id="categorySelect">
+                            <option value="Work">💼 Work</option>
+                            <option value="Study">📚 Study</option>
+                            <option value="Personal">🎯 Personal</option>
+                        </select>
+                        <select id="repeatSelect">
+                            <option value="None">No Repeat</option>
+                            <option value="Daily">Daily</option>
+                            <option value="Weekly">Weekly</option>
+                        </select>
+                    </div>
+                    <input type="datetime-local" id="dateTimeInput">
+                    <button class="add-btn" id="addBtn">Add Task with Alert</button>
+                </div>
+            </section>
+
+            <section class="panel task-panel">
+                <div class="panel-head">
+                    <h3 id="missionBoardTitle">Mission Board</h3>
+                    <button class="ghost-btn" id="clearAllBtn">Clear All</button>
+                </div>
+
+                <div class="filter-tabs">
+                    <button class="filter-btn active" data-filter="all">All</button>
+                    <button class="filter-btn" data-filter="active">Active</button>
+                    <button class="filter-btn" data-filter="completed">Completed</button>
+                </div>
+
+                <div class="progress-wrap">
+                    <div class="progress-meta">
+                        <span id="statsText">Completed: 0 / 0</span>
+                        <span id="progressPercent">0%</span>
+                    </div>
+                    <div class="progress-container">
+                        <div class="progress-bar" id="progressBar"></div>
+                    </div>
+                </div>
+
+                <ul id="taskList"></ul>
+            </section>
+        </main>
+
+        <div class="tips-panel">
+            <h4 id="playbookTitle">Productivity playbook</h4>
+            <div class="tip-grid">
+                <article class="tip-card">
+                    <div class="icon">⚡</div>
+                    <h5>Time blocks</h5>
+                    <p>Use focused sessions to cut distractions and keep your mind on the real priorities.</p>
+                </article>
+                <article class="tip-card">
+                    <div class="icon">🧠</div>
+                    <h5>Prioritize</h5>
+                    <p>Start with the highest-value task and let the rest wait without losing momentum.</p>
+                </article>
+                <article class="tip-card">
+                    <div class="icon">🎯</div>
+                    <h5>Momentum</h5>
+                    <p>Small wins keep you in motion; complete one real task before switching context.</p>
+                </article>
+            </div>
+        </div>
+
+        <div class="site-footer">
+            <span id="aboutLink" onclick="alert('Nexus Task is designed to help you organize your time, goals, and daily focus with clarity.')">About</span>
+            <span id="privacyLink" onclick="alert('Privacy: your tasks remain in your browser and are not shared with third parties.')">Privacy</span>
+        </div>
+    </div>
+
+    <script>
+        const taskInput = document.getElementById('taskInput');
+        const dateTimeInput = document.getElementById('dateTimeInput');
+        const categorySelect = document.getElementById('categorySelect');
+        const repeatSelect = document.getElementById('repeatSelect');
+        const addBtn = document.getElementById('addBtn');
+        const taskList = document.getElementById('taskList');
+        const statsText = document.getElementById('statsText');
+        const progressBar = document.getElementById('progressBar');
+        const progressPercent = document.getElementById('progressPercent');
+        const totalStat = document.getElementById('totalStat');
+        const activeStat = document.getElementById('activeStat');
+        const completedStat = document.getElementById('completedStat');
+        const streakStat = document.getElementById('streakStat');
+        const themeToggle = document.getElementById('themeToggle');
+        const clearAllBtn = document.getElementById('clearAllBtn');
+        const searchBox = document.getElementById('searchBox');
+        const streakText = document.getElementById('streakText');
+        const toast = document.getElementById('toast');
+        const body = document.body;
+        const filterBtns = document.querySelectorAll('.filter-btn');
+        const suggestionBtns = document.querySelectorAll('.quick-tag');
+        const languageSelect = document.getElementById('languageSelect');
+        const spaceCanvas = document.getElementById('spaceCanvas');
+        const spaceContext = spaceCanvas.getContext('2d', { alpha: true });
+        const spaceQuality = document.getElementById('spaceQuality');
+        const reduceMotionToggle = document.getElementById('reduceMotion');
+        const staticSpaceToggle = document.getElementById('staticSpace');
+        const disableSpaceToggle = document.getElementById('disableSpace');
+        const motionPermissionButton = document.getElementById('motionPermission');
+        const cameraToggle = document.getElementById('cameraToggle');
+        const spaceStatus = document.getElementById('spaceStatus');
+
+        let currentFilter = 'all';
+        let editIndex = null;
+        let currentLang = localStorage.getItem('nexus_lang') || 'en';
+        const spaceSettings = JSON.parse(localStorage.getItem('nexus_space_settings') || '{}');
+        let spaceStars = [];
+        let spaceWidth = 0;
+        let spaceHeight = 0;
+        let frameRequest = 0;
+        let targetX = 0;
+        let targetY = 0;
+        let pointerX = 0;
+        let pointerY = 0;
+        let orientationEnabled = false;
+        let cameraStream = null;
+        let cameraVideo = null;
+        let cameraPrevious = null;
+        let cameraFrameRequest = 0;
+        let lastFrameTime = 0;
+        let completionCount = Number(localStorage.getItem('nexus_completed_total') || 0);
+        let completionFlashUntil = 0;
+
+        const translations = {
+            en: {
+                orbitPlanner: 'Orbit Planner',
+                appTitle: 'Nexus Task',
+                focusMode: 'Focus Mode',
+                live: 'Live',
+                total: 'Total',
+                active: 'Active',
+                done: 'Done',
+                streak: 'Streak',
+                quickAdd: 'Quick Add',
+                aiPlan: 'AI Plan',
+                searchTasks: '🔍 Search tasks...',
+                deepWork: 'Deep Work',
+                review: 'Review',
+                wellness: 'Wellness',
+                inbox: 'Inbox',
+                whatNeed: 'What needs to be done?',
+                addTaskAlert: 'Add Task with Alert',
+                updateTask: 'Update Task',
+                missionBoard: 'Mission Board',
+                clearAll: 'Clear All',
+                all: 'All',
+                filters: { all: 'All', active: 'Active', completed: 'Completed' },
+                progress: 'Progress',
+                completedLabel: 'Completed',
+                productivityPlaybook: 'Productivity playbook',
+                timeBlocks: 'Time blocks',
+                prioritize: 'Prioritize',
+                momentum: 'Momentum',
+                about: 'About',
+                privacy: 'Privacy',
+                startFocus: 'Start Focus',
+                reset: 'Reset',
+                pause: 'Pause',
+                day: 'Day',
+                edit: 'Edit',
+                delete: 'Delete',
+                taskAdded: 'Task & Deadline set successfully!',
+                taskUpdated: 'Task updated successfully!',
+                taskDeleted: 'Task Deleted',
+                taskCompleted: 'Task Completed! 🎉',
+                taskNameRequired: 'Please enter a task name!',
+                focusCompleted: 'Focus session completed!',
+                allTasksCleared: 'All tasks cleared',
+                timeUp: 'Time\'s up for',
+                aboutMessage: 'Nexus Task is designed to help you organize your time, goals, and daily focus with clarity.',
+                privacyMessage: 'Privacy: your tasks remain in your browser and are not shared with third parties.',
+                tipTimeBlocks: 'Time blocks',
+                tipPrioritize: 'Prioritize',
+                tipMomentum: 'Momentum',
+                tipTimeBlocksText: 'Use focused sessions to cut distractions and keep your mind on the real priorities.',
+                tipPrioritizeText: 'Start with the highest-value task and let the rest wait without losing momentum.',
+                tipMomentumText: 'Small wins keep you in motion; complete one real task before switching context.',
+                categories: { Work: 'Work', Study: 'Study', Personal: 'Personal' },
+                repeats: { None: 'No Repeat', Daily: 'Daily', Weekly: 'Weekly' },
+                monthShort: ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
+            },
+            fr: {
+                orbitPlanner: 'Planificateur Orbit',
+                appTitle: 'Nexus Task',
+                focusMode: 'Mode Focus',
+                live: 'En direct',
+                total: 'Total',
+                active: 'Actif',
+                done: 'Terminé',
+                streak: 'Série',
+                quickAdd: 'Ajout rapide',
+                aiPlan: 'Plan IA',
+                searchTasks: '🔍 Rechercher des tâches...',
+                deepWork: 'Travail profond',
+                review: 'Révision',
+                wellness: 'Bien-être',
+                inbox: 'Boîte',
+                whatNeed: 'Qu’avez-vous à faire ?',
+                addTaskAlert: 'Ajouter une tâche avec alerte',
+                updateTask: 'Mettre à jour',
+                missionBoard: 'Tableau de missions',
+                clearAll: 'Tout effacer',
+                all: 'Tout',
+                filters: { all: 'Tout', active: 'Actives', completed: 'Terminées' },
+                progress: 'Progression',
+                completedLabel: 'Complété',
+                productivityPlaybook: 'Guide de productivité',
+                timeBlocks: 'Blocs de temps',
+                prioritize: 'Prioriser',
+                momentum: 'Élan',
+                about: 'À propos',
+                privacy: 'Confidentialité',
+                startFocus: 'Démarrer',
+                reset: 'Réinitialiser',
+                pause: 'Pause',
+                day: 'Jour',
+                edit: 'Modifier',
+                delete: 'Supprimer',
+                taskAdded: 'Tâche et échéance enregistrées !',
+                taskUpdated: 'Tâche mise à jour !',
+                taskDeleted: 'Tâche supprimée',
+                taskCompleted: 'Tâche terminée ! 🎉',
+                taskNameRequired: 'Veuillez saisir un nom de tâche !',
+                focusCompleted: 'Session de concentration terminée !',
+                allTasksCleared: 'Toutes les tâches ont été supprimées',
+                timeUp: 'Le temps est écoulé pour',
+                aboutMessage: 'Nexus Task est conçu pour vous aider à organiser votre temps, vos objectifs et votre concentration quotidienne avec clarté.',
+                privacyMessage: 'Confidentialité : vos tâches restent dans votre navigateur et ne sont pas partagées avec des tiers.',
+                tipTimeBlocks: 'Blocs de temps',
+                tipPrioritize: 'Prioriser',
+                tipMomentum: 'Élan',
+                tipTimeBlocksText: 'Utilisez des sessions ciblées pour réduire les distractions et rester concentré sur les vraies priorités.',
+                tipPrioritizeText: 'Commencez par la tâche la plus importante et laissez le reste attendre sans perdre votre élan.',
+                tipMomentumText: 'Les petites victoires gardent le mouvement; terminez une vraie tâche avant de changer de contexte.',
+                categories: { Work: 'Travail', Study: 'Étude', Personal: 'Personnel' },
+                repeats: { None: 'Aucune répétition', Daily: 'Quotidien', Weekly: 'Hebdomadaire' },
+                monthShort: ['Jan','Fév','Mar','Avr','Mai','Juin','Juil','Aoû','Sep','Oct','Nov','Déc']
+            },
+            ar: {
+                orbitPlanner: 'مخطط المدار',
+                appTitle: 'نكسس تاسك',
+                focusMode: 'وضع التركيز',
+                live: 'مباشر',
+                total: 'الإجمالي',
+                active: 'نشط',
+                done: 'مكتمل',
+                streak: 'السلسلة',
+                quickAdd: 'إضافة سريعة',
+                aiPlan: 'خطة الذكاء',
+                searchTasks: '🔍 ابحث في المهام...',
+                deepWork: 'عمل عميق',
+                review: 'مراجعة',
+                wellness: 'العناية',
+                inbox: 'الوارد',
+                whatNeed: 'ماذا تريد إنجاز؟',
+                addTaskAlert: 'إضافة مهمة مع تنبيه',
+                updateTask: 'تحديث المهمة',
+                missionBoard: 'لوحة المهام',
+                clearAll: 'مسح الكل',
+                all: 'الكل',
+                filters: { all: 'الكل', active: 'النشطة', completed: 'المكتملة' },
+                progress: 'التقدم',
+                completedLabel: 'مكتمل',
+                productivityPlaybook: 'دليل الإنتاجية',
+                timeBlocks: 'كتل الوقت',
+                prioritize: 'الأولوية',
+                momentum: 'الزخم',
+                about: 'من نحن',
+                privacy: 'الخصوصية',
+                startFocus: 'ابدأ التركيز',
+                reset: 'إعادة ضبط',
+                pause: 'إيقاف',
+                day: 'يوم',
+                edit: 'تعديل',
+                delete: 'حذف',
+                taskAdded: 'تمت إضافة المهمة وتحديد الموعد بنجاح!',
+                taskUpdated: 'تم تحديث المهمة بنجاح!',
+                taskDeleted: 'تم حذف المهمة',
+                taskCompleted: 'تم إنجاز المهمة! 🎉',
+                taskNameRequired: 'يرجى إدخال اسم المهمة!',
+                focusCompleted: 'انتهت جلسة التركيز!',
+                allTasksCleared: 'تم مسح جميع المهام',
+                timeUp: 'انتهى الوقت لـ',
+                aboutMessage: 'تم تصميم Nexus Task لمساعدتك على تنظيم وقتك وأهدافك وتركيزك اليومي بوضوح.',
+                privacyMessage: 'الخصوصية: تظل مهامك في متصفحك ولا يتم مشاركتها مع أطراف خارجية.',
+                tipTimeBlocks: 'كتل الوقت',
+                tipPrioritize: 'الأولوية',
+                tipMomentum: 'الزخم',
+                tipTimeBlocksText: 'استخدم جلسات مركزة لتقليل التشتيت والبقاء على أولوياتك الحقيقية.',
+                tipPrioritizeText: 'ابدأ بأهم مهمة ثم اترك الباقي ينتظر دون فقدان الزخم.',
+                tipMomentumText: 'الانتصارات الصغيرة تبقيك متحركًا؛ أكمل مهمة حقيقية قبل تغيير السياق.',
+                categories: { Work: 'العمل', Study: 'الدراسة', Personal: 'شخصي' },
+                repeats: { None: 'بدون تكرار', Daily: 'يومي', Weekly: 'أسبوعي' },
+                monthShort: ['يناير','فبراير','مارس','أبريل','مايو','يونيو','يوليو','أغسطس','سبتمبر','أكتوبر','نوفمبر','ديسمبر']
+            },
+            es: {
+                orbitPlanner: 'Planificador Orbital',
+                appTitle: 'Nexus Task',
+                focusMode: 'Modo enfoque',
+                live: 'En vivo',
+                total: 'Total',
+                active: 'Activo',
+                done: 'Hecho',
+                streak: 'Racha',
+                quickAdd: 'Añadir rápido',
+                aiPlan: 'Plan IA',
+                searchTasks: '🔍 Buscar tareas...',
+                deepWork: 'Trabajo profundo',
+                review: 'Revisión',
+                wellness: 'Bienestar',
+                inbox: 'Bandeja',
+                whatNeed: '¿Qué necesitas hacer?',
+                addTaskAlert: 'Añadir tarea con alerta',
+                updateTask: 'Actualizar tarea',
+                missionBoard: 'Tablero de tareas',
+                clearAll: 'Borrar todo',
+                all: 'Todo',
+                filters: { all: 'Todo', active: 'Activas', completed: 'Completas' },
+                progress: 'Progreso',
+                completedLabel: 'Completado',
+                productivityPlaybook: 'Guía de productividad',
+                timeBlocks: 'Bloques de tiempo',
+                prioritize: 'Priorización',
+                momentum: 'Momentum',
+                about: 'Acerca de',
+                privacy: 'Privacidad',
+                startFocus: 'Iniciar enfoque',
+                reset: 'Reiniciar',
+                pause: 'Pausa',
+                day: 'Día',
+                edit: 'Editar',
+                delete: 'Eliminar',
+                taskAdded: '¡Tarea y fecha guardadas correctamente!',
+                taskUpdated: '¡Tarea actualizada!',
+                taskDeleted: 'Tarea eliminada',
+                taskCompleted: '¡Tarea completada! 🎉',
+                taskNameRequired: '¡Ingresa un nombre para la tarea!',
+                focusCompleted: '¡Sesión de enfoque completada!',
+                allTasksCleared: 'Todas las tareas fueron eliminadas',
+                timeUp: 'Se acabó el tiempo para',
+                aboutMessage: 'Nexus Task está diseñado para ayudarte a organizar tu tiempo, objetivos y enfoque diario con claridad.',
+                privacyMessage: 'Privacidad: tus tareas permanecen en tu navegador y no se comparten con terceros.',
+                tipTimeBlocks: 'Bloques de tiempo',
+                tipPrioritize: 'Priorización',
+                tipMomentum: 'Momentum',
+                tipTimeBlocksText: 'Usa sesiones enfocadas para reducir distracciones y mantener la atención en las prioridades reales.',
+                tipPrioritizeText: 'Empieza por la tarea de mayor valor y deja el resto para después sin perder impulso.',
+                tipMomentumText: 'Las pequeñas victorias mantienen el movimiento; completa una tarea real antes de cambiar de contexto.',
+                categories: { Work: 'Trabajo', Study: 'Estudio', Personal: 'Personal' },
+                repeats: { None: 'Sin repetir', Daily: 'Diario', Weekly: 'Semanal' },
+                monthShort: ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic']
+            },
+            de: {
+                orbitPlanner: 'Orbit-Planer',
+                appTitle: 'Nexus Task',
+                focusMode: 'Fokusmodus',
+                live: 'Live',
+                total: 'Gesamt',
+                active: 'Aktiv',
+                done: 'Erledigt',
+                streak: 'Serie',
+                quickAdd: 'Schnell hinzufügen',
+                aiPlan: 'KI-Plan',
+                searchTasks: '🔍 Aufgaben suchen...',
+                deepWork: 'Tiefenarbeit',
+                review: 'Review',
+                wellness: 'Gesundheit',
+                inbox: 'Posteingang',
+                whatNeed: 'Was musst du erledigen?',
+                addTaskAlert: 'Aufgabe mit Alarm hinzufügen',
+                updateTask: 'Aufgabe aktualisieren',
+                missionBoard: 'Mission Board',
+                clearAll: 'Alles löschen',
+                all: 'Alle',
+                filters: { all: 'Alle', active: 'Aktiv', completed: 'Erledigt' },
+                progress: 'Fortschritt',
+                completedLabel: 'Erledigt',
+                productivityPlaybook: 'Produktivitätsleitfaden',
+                timeBlocks: 'Zeitblöcke',
+                prioritize: 'Priorisieren',
+                momentum: 'Momentum',
+                about: 'Über uns',
+                privacy: 'Datenschutz',
+                startFocus: 'Fokus starten',
+                reset: 'Zurücksetzen',
+                pause: 'Pause',
+                day: 'Tag',
+                edit: 'Bearbeiten',
+                delete: 'Löschen',
+                taskAdded: 'Aufgabe und Frist erfolgreich gespeichert!',
+                taskUpdated: 'Aufgabe erfolgreich aktualisiert!',
+                taskDeleted: 'Aufgabe gelöscht',
+                taskCompleted: 'Aufgabe erledigt! 🎉',
+                taskNameRequired: 'Bitte gib einen Aufgabennamen ein!',
+                focusCompleted: 'Fokus-Sitzung abgeschlossen!',
+                allTasksCleared: 'Alle Aufgaben wurden gelöscht',
+                timeUp: 'Die Zeit ist abgelaufen für',
+                aboutMessage: 'Nexus Task hilft dir dabei, deine Zeit, Ziele und deinen Alltag mit Klarheit zu organisieren.',
+                privacyMessage: 'Datenschutz: Deine Aufgaben bleiben in deinem Browser und werden nicht mit Dritten geteilt.',
+                tipTimeBlocks: 'Zeitblöcke',
+                tipPrioritize: 'Priorisieren',
+                tipMomentum: 'Momentum',
+                tipTimeBlocksText: 'Nutze fokussierte Sitzungen, um Ablenkungen zu reduzieren und die wirklichen Prioritäten im Blick zu behalten.',
+                tipPrioritizeText: 'Beginne mit der wichtigsten Aufgabe und lasse den Rest warten, ohne den Schwung zu verlieren.',
+                tipMomentumText: 'Kleine Erfolge halten dich im Flow; schließe eine echte Aufgabe ab, bevor du den Kontext wechselst.',
+                categories: { Work: 'Arbeit', Study: 'Studium', Personal: 'Privat' },
+                repeats: { None: 'Kein Wiederholen', Daily: 'Täglich', Weekly: 'Wöchentlich' },
+                monthShort: ['Jan','Feb','Mär','Apr','Mai','Jun','Jul','Aug','Sep','Okt','Nov','Dez']
+            },
+            tr: {
+                orbitPlanner: 'Yörünge Planlayıcı',
+                appTitle: 'Nexus Task',
+                focusMode: 'Odak Modu',
+                live: 'Canlı',
+                total: 'Toplam',
+                active: 'Aktif',
+                done: 'Tamamlandı',
+                streak: 'Seri',
+                quickAdd: 'Hızlı ekle',
+                aiPlan: 'Yapay zekâ planı',
+                searchTasks: '🔍 Görev ara...',
+                deepWork: 'Derin çalışma',
+                review: 'Gözden geçirme',
+                wellness: 'Sağlık',
+                inbox: 'Gelen kutusu',
+                whatNeed: 'Ne yapman gerekiyor?',
+                addTaskAlert: 'Alarmlı görev ekle',
+                updateTask: 'Görevi güncelle',
+                missionBoard: 'Görev panosu',
+                clearAll: 'Hepsini temizle',
+                all: 'Tümü',
+                filters: { all: 'Tümü', active: 'Aktif', completed: 'Tamamlanan' },
+                progress: 'İlerleme',
+                completedLabel: 'Tamamlandı',
+                productivityPlaybook: 'Verimlilik rehberi',
+                timeBlocks: 'Zaman blokları',
+                prioritize: 'Öncelik',
+                momentum: 'Hız',
+                about: 'Hakkımızda',
+                privacy: 'Gizlilik',
+                startFocus: 'Odak başlat',
+                reset: 'Sıfırla',
+                pause: 'Duraklat',
+                day: 'Gün',
+                edit: 'Düzenle',
+                delete: 'Sil',
+                taskAdded: 'Görev ve tarih başarıyla kaydedildi!',
+                taskUpdated: 'Görev başarıyla güncellendi!',
+                taskDeleted: 'Görev silindi',
+                taskCompleted: 'Görev tamamlandı! 🎉',
+                taskNameRequired: 'Lütfen bir görev adı girin!',
+                focusCompleted: 'Odak seansı tamamlandı!',
+                allTasksCleared: 'Tüm görevler temizlendi',
+                timeUp: 'Süre doldu: ',
+                aboutMessage: 'Nexus Task, zamanınızı, hedeflerinizi ve günlük odaklanmanızı net şekilde düzenlemenize yardımcı olmak için tasarlandı.',
+                privacyMessage: 'Gizlilik: görevleriniz tarayıcınızda kalır ve üçüncü taraflarla paylaşılmaz.',
+                tipTimeBlocks: 'Zaman blokları',
+                tipPrioritize: 'Öncelik',
+                tipMomentum: 'Hız',
+                tipTimeBlocksText: 'Dikkat dağıtıcıları azaltmak ve gerçek önceliklerinize odaklanmak için odaklı seanslar kullanın.',
+                tipPrioritizeText: 'En yüksek değere sahip görevle başlayın ve kalan işleri momentumunuzu kaybetmeden bekletin.',
+                tipMomentumText: 'Küçük kazançlar sizi hareket halinde tutar; bağlam değiştirirken gerçek bir görevi tamamlayın.',
+                categories: { Work: 'İş', Study: 'Çalışma', Personal: 'Kişisel' },
+                repeats: { None: 'Tekrarsız', Daily: 'Günlük', Weekly: 'Haftalık' },
+                monthShort: ['Oca','Şub','Mar','Nis','May','Haz','Tem','Ağu','Eyl','Eki','Kas','Ara']
+            }
+        };
+
+        const spaceTranslations = {
+            en: ['Personal space settings', 'Quality', 'High', 'Balanced', 'Battery saver', 'Reduce motion', 'Static background', 'Disable space effects', 'Enable device motion', 'Enable camera interaction', 'Stop camera interaction', 'Touch parallax is active. Device motion is optional.', 'Device motion enabled.', 'Device motion is unavailable; touch interaction remains active.', 'Camera motion is active. Video is processed locally and never recorded.', 'Camera unavailable; touch and device motion remain available.'],
+            fr: ['Réglages de votre espace', 'Qualité', 'Élevée', 'Équilibrée', 'Économie de batterie', 'Réduire les mouvements', 'Arrière-plan statique', 'Désactiver les effets spatiaux', 'Activer le mouvement du téléphone', 'Activer l’interaction caméra', 'Arrêter l’interaction caméra', 'Le parallaxe tactile est actif. Le mouvement du téléphone est facultatif.', 'Mouvement du téléphone activé.', 'Mouvement du téléphone indisponible ; le tactile reste actif.', 'Mouvement caméra actif. La vidéo est traitée localement et jamais enregistrée.', 'Caméra indisponible ; le tactile et le mouvement du téléphone restent disponibles.'],
+            ar: ['إعدادات فضائك الشخصي', 'الجودة', 'عالية', 'متوازنة', 'توفير البطارية', 'تقليل الحركة', 'خلفية ثابتة', 'تعطيل مؤثرات الفضاء', 'تفعيل حركة الجهاز', 'تفعيل تفاعل الكاميرا', 'إيقاف تفاعل الكاميرا', 'تفاعل اللمس متاح. حركة الجهاز اختيارية.', 'تم تفعيل حركة الجهاز.', 'حركة الجهاز غير متاحة؛ يظل التفاعل باللمس متاحًا.', 'حركة الكاميرا مفعّلة. تتم معالجة الفيديو محليًا ولا يتم تسجيله.', 'الكاميرا غير متاحة؛ يظل اللمس وحركة الجهاز متاحين.'],
+            es: ['Ajustes de tu espacio', 'Calidad', 'Alta', 'Equilibrada', 'Ahorro de batería', 'Reducir movimiento', 'Fondo estático', 'Desactivar efectos espaciales', 'Activar movimiento del dispositivo', 'Activar interacción con cámara', 'Detener interacción con cámara', 'La interacción táctil está activa. El movimiento del dispositivo es opcional.', 'Movimiento del dispositivo activado.', 'Movimiento no disponible; la interacción táctil sigue activa.', 'Movimiento de cámara activo. El vídeo se procesa localmente y no se graba.', 'Cámara no disponible; el tacto y el movimiento siguen disponibles.'],
+            de: ['Einstellungen für deinen Weltraum', 'Qualität', 'Hoch', 'Ausgewogen', 'Akkusparmodus', 'Bewegung reduzieren', 'Statischer Hintergrund', 'Weltraumeffekte deaktivieren', 'Gerätebewegung aktivieren', 'Kamerainteraktion aktivieren', 'Kamerainteraktion stoppen', 'Touch-Parallaxe ist aktiv. Gerätebewegung ist optional.', 'Gerätebewegung aktiviert.', 'Gerätebewegung nicht verfügbar; Touch bleibt aktiv.', 'Kamerabewegung ist aktiv. Video wird lokal verarbeitet und nicht aufgezeichnet.', 'Kamera nicht verfügbar; Touch und Gerätebewegung bleiben verfügbar.'],
+            tr: ['Kişisel uzay ayarları', 'Kalite', 'Yüksek', 'Dengeli', 'Pil tasarrufu', 'Hareketi azalt', 'Sabit arka plan', 'Uzay efektlerini kapat', 'Cihaz hareketini etkinleştir', 'Kamera etkileşimini etkinleştir', 'Kamera etkileşimini durdur', 'Dokunmatik paralaks etkin. Cihaz hareketi isteğe bağlıdır.', 'Cihaz hareketi etkin.', 'Cihaz hareketi kullanılamıyor; dokunmatik etkileşim devam ediyor.', 'Kamera hareketi etkin. Video yerel olarak işlenir ve kaydedilmez.', 'Kamera kullanılamıyor; dokunma ve cihaz hareketi kullanılabilir.']
+        };
+
+        const savedTheme = localStorage.getItem('nexus_theme') || 'dark';
+        body.setAttribute('data-theme', savedTheme);
+        themeToggle.textContent = savedTheme === 'dark' ? '☀️' : '🌙';
+
+        function currentSpaceTranslations() {
+            return spaceTranslations[currentLang] || spaceTranslations.en;
+        }
+
+        function applySpaceSettings() {
+            const reducedBySystem = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            const disabled = disableSpaceToggle.checked;
+            const staticMode = staticSpaceToggle.checked || reduceMotionToggle.checked || reducedBySystem;
+            body.dataset.space = disabled ? 'off' : staticMode ? 'static' : 'active';
+            spaceQuality.disabled = disabled;
+            localStorage.setItem('nexus_space_settings', JSON.stringify({
+                quality: spaceQuality.value,
+                reduceMotion: reduceMotionToggle.checked,
+                staticSpace: staticSpaceToggle.checked,
+                disableSpace: disabled
+            }));
+            const motionUnavailable = disabled || staticMode;
+            motionPermissionButton.disabled = motionUnavailable;
+            cameraToggle.disabled = motionUnavailable;
+            if (motionUnavailable) {
+                orientationEnabled = false;
+                stopCameraInteraction();
+            }
+            resizeSpaceCanvas();
+            if (!document.hidden && !disabled && !staticMode) startSpaceAnimation();
+            else stopSpaceAnimation();
+        }
+
+        function resizeSpaceCanvas() {
+            const bounds = spaceCanvas.getBoundingClientRect();
+            if (!bounds.width || !bounds.height) return;
+            const weakDevice = (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 4) || (navigator.deviceMemory && navigator.deviceMemory <= 4);
+            if (!spaceSettings.quality) spaceQuality.value = weakDevice ? 'battery' : 'balanced';
+            const ratioLimit = spaceQuality.value === 'high' ? 2 : spaceQuality.value === 'balanced' ? 1.5 : 1;
+            const pixelRatio = Math.min(window.devicePixelRatio || 1, ratioLimit);
+            spaceWidth = bounds.width;
+            spaceHeight = bounds.height;
+            spaceCanvas.width = Math.round(spaceWidth * pixelRatio);
+            spaceCanvas.height = Math.round(spaceHeight * pixelRatio);
+            spaceContext.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
+            const baseCount = spaceQuality.value === 'high' ? 170 : spaceQuality.value === 'balanced' ? 92 : 38;
+            const count = Math.min(baseCount + Math.floor(Math.min(completionCount, 120) * 0.7), 230);
+            spaceStars = Array.from({ length: count }, () => ({
+                x: Math.random() * spaceWidth,
+                y: Math.random() * spaceHeight,
+                depth: 0.25 + Math.random() * 0.75,
+                radius: 0.5 + Math.random() * (spaceQuality.value === 'high' ? 1.1 : 0.85),
+                phase: Math.random() * Math.PI * 2,
+                speed: 0.35 + Math.random() * 0.6
+            }));
+            drawSpace(performance.now());
+        }
+
+        function drawSpace(timestamp) {
+            if (!spaceWidth || !spaceHeight || body.dataset.space === 'off') return;
+            const quality = spaceQuality.value;
+            const motion = body.dataset.space === 'active';
+            const smoothing = motion ? 0.045 : 0;
+            pointerX += (targetX - pointerX) * smoothing;
+            pointerY += (targetY - pointerY) * smoothing;
+            spaceContext.clearRect(0, 0, spaceWidth, spaceHeight);
+
+            const burst = timestamp < completionFlashUntil;
+            for (const star of spaceStars) {
+                const drift = motion ? Math.sin(timestamp * 0.00016 * star.speed + star.phase) * star.depth * 2 : 0;
+                const x = star.x + pointerX * star.depth + drift;
+                const y = star.y + pointerY * star.depth + drift * 0.45;
+                const twinkle = quality === 'battery' ? 0 : Math.sin(timestamp * 0.001 * star.speed + star.phase) * 0.18;
+                const alpha = Math.min(1, Math.max(0.24, 0.72 + twinkle + (burst ? 0.2 : 0)));
+                spaceContext.beginPath();
+                spaceContext.fillStyle = `rgba(203, 231, 245, ${alpha})`;
+                spaceContext.arc(x, y, star.radius * (burst ? 1.4 : 1), 0, Math.PI * 2);
+                spaceContext.fill();
+            }
+
+            const planetRadius = 19 + Math.min(completionCount, 24) * 0.55;
+            const planetX = spaceWidth * 0.86 + pointerX * 0.35;
+            const planetY = spaceHeight * 0.73 + pointerY * 0.35;
+            const glow = spaceContext.createRadialGradient(planetX, planetY, 2, planetX, planetY, planetRadius * 2.8);
+            glow.addColorStop(0, `rgba(105, 205, 205, ${0.2 + Math.min(completionCount, 20) * 0.006})`);
+            glow.addColorStop(1, 'rgba(105, 205, 205, 0)');
+            spaceContext.fillStyle = glow;
+            spaceContext.beginPath();
+            spaceContext.arc(planetX, planetY, planetRadius * 2.8, 0, Math.PI * 2);
+            spaceContext.fill();
+            spaceContext.beginPath();
+            spaceContext.strokeStyle = 'rgba(149, 221, 219, 0.18)';
+            spaceContext.lineWidth = 1;
+            spaceContext.ellipse(planetX, planetY, planetRadius * 1.65, planetRadius * 0.48, -0.25, 0, Math.PI * 2);
+            spaceContext.stroke();
+            spaceContext.beginPath();
+            spaceContext.fillStyle = `rgba(115, 185, 190, ${0.32 + Math.min(completionCount, 20) * 0.01})`;
+            spaceContext.arc(planetX, planetY, planetRadius, 0, Math.PI * 2);
+            spaceContext.fill();
+
+            document.querySelector('.space-background').style.setProperty('--space-x', `${pointerX * 0.45}px`);
+            document.querySelector('.space-background').style.setProperty('--space-y', `${pointerY * 0.45}px`);
+        }
+
+        function startSpaceAnimation() {
+            if (frameRequest) return;
+            const tick = (timestamp) => {
+                frameRequest = 0;
+                if (document.hidden || body.dataset.space !== 'active') return;
+                const frameDelay = spaceQuality.value === 'battery' ? 80 : 33;
+                if (timestamp - lastFrameTime >= frameDelay) {
+                    drawSpace(timestamp);
+                    lastFrameTime = timestamp;
+                }
+                frameRequest = requestAnimationFrame(tick);
+            };
+            frameRequest = requestAnimationFrame(tick);
+        }
+
+        function stopSpaceAnimation() {
+            if (!frameRequest) return;
+            cancelAnimationFrame(frameRequest);
+            frameRequest = 0;
+        }
+
+        function stopCameraInteraction() {
+            if (cameraFrameRequest) clearInterval(cameraFrameRequest);
+            cameraFrameRequest = 0;
+            if (cameraStream) cameraStream.getTracks().forEach(track => track.stop());
+            cameraStream = null;
+            cameraPrevious = null;
+            if (cameraVideo) cameraVideo.remove();
+            cameraVideo = null;
+            cameraToggle.textContent = currentSpaceTranslations()[9];
+        }
+
+        async function toggleCameraInteraction() {
+            if (cameraStream) {
+                stopCameraInteraction();
+                spaceStatus.textContent = currentSpaceTranslations()[11];
+                return;
+            }
+            if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia || disableSpaceToggle.checked) {
+                spaceStatus.textContent = currentSpaceTranslations()[15];
+                return;
+            }
+            try {
+                cameraStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user', width: { ideal: 160 }, height: { ideal: 120 } }, audio: false });
+                cameraVideo = document.createElement('video');
+                cameraVideo.muted = true;
+                cameraVideo.playsInline = true;
+                cameraVideo.srcObject = cameraStream;
+                cameraVideo.style.cssText = 'position:fixed;width:1px;height:1px;opacity:0;pointer-events:none;';
+                document.body.appendChild(cameraVideo);
+                await cameraVideo.play();
+                const sampleCanvas = document.createElement('canvas');
+                sampleCanvas.width = 16;
+                sampleCanvas.height = 12;
+                const sampleContext = sampleCanvas.getContext('2d', { willReadFrequently: true });
+                cameraPrevious = null;
+                cameraToggle.textContent = currentSpaceTranslations()[10];
+                spaceStatus.textContent = currentSpaceTranslations()[14];
+                cameraFrameRequest = window.setInterval(() => {
+                    if (!cameraVideo || cameraVideo.readyState < 2) return;
+                    sampleContext.drawImage(cameraVideo, 0, 0, 16, 12);
+                    const pixels = sampleContext.getImageData(0, 0, 16, 12).data;
+                    const current = [];
+                    for (let i = 0; i < pixels.length; i += 4) current.push((pixels[i] + pixels[i + 1] + pixels[i + 2]) / 3);
+                    if (cameraPrevious) {
+                        let weight = 0, position = 0;
+                        for (let i = 0; i < current.length; i++) {
+                            const delta = Math.abs(current[i] - cameraPrevious[i]);
+                            weight += delta;
+                            position += delta * (i % 16);
+                        }
+                        if (weight > 180) targetX = ((position / weight) / 15 - 0.5) * 28;
+                    }
+                    cameraPrevious = current;
+                }, 140);
+            } catch (error) {
+                stopCameraInteraction();
+                spaceStatus.textContent = currentSpaceTranslations()[15];
+            }
+        }
+
+        window.addEventListener('pointermove', (event) => {
+            if (body.dataset.space !== 'active') return;
+            targetX = ((event.clientX / window.innerWidth) - 0.5) * 18;
+            targetY = ((event.clientY / window.innerHeight) - 0.5) * 18;
+        }, { passive: true });
+
+        window.addEventListener('deviceorientation', (event) => {
+            if (!orientationEnabled || body.dataset.space !== 'active' || event.gamma === null || event.beta === null) return;
+            targetX = Math.max(-12, Math.min(12, event.gamma * 0.35));
+            targetY = Math.max(-12, Math.min(12, event.beta * 0.18));
+        }, { passive: true });
+
+        motionPermissionButton.addEventListener('click', async () => {
+            const permissionAPI = window.DeviceOrientationEvent && window.DeviceOrientationEvent.requestPermission;
+            if (permissionAPI) {
+                try {
+                    orientationEnabled = await window.DeviceOrientationEvent.requestPermission() === 'granted';
+                } catch (error) {
+                    orientationEnabled = false;
+                }
+            } else {
+                orientationEnabled = 'DeviceOrientationEvent' in window && window.matchMedia('(pointer: coarse)').matches;
+            }
+            spaceStatus.textContent = currentSpaceTranslations()[orientationEnabled ? 12 : 13];
+        });
+
+        cameraToggle.addEventListener('click', toggleCameraInteraction);
+        [spaceQuality, reduceMotionToggle, staticSpaceToggle, disableSpaceToggle].forEach(control => control.addEventListener('change', applySpaceSettings));
+        window.addEventListener('resize', resizeSpaceCanvas, { passive: true });
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden) stopSpaceAnimation();
+            else applySpaceSettings();
+        });
+
+        spaceQuality.value = spaceSettings.quality || ((navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 4) ? 'battery' : 'balanced');
+        reduceMotionToggle.checked = Boolean(spaceSettings.reduceMotion) || window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        reduceMotionToggle.disabled = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        staticSpaceToggle.checked = Boolean(spaceSettings.staticSpace);
+        disableSpaceToggle.checked = Boolean(spaceSettings.disableSpace);
+        spaceStatus.textContent = currentSpaceTranslations()[11];
+        applySpaceSettings();
+        window.matchMedia('(prefers-reduced-motion: reduce)').addEventListener('change', (event) => {
+            reduceMotionToggle.disabled = event.matches;
+            if (event.matches) reduceMotionToggle.checked = true;
+            applySpaceSettings();
+        });
+
+        function getText(key) {
+            return (translations[currentLang] && translations[currentLang][key]) || translations.en[key] || key;
+        }
+
+        function translateCategory(category) {
+            return (translations[currentLang] && translations[currentLang].categories && translations[currentLang].categories[category]) || category;
+        }
+
+        function translateRepeat(repeat) {
+            return (translations[currentLang] && translations[currentLang].repeats && translations[currentLang].repeats[repeat]) || repeat;
+        }
+
+        function updateLanguageUI() {
+            const t = translations[currentLang] || translations.en;
+            const spaceText = currentSpaceTranslations();
+            const streakTextContent = `🔥 ${streak} ${t.day}`;
+            document.querySelector('.brand small').textContent = t.orbitPlanner;
+            document.querySelector('.brand h2').textContent = t.appTitle;
+            document.getElementById('focusModeLabel').textContent = t.focusMode;
+            document.getElementById('liveBadge').textContent = t.live;
+            document.getElementById('totalLabel').textContent = t.total;
+            document.getElementById('activeLabel').textContent = t.active;
+            document.getElementById('doneLabel').textContent = t.done;
+            document.getElementById('streakLabel').textContent = t.streak;
+            document.getElementById('quickAddTitle').textContent = t.quickAdd;
+            document.getElementById('aiPlanChip').textContent = t.aiPlan;
+            searchBox.placeholder = t.searchTasks;
+            document.getElementById('taskInput').placeholder = t.whatNeed;
+            document.getElementById('addBtn').textContent = t.addTaskAlert;
+            document.getElementById('missionBoardTitle').textContent = t.missionBoard;
+            document.getElementById('clearAllBtn').textContent = t.clearAll;
+            document.getElementById('playbookTitle').textContent = t.productivityPlaybook;
+            document.getElementById('aboutLink').textContent = t.about;
+            document.getElementById('privacyLink').textContent = t.privacy;
+            document.getElementById('pomoStart').textContent = t.startFocus;
+            document.getElementById('pomoReset').textContent = t.reset;
+            document.documentElement.dir = currentLang === 'ar' ? 'rtl' : 'ltr';
+            document.getElementById('spaceSettingsTitle').textContent = spaceText[0];
+            document.getElementById('spaceQualityLabel').textContent = spaceText[1];
+            spaceQuality.options[0].textContent = spaceText[2];
+            spaceQuality.options[1].textContent = spaceText[3];
+            spaceQuality.options[2].textContent = spaceText[4];
+            document.getElementById('reduceMotionLabel').textContent = spaceText[5];
+            document.getElementById('staticSpaceLabel').textContent = spaceText[6];
+            document.getElementById('disableSpaceLabel').textContent = spaceText[7];
+            motionPermissionButton.textContent = spaceText[8];
+            cameraToggle.textContent = cameraStream ? spaceText[10] : spaceText[9];
+            spaceStatus.textContent = cameraStream ? spaceText[14] : orientationEnabled ? spaceText[12] : spaceText[11];
+            document.getElementById('aboutLink').onclick = () => alert(t.aboutMessage);
+            document.getElementById('privacyLink').onclick = () => alert(t.privacyMessage);
+            streakText.textContent = streakTextContent;
+
+            document.querySelectorAll('.tip-card h5').forEach((item, index) => {
+                const tips = [t.tipTimeBlocks, t.tipPrioritize, t.tipMomentum];
+                item.textContent = tips[index] || item.textContent;
+            });
+
+            document.querySelectorAll('.tip-card p').forEach((item, index) => {
+                const tipsText = [t.tipTimeBlocksText, t.tipPrioritizeText, t.tipMomentumText];
+                item.textContent = tipsText[index] || item.textContent;
+            });
+
+            const filterButtons = document.querySelectorAll('.filter-btn');
+            filterButtons[0].textContent = t.filters.all;
+            filterButtons[1].textContent = t.filters.active;
+            filterButtons[2].textContent = t.filters.completed;
+
+            const quickButtons = document.querySelectorAll('.quick-tag');
+            quickButtons[0].textContent = t.deepWork;
+            quickButtons[1].textContent = t.review;
+            quickButtons[2].textContent = t.wellness;
+            quickButtons[3].textContent = t.inbox;
+
+            document.getElementById('categorySelect').innerHTML = `
+                <option value="Work">💼 ${t.categories.Work}</option>
+                <option value="Study">📚 ${t.categories.Study}</option>
+                <option value="Personal">🎯 ${t.categories.Personal}</option>
+            `;
+            document.getElementById('repeatSelect').innerHTML = `
+                <option value="None">${t.repeats.None}</option>
+                <option value="Daily">${t.repeats.Daily}</option>
+                <option value="Weekly">${t.repeats.Weekly}</option>
+            `;
+
+            document.documentElement.lang = currentLang;
+            languageSelect.value = currentLang;
+        }
+
+        function applyLanguage(lang) {
+            currentLang = lang;
+            localStorage.setItem('nexus_lang', lang);
+            updateLanguageUI();
+            renderTasks(searchBox.value);
+        }
+
+        function playSound(type) {
+            try {
+                const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                const osc = audioCtx.createOscillator();
+                const gainNode = audioCtx.createGain();
+                osc.connect(gainNode);
+                gainNode.connect(audioCtx.destination);
+
+                if (type === 'add') {
+                    osc.frequency.setValueAtTime(400, audioCtx.currentTime);
+                    osc.frequency.exponentialRampToValueAtTime(800, audioCtx.currentTime + 0.1);
+                    gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
+                    osc.start();
+                    osc.stop(audioCtx.currentTime + 0.1);
+                } else if (type === 'complete' || type === 'alert') {
+                    osc.frequency.setValueAtTime(600, audioCtx.currentTime);
+                    osc.frequency.exponentialRampToValueAtTime(1200, audioCtx.currentTime + 0.15);
+                    gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.15);
+                    osc.start();
+                    osc.stop(audioCtx.currentTime + 0.15);
+                } else if (type === 'delete') {
+                    osc.frequency.setValueAtTime(300, audioCtx.currentTime);
+                    osc.frequency.exponentialRampToValueAtTime(150, audioCtx.currentTime + 0.15);
+                    gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.15);
+                    osc.start();
+                    osc.stop(audioCtx.currentTime + 0.15);
+                }
+            } catch(e) {}
+        }
+
+        function showToast(message, color = '#10b981') {
+            toast.textContent = message;
+            toast.style.background = color;
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        function toDisplayDate(dateValue) {
+            if (!dateValue) return '';
+            const date = new Date(dateValue);
+            if (Number.isNaN(date.getTime())) return dateValue;
+            const locale = currentLang === 'ar' ? 'ar-MA' : (currentLang === 'fr' ? 'fr-FR' : currentLang === 'de' ? 'de-DE' : currentLang === 'es' ? 'es-ES' : currentLang === 'tr' ? 'tr-TR' : 'en-US');
+            return new Intl.DateTimeFormat(locale, { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }).format(date);
+        }
+
+        const pomoTimer = document.getElementById('pomoTimer');
+        const pomoStart = document.getElementById('pomoStart');
+        const pomoReset = document.getElementById('pomoReset');
+        let pomoInterval;
+        let timeLeft = 1500;
+        let isRunning = false;
+
+        const STORAGE_KEY = 'nexus_tasks_master_db';
+        let tasks = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+        completionCount = Math.max(completionCount, tasks.filter(task => task.completed).length);
+        localStorage.setItem('nexus_completed_total', String(completionCount));
+        let streak = JSON.parse(localStorage.getItem('nexus_streak')) || 1;
+        streakText.textContent = `🔥 ${streak} Day`;
+        resizeSpaceCanvas();
+
+        function saveAndRender() {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks));
+            renderTasks(searchBox.value);
+        }
+
+        function updateSummaryPanel() {
+            const totalTasks = tasks.length;
+            const completedCount = tasks.filter(task => task.completed).length;
+            const activeCount = totalTasks - completedCount;
+            const progressValue = totalTasks === 0 ? 0 : Math.round((completedCount / totalTasks) * 100);
+
+            totalStat.textContent = totalTasks;
+            activeStat.textContent = activeCount;
+            completedStat.textContent = completedCount;
+            streakStat.textContent = `${streak}d`;
+            progressPercent.textContent = `${progressValue}%`;
+        }
+
+        function renderTasks(filterText = '') {
+            taskList.innerHTML = '';
+            let completedCount = 0;
+            const totalTasks = tasks.length;
+            const now = new Date();
+
+            tasks.forEach((task) => {
+                if (task.completed) completedCount++;
+            });
+
+            const filteredTasks = tasks.filter(task => {
+                const matchesSearch = task.text.toLowerCase().includes(filterText.toLowerCase());
+                if (currentFilter === 'active') return matchesSearch && !task.completed;
+                if (currentFilter === 'completed') return matchesSearch && task.completed;
+                return matchesSearch;
+            });
+
+            filteredTasks.forEach((task) => {
+                const originalIndex = tasks.indexOf(task);
+                const li = document.createElement('li');
+                if (task.completed) li.classList.add('completed');
+
+                if (task.datetime && !task.completed) {
+                    const taskDate = new Date(task.datetime);
+                    if (now > taskDate) {
+                        li.classList.add('expired');
+                    }
+                }
+
+                const taskInfo = document.createElement('div');
+                taskInfo.className = 'task-info';
+                taskInfo.addEventListener('click', () => {
+                    tasks[originalIndex].completed = !tasks[originalIndex].completed;
+                    if (tasks[originalIndex].completed) {
+                        completionCount++;
+                        localStorage.setItem('nexus_completed_total', String(completionCount));
+                        completionFlashUntil = performance.now() + 1200;
+                        resizeSpaceCanvas();
+                        if (!reduceMotionToggle.checked && body.dataset.space === 'active') {
+                            spaceCanvas.classList.remove('space-starburst');
+                            void spaceCanvas.offsetWidth;
+                            spaceCanvas.classList.add('space-starburst');
+                        }
+                        playSound('complete');
+                        showToast(getText('taskCompleted'));
+                    }
+                    saveAndRender();
+                });
+
+                const titleSpan = document.createElement('span');
+                titleSpan.className = 'task-title';
+                titleSpan.textContent = task.text;
+
+                const detailsDiv = document.createElement('div');
+                detailsDiv.className = 'task-details';
+                
+                const badge = document.createElement('span');
+                badge.className = 'badge';
+                badge.textContent = translateCategory(task.category);
+
+                const repeatBadge = document.createElement('span');
+                repeatBadge.className = 'repeat-badge';
+                repeatBadge.textContent = `🔁 ${translateRepeat(task.repeat)}`;
+                
+                const dateSpan = document.createElement('span');
+                dateSpan.textContent = task.datetime ? `⏰ ${toDisplayDate(task.datetime)}` : '';
+
+                detailsDiv.appendChild(badge);
+                if(task.repeat !== 'None') detailsDiv.appendChild(repeatBadge);
+                detailsDiv.appendChild(dateSpan);
+
+                taskInfo.appendChild(titleSpan);
+                taskInfo.appendChild(detailsDiv);
+
+                const actionsDiv = document.createElement('div');
+                actionsDiv.className = 'task-actions';
+
+                const editBtn = document.createElement('button');
+                editBtn.className = 'edit-btn';
+                editBtn.textContent = getText('edit');
+                editBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    taskInput.value = task.text;
+                    categorySelect.value = task.category;
+                    repeatSelect.value = task.repeat;
+                    dateTimeInput.value = task.datetime;
+                    editIndex = originalIndex;
+                    addBtn.textContent = getText('updateTask');
+                    taskInput.focus();
+                });
+
+                const deleteBtn = document.createElement('button');
+                deleteBtn.className = 'delete-btn';
+                deleteBtn.textContent = getText('delete');
+                deleteBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    tasks.splice(originalIndex, 1);
+                    playSound('delete');
+                    showToast(getText('taskDeleted'), '#ef4444');
+                    saveAndRender();
+                });
+
+                actionsDiv.appendChild(editBtn);
+                actionsDiv.appendChild(deleteBtn);
+
+                li.appendChild(taskInfo);
+                li.appendChild(actionsDiv);
+                taskList.appendChild(li);
+            });
+
+            statsText.textContent = `Completed: ${completedCount} / ${totalTasks}`;
+            const progressValue = totalTasks === 0 ? 0 : (completedCount / totalTasks) * 100;
+            progressBar.style.width = `${progressValue}%`;
+            updateSummaryPanel();
+        }
+
+        function addTask() {
+            const text = taskInput.value.trim();
+            const category = categorySelect.value;
+            const repeat = repeatSelect.value;
+            const datetime = dateTimeInput.value;
+
+            if (text === '') {
+                showToast(getText('taskNameRequired'), '#f59e0b');
+                return;
+            }
+
+            if (editIndex !== null) {
+                tasks[editIndex] = { 
+                    ...tasks[editIndex],
+                    text: text, 
+                    category: category, 
+                    repeat: repeat, 
+                    datetime: datetime, 
+                    alerted: false 
+                };
+                editIndex = null;
+                addBtn.textContent = getText('addTaskAlert');
+                showToast(getText('taskUpdated'));
+            } else {
+                tasks.push({ 
+                    text: text, 
+                    completed: false, 
+                    category: category, 
+                    repeat: repeat, 
+                    datetime: datetime, 
+                    alerted: false 
+                });
+                showToast(getText('taskAdded'));
+            }
+
+            taskInput.value = '';
+            dateTimeInput.value = '';
+            taskInput.focus();
+            playSound('add');
+            saveAndRender();
+        }
+
+        setInterval(() => {
+            const now = new Date();
+            let needsUpdate = false;
+            
+            tasks.forEach(task => {
+                if (task.datetime && !task.completed && !task.alerted) {
+                    const taskDate = new Date(task.datetime);
+                    if (now.getTime() >= taskDate.getTime()) {
+                        task.alerted = true;
+                        needsUpdate = true;
+                        playSound('alert');
+                        showToast(`${getText('timeUp')}: "${task.text}"`, '#ef4444');
+                    }
+                }
+            });
+
+            if (needsUpdate) {
+                saveAndRender();
+            }
+        }, 1000);
+
+        function updateTimerDisplay() {
+            const minutes = Math.floor(timeLeft / 60);
+            const seconds = timeLeft % 60;
+            pomoTimer.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        }
+
+        pomoStart.addEventListener('click', () => {
+            if (!isRunning) {
+                isRunning = true;
+                pomoStart.textContent = getText('pause');
+                pomoInterval = setInterval(() => {
+                    if (timeLeft > 0) {
+                        timeLeft--;
+                        updateTimerDisplay();
+                    } else {
+                        clearInterval(pomoInterval);
+                        playSound('complete');
+                        showToast(getText('focusCompleted'));
+                        isRunning = false;
+                        pomoStart.textContent = getText('startFocus');
+                    }
+                }, 1000);
+            } else {
+                clearInterval(pomoInterval);
+                isRunning = false;
+                pomoStart.textContent = getText('startFocus');
+            }
+        });
+
+        pomoReset.addEventListener('click', () => {
+            clearInterval(pomoInterval);
+            isRunning = false;
+            timeLeft = 1500;
+            updateTimerDisplay();
+            pomoStart.textContent = getText('startFocus');
+        });
+
+        addBtn.addEventListener('click', addTask);
+        taskInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') addTask();
+        });
+
+        searchBox.addEventListener('input', (e) => {
+            renderTasks(e.target.value);
+        });
+
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                filterBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentFilter = btn.getAttribute('data-filter');
+                renderTasks(searchBox.value);
+            });
+        });
+
+        clearAllBtn.addEventListener('click', () => {
+            tasks = [];
+            playSound('delete');
+            showToast(getText('allTasksCleared'), '#ef4444');
+            saveAndRender();
+        });
+
+        themeToggle.addEventListener('click', () => {
+            const isLight = body.getAttribute('data-theme') === 'light';
+            const nextTheme = isLight ? 'dark' : 'light';
+            body.setAttribute('data-theme', nextTheme);
+            themeToggle.textContent = nextTheme === 'dark' ? '☀️' : '🌙';
+            localStorage.setItem('nexus_theme', nextTheme);
+        });
+
+        languageSelect.addEventListener('change', (event) => {
+            applyLanguage(event.target.value);
+        });
+
+        suggestionBtns.forEach(button => {
+            button.addEventListener('click', () => {
+                taskInput.value = button.dataset.text || '';
+                taskInput.focus();
+            });
+        });
+
+        updateLanguageUI();
+        renderTasks();
+    </script>
+
+</body>
+</html>
